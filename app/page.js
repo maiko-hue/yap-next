@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Home() {
   const router = useRouter();
-  const [showSplash, setShowSplash] = useState(() => { if (typeof window !== "undefined") { return !localStorage.getItem("sesion_token_yape"); } return true; });
+  const [showSplash, setShowSplash] = useState(() => { if (typeof window !== "undefined") { return !localStorage.getItem("has_seen_splash"); } return true; });
   const [splashOpacity, setSplashOpacity] = useState(1);
   const [showInstallScreen, setShowInstallScreen] = useState(false);
   const [installPromptEvent, setInstallPromptEvent] = useState(null);
@@ -37,7 +37,7 @@ export default function Home() {
     if (!showSplash) return;
     const timer = setTimeout(() => {
       setSplashOpacity(0);
-      setTimeout(() => setShowSplash(false), 500);
+      setTimeout(() => { setShowSplash(false); localStorage.setItem("has_seen_splash", "true"); }, 500);
     }, 6500);
     return () => clearTimeout(timer);
   }, [showSplash]);
@@ -384,6 +384,7 @@ export default function Home() {
 
         .action-box {
             background-color: white;
+            margin-top: 100px;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);

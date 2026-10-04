@@ -1,5 +1,6 @@
 import "./globals.css";
 import SecurityGuard from './SecurityGuard';
+import Script from 'next/script';
 
 export const metadata = {
   title: "Yapton",
@@ -25,8 +26,8 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
-        <script dangerouslySetInnerHTML={{
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="beforeInteractive" />
+        <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             document.addEventListener('keydown', function(event) {
               if (event.ctrlKey && (event.key === '=' || event.key === '-' || event.key === '0')) {

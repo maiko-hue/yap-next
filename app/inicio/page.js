@@ -357,7 +357,7 @@ export default function Inicio() {
           <div className="loader-overlay show" onClick={() => setShowLoader(false)}>
               <div className="loader-card">
                   <div className="custom-spinner"></div>
-                  <div className="loader-text">Verifica tu conexión a<br/>internet</div>
+                  <div className="loader-text">Verifica tu conexión a<br/>internet...</div>
               </div>
           </div>
         )}
