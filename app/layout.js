@@ -1,4 +1,5 @@
 import "./globals.css";
+import SecurityGuard from './SecurityGuard';
 
 export const metadata = {
   title: "Yapton",
@@ -43,7 +44,11 @@ export default function RootLayout({ children }) {
           `
         }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <SecurityGuard>
+          {children}
+        </SecurityGuard>
+      </body>
     </html>
   );
 }
