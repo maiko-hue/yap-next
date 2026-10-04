@@ -1,0 +1,155 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    color: #333;
+}
+
+/* HEADER */
+.movimientos-header {
+    background-color: #742284;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.movimientos-header-icon {
+    font-size: 20px;
+    cursor: pointer;
+    width: 30px;
+}
+
+.movimientos-header-title {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+}
+
+.movimientos-header-right-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* CONTENIDO PRINCIPAL */
+.movimientos-content {
+    padding: 15px 20px;
+    padding-bottom: 40px;
+}
+
+/* BANNER */
+.movimientos-banner {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ESTILOS DE LISTA DE MOVIMIENTOS */
+.month-group {
+    margin-bottom: 15px;
+}
+
+.month-title {
+    color: #742284;
+    font-size: 14.5px;
+    font-weight: 400;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.movement-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.movement-item:active {
+    background-color: #f9f9f9;
+}
+
+.mov-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mov-name {
+    font-size: 15px;
+    color: #111;
+    font-weight: 400;
+}
+
+.mov-time {
+    font-size: 12.5px;
+    color: #888;
+}
+
+.mov-amount {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.amount-red {
+    color: #e53935;
+}
+
+.amount-black {
+    color: #333;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+    font-size: 15px;
+}
+
+/* ANIMACI"N SKELETON */
+.skeleton-wrapper {
+    display: block;
+}
+
+.skeleton {
+    background: #eee;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    border-radius: 4px;
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+    to { background-position-x: -200%; }
+}
+
+.sk-month { width: 110px; height: 18px; margin-bottom: 15px; margin-top: 10px; }
+.sk-name { width: 130px; height: 16px; margin-bottom: 6px; }
+.sk-time { width: 85px; height: 12px; }
+.sk-amount { width: 75px; height: 16px; }
+
+.sk-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
