@@ -203,12 +203,12 @@ export default function EditarDatos() {
               <i className="fa-solid fa-arrow-up-right-from-square arrow-icon-ed"></i>
             </a>
 
-            <div className="setting-item-ed" onClick={() => alert('Módulo en construcción: Sobre esto')}>
+            <div className="setting-item-ed" onClick={() => window.location.href = "/mi_cuenta"}>
               <div className="setting-left-ed">
                 <div className="icon-circle-ed bg-gray-ed"><i className="fa-solid fa-info"></i></div>
                 <div className="setting-text-ed">
-                  <span className="st-title-ed">Información</span>
-                  <span className="st-desc-ed">Créditos y detalles técnicos</span>
+                  <span className="st-title-ed">Mi cuenta</span>
+                    <span className="st-desc-ed">Información de tu cuenta</span>
                 </div>
               </div>
               <i className="fa-solid fa-chevron-right arrow-icon-ed"></i>

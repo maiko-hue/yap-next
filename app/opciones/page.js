@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { auth } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 export default function Opciones() {
   const router = useRouter();
   
   // TOAST
   const [toast, setToast] = useState({ show: false, msg: "" });
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const showToast = (msg) => {
     setToast({ show: true, msg });
     setTimeout(() => setToast({ show: false, msg: "" }), 2000);
@@ -415,7 +418,7 @@ export default function Opciones() {
           <hr className="divider" />
           <div className="section-title">Sistema</div>
           <div className="settings-section">
-            <div className="setting-item" onClick={() => { localStorage.clear(); window.location.reload(); }}>
+            <div className="setting-item" onClick={() => { window.location.reload(); }}>
               <div className="setting-left">
                 <div className="icon-circle bg-teal"><i className="fa-solid fa-arrows-rotate"></i></div>
                 <div className="setting-text">
@@ -435,16 +438,26 @@ export default function Opciones() {
               </div>
               <i className="fa-solid fa-arrow-up-right-from-square arrow-icon"></i>
             </a>
-            <div className="setting-item" onClick={() => showToast('Módulo en construcción')}>
-              <div className="setting-left">
-                <div className="icon-circle bg-gray"><i className="fa-solid fa-circle-info"></i></div>
+            <div className="setting-item" onClick={() => router.push("/mi_cuenta")}>
+                <div className="setting-left">
+                  <div className="icon-circle bg-gray"><i className="fa-solid fa-user"></i></div>
                 <div className="setting-text">
-                  <span className="st-title">Sobre esto</span>
-                  <span className="st-desc">Versión e información</span>
+                  <span className="st-title">Mi cuenta</span>
+                  <span className="st-desc">Información de tu cuenta</span>
                 </div>
               </div>
               <i className="fa-solid fa-chevron-right arrow-icon"></i>
             </div>
+              <div className="setting-item" onClick={() => setShowLogoutModal(true)}>
+                <div className="setting-left">
+                  <div className="icon-circle bg-red"><i className="fa-solid fa-right-from-bracket"></i></div>
+                  <div className="setting-text">
+                    <span className="st-title">Cerrar sesión</span>
+                    <span className="st-desc">Salir de tu cuenta</span>
+                  </div>
+                </div>
+                <i className="fa-solid fa-chevron-right arrow-icon"></i>
+              </div>
           </div>
 
         </div>
@@ -684,7 +697,26 @@ export default function Opciones() {
       {/* TOAST NATIVO */}
       <div id="modalToast" style={{ opacity: toast.show ? 1 : 0 }}>{toast.msg}</div>
 
-      <style dangerouslySetInnerHTML={{__html: `
+      {showLogoutModal && (
+          <div className="loader-overlay show" style={{ zIndex: 10000 }} onClick={(e) => { if (e.target.className.includes('loader-overlay')) setShowLogoutModal(false); }}>
+            <div className="yape-alert-card">
+              <div className="yape-alert-title" style={{ fontSize: '18px', fontWeight: '700', color: '#742385', marginBottom: '10px' }}>Cerrar sesión</div>
+              <div className="yape-alert-text" style={{ fontSize: '14.5px', color: '#555', marginBottom: '20px', lineHeight: '1.4' }}>¿Está usted seguro que quiere salir de la cuenta?</div>
+              <div className="yape-alert-actions" style={{ display: 'flex', width: '100%', gap: '10px' }}>
+                <button className="yape-btn-cancel" onClick={() => setShowLogoutModal(false)} style={{ flex: 1, padding: '12px', borderRadius: '25px', border: '1px solid #ccc', background: 'white', color: '#666', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>Cancelar</button>
+                <button className="yape-btn-confirm" onClick={() => {
+                  localStorage.removeItem("sesion_token_yape");
+                  localStorage.removeItem("sesion_iniciada");
+                  localStorage.removeItem("pase_vip_activo");
+                  signOut(auth).then(() => {
+                    window.location.href = '/';
+                  });
+                }} style={{ flex: 1, padding: '12px', borderRadius: '25px', border: 'none', background: '#00BFA5', color: 'white', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>Sí, salir</button>
+              </div>
+            </div>
+          </div>
+        )}
+        <style dangerouslySetInnerHTML={{__html: `
         .pin-screen-overlay { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 480px; height: 100dvh; background-color: white; z-index: 6000; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; }
         .pin-screen-overlay.show { display: flex; opacity: 1; }
         .pin-header { background-color: #742385; padding: 20px; display: flex; align-items: center; color: white; padding-top: max(20px, env(safe-area-inset-top)); }
