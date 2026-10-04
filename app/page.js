@@ -22,10 +22,11 @@ export default function Home() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   
   const [isLoading, setIsLoading] = useState(false);
+  const isLoggingIn = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && !isLoggingIn.current) {
         router.push('/login_pin');
       }
     });
@@ -91,6 +92,7 @@ export default function Home() {
   };
 
   const iniciarSesion = async () => {
+    isLoggingIn.current = true;
     setIsLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
@@ -130,7 +132,24 @@ export default function Home() {
       <div className="main-container">
         {showSplash && (
           <div id="splash-screen-anim" style={{ opacity: splashOpacity }}>
-            <img src="/img/SplashYapeOficial.gif" alt="Splash" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div className="contenedor-principal">
+              <div className="contenedor-logo">
+                  <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 500.000000 500.000000" preserveAspectRatio="xMidYMid meet">
+                      <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)">
+                          <path d="M1318 2601 c-72 -46 -139 -142 -275 -396 l-48 -90 -60 -7 c-84 -11 -160 -50 -174 -89 -10 -29 -6 -79 6 -79 3 0 18 10 35 21 30 22 118 53 126 44 7 -7 -43 -87 -109 -174 -96 -128 -189 -184 -259 -155 -36 15 -50 8 -50 -27 -1 -83 74 -132 163 -105 107 32 214 152 333 374 l66 122 70 0 c57 0 69 -3 65 -14 -13 -33 -18 -182 -8 -209 14 -35 50 -52 87 -40 l27 9 1 133 c1 121 3 135 20 145 68 38 90 104 33 98 -27 -3 -28 -2 -21 35 9 50 79 306 99 362 11 33 12 47 4 57 -20 24 -81 16 -131 -15z m-42 -267 c-20 -71 -39 -145 -44 -164 -8 -34 -10 -35 -60 -38 -32 -2 -52 1 -52 8 0 32 175 338 187 327 2 -2 -12 -62 -31 -133z"/>
+                          <path d="M1583 2269 c-29 -30 -31 -30 -37 -11 -16 48 -71 38 -81 -16 -7 -39 -108 -506 -125 -579 -16 -67 -13 -91 15 -109 47 -31 57 -18 77 91 10 55 23 124 29 153 l11 54 22 -21 c43 -41 114 -15 161 58 61 97 95 278 66 354 -25 65 -87 77 -138 26z m47 -74 c27 -32 -7 -198 -55 -271 -21 -32 -53 -31 -66 3 -24 63 54 283 100 283 5 0 14 -7 21 -15z"/>
+                          <path d="M2230 2362 c-17 -18 -30 -44 -35 -71 -4 -24 -13 -58 -20 -75 -14 -32 -71 -96 -86 -96 -5 0 -9 26 -9 58 0 77 -16 129 -45 148 -31 20 -75 11 -105 -22 -28 -29 -36 -30 -43 -4 -4 14 -14 20 -35 20 -33 0 -35 -4 -47 -75 -8 -51 -121 -576 -136 -632 -8 -29 -18 -45 -33 -49 -92 -28 -251 -130 -340 -218 -198 -195 -261 -465 -134 -583 74 -69 209 -53 311 37 44 38 132 169 175 261 34 71 96 254 108 313 4 24 14 41 28 47 76 33 778 173 1024 204 28 4 52 9 52 12 0 4 -22 29 -48 57 -27 28 -53 60 -59 70 -11 19 -13 19 -139 2 -217 -30 -531 -84 -689 -120 -82 -18 -151 -32 -153 -31 -3 3 24 152 44 243 l5 23 26 -21 c14 -11 35 -20 47 -20 47 0 118 75 148 156 8 24 21 37 43 44 33 11 84 59 104 98 7 12 15 22 20 22 12 0 41 -109 41 -152 0 -71 -62 -94 -68 -25 -3 31 -7 37 -26 37 -37 0 -60 -34 -57 -83 2 -32 56 -77 92 -77 45 0 111 34 131 67 33 56 32 92 -6 206 -20 59 -36 113 -36 120 0 7 11 28 25 47 30 41 32 66 6 80 -31 16 -51 12 -81 -18z m-245 -151 c7 -34 -10 -136 -32 -195 -18 -47 -50 -86 -70 -86 -46 0 -36 136 17 249 24 50 33 61 54 61 19 0 26 -7 31 -29z m-425 -973 c-53 -132 -110 -228 -175 -295 -53 -55 -82 -65 -109 -37 -50 50 31 234 153 346 58 54 163 115 169 98 2 -5 -15 -55 -38 -112z"/>
+                          <path d="M2570 2754 c-194 -52 -318 -204 -234 -288 33 -33 52 -33 59 -1 3 14 7 36 10 50 16 77 155 165 260 165 95 0 134 -35 135 -118 0 -62 -23 -112 -72 -158 -50 -48 -151 -93 -157 -71 -5 15 12 73 46 166 39 104 36 113 -27 109 -29 -3 -38 -9 -51 -38 -68 -144 -156 -525 -147 -635 3 -37 6 -40 35 -43 47 -5 73 26 73 86 0 76 35 262 50 262 4 0 18 -26 31 -57 96 -243 260 -475 382 -542 85 -47 178 -33 218 33 29 48 25 53 -34 48 -41 -3 -64 1 -102 19 -109 51 -256 228 -345 414 -22 46 -40 88 -40 94 0 5 28 25 61 42 123 66 191 163 192 274 2 159 -147 241 -343 189z"/>
+                          <path d="M3288 2699 c-26 -15 -110 -295 -134 -447 -8 -52 -52 -121 -103 -161 -68 -54 -114 -48 -127 16 -6 31 -4 34 41 53 75 32 106 59 132 118 28 60 27 110 -3 143 -21 23 -74 25 -113 4 -81 -42 -151 -188 -151 -317 0 -104 32 -148 108 -148 58 0 124 38 168 95 l28 38 8 -30 c24 -93 133 -100 206 -13 29 34 73 134 88 197 17 72 12 138 -12 185 -18 34 -65 46 -99 24 -13 -9 -27 -16 -30 -16 -8 0 3 42 38 149 30 91 30 94 12 107 -22 16 -34 17 -57 3z m63 -343 c15 -33 -5 -144 -38 -212 -62 -126 -109 -48 -68 111 29 110 80 159 106 101z m-314 -33 c-7 -40 -54 -93 -83 -93 -17 0 -13 22 14 75 22 44 32 55 55 55 17 0 19 -5 14 -37z"/>
+                          <path d="M3475 1864 c-11 -2 -110 -11 -220 -20 -244 -21 -254 -23 -193 -53 37 -17 55 -20 100 -15 64 7 88 -8 88 -60 l0 -32 183 18 c223 22 223 22 243 53 19 29 13 66 -16 95 -17 17 -32 20 -92 19 -40 -1 -82 -3 -93 -5z"/>
+                          <path d="M3849 2539 c-18 -26 -21 -39 -15 -84 6 -50 4 -55 -20 -74 -37 -29 -44 -27 -44 18 0 51 -39 101 -80 101 -56 0 -118 -36 -150 -87 -89 -141 -105 -316 -33 -373 82 -64 197 28 249 199 11 35 21 50 46 62 18 8 47 34 63 57 27 37 61 53 78 36 3 -3 -8 -33 -24 -67 -57 -121 -62 -221 -13 -253 33 -22 80 -12 120 27 30 29 32 30 38 11 8 -24 52 -37 71 -22 7 6 16 30 20 53 17 110 82 275 120 307 34 28 35 -5 5 -110 -38 -132 -39 -192 -5 -225 29 -30 37 -31 84 -5 66 38 145 170 128 214 -10 26 -21 19 -52 -40 -35 -65 -58 -89 -80 -81 -21 9 -19 20 15 133 42 133 47 177 26 209 -29 45 -92 25 -144 -46 l-31 -41 -3 32 c-4 40 -30 60 -55 44 -12 -7 -25 -44 -40 -110 -30 -132 -47 -175 -92 -225 -73 -83 -82 -8 -16 145 31 72 36 94 28 115 -8 24 -13 26 -61 23 -52 -3 -52 -2 -52 27 0 44 -10 61 -35 61 -15 0 -32 -12 -46 -31z m-149 -160 c0 -31 -9 -36 -28 -17 -13 13 -16 50 -5 61 12 13 33 -15 33 -44z m-40 -87 c36 -20 35 -41 -8 -112 -21 -34 -35 -46 -56 -48 -35 -4 -46 10 -46 64 0 44 25 141 43 162 8 10 13 6 23 -18 7 -17 27 -38 44 -48z"/>
+                      </g>
+                  </svg>
+              </div>
+              <div className="firma">
+                  <span>D</span><span>e</span><span>&nbsp;</span><span>M</span><span>a</span><span>i</span><span>k</span><span>o</span><span>l</span><span>&nbsp;</span><span>E</span><span>s</span><span>l</span><span>e</span><span>i</span><span>t</span><span>e</span><span>r</span>
+              </div>
+            </div>
           </div>
         )}
 
@@ -505,7 +524,20 @@ export default function Home() {
         .btn-telegram { background-color: #229ED9; color: white; width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 10px; text-decoration: none; display: block; }
         .btn-close { background: #f0f4f8; color: var(--brand-purple); width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 800; font-size: 15px; cursor: pointer; }
 
-        #splash-screen-anim { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 9999999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        
+          .contenedor-principal { display: flex; flex-direction: column; align-items: center; }
+          .contenedor-logo { width: 400px; max-width: 90vw; }
+          svg g path { fill: transparent; stroke: #742284; stroke-width: 30; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 15000; stroke-dashoffset: 15000; animation: trazar 1.5s ease-out forwards, rellenar 0.5s ease-in forwards; }
+          svg g path:nth-child(1) { animation-delay: 0s, 1.5s; } svg g path:nth-child(2) { animation-delay: 0.4s, 1.9s; } svg g path:nth-child(3) { animation-delay: 0.8s, 2.3s; } svg g path:nth-child(4) { animation-delay: 1.2s, 2.7s; } svg g path:nth-child(5) { animation-delay: 1.6s, 3.1s; } svg g path:nth-child(6) { animation-delay: 2.0s, 3.5s; } svg g path:nth-child(7) { animation-delay: 2.4s, 3.9s; }
+          @keyframes trazar { 100% { stroke-dashoffset: 0; } } @keyframes rellenar { 100% { fill: #742284; stroke: transparent; } }
+  
+          .firma { font-family: 'Caveat', cursive; font-size: 2.5rem; color: #742284; margin-top: -60px; display: flex; }
+          .firma span { opacity: 0; transform: translateY(10px); animation: aparecerFirmaLetra 0.5s ease-out forwards; }
+          .firma span:nth-child(1) { animation-delay: 4.50s; } .firma span:nth-child(2) { animation-delay: 4.55s; } .firma span:nth-child(4) { animation-delay: 4.65s; } .firma span:nth-child(5) { animation-delay: 4.70s; } .firma span:nth-child(6) { animation-delay: 4.75s; } .firma span:nth-child(7) { animation-delay: 4.80s; } .firma span:nth-child(8) { animation-delay: 4.85s; } .firma span:nth-child(9) { animation-delay: 4.90s; } .firma span:nth-child(11) { animation-delay: 5.00s; } .firma span:nth-child(12) { animation-delay: 5.05s; } .firma span:nth-child(13) { animation-delay: 5.10s; } .firma span:nth-child(14) { animation-delay: 5.15s; } .firma span:nth-child(15) { animation-delay: 5.20s; } .firma span:nth-child(16) { animation-delay: 5.25s; } .firma span:nth-child(17) { animation-delay: 5.30s; } .firma span:nth-child(18) { animation-delay: 5.35s; } 
+          @keyframes aparecerFirmaLetra { 100% { opacity: 1; transform: translateY(0); } }
+
+          #splash-screen-anim { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 9999999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+
         
         @keyframes fillProgress {
             0% { width: 0%; }
