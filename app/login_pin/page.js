@@ -87,17 +87,20 @@ export default function LoginPin() {
                 const customPin = localStorage.getItem("yape_custom_pin");
 
                 if (newPin === "000000") {
-                    setShowErrorScreen(true);
-                } else if (customPin && newPin !== customPin) {
+                      setShowErrorScreen(true);
+                      setCurrentPin("");
+                  } else if (customPin && newPin !== customPin) {
                     setAlertText("Credenciales inválidas. Puede recuperar tu clave en la sección 'Olvido o cambio de clave'.");
                     setShowCustomAlertModal(true);
                     setCurrentPin("");
                 } else {
-                    setShowLoaderModal(true);
                     setTimeout(() => {
-                        localStorage.setItem('sesion_iniciada', 'true');
-                        router.push('/inicio');
-                    }, 2000);
+                        setShowLoaderModal(true);
+                        setTimeout(() => {
+                            localStorage.setItem('sesion_iniciada', 'true');
+                            router.push('/inicio');
+                        }, 2000);
+                    }, 150);
                 }
             }
         }
@@ -210,7 +213,7 @@ export default function LoginPin() {
 
                         <div className="dots-container">
                             {[0, 1, 2, 3, 4, 5].map((index) => (
-                                <div key={index} className={`dot ${index < currentPin.length ? 'active' : ''}`}></div>
+                                <div key={index} className={`pin-dot ${index < currentPin.length ? 'active' : ''}`}></div>
                             ))}
                         </div>
 
@@ -483,18 +486,18 @@ export default function LoginPin() {
                     align-items: center;
                 }
 
-                .dot {
-                    width: 11px;
-                    height: 11px;
-                    background-color: #ccc;
-                    border-radius: 50%;
-                    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                }
+                .pin-dot {
+    width: 11px;
+    height: 11px;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-                .dot.active {
-                    background-color: #999;
-                    transform: scale(1.3);
-                }
+                .pin-dot.active {
+    background-color: #999;
+    transform: scale(1.3);
+}
 
                 .keypad {
                     width: 100%;
@@ -539,8 +542,7 @@ export default function LoginPin() {
 
                 .loader-card {
                     background: white; 
-                    width: 273px; 
-                    height: 130px; 
+                    width: 200px; height: 95px; 
                     border-radius: 12px; 
                     display: flex; 
                     flex-direction: column;
@@ -552,9 +554,9 @@ export default function LoginPin() {
                 }
 
                 .custom-spinner {
-                    width: 38px; height: 38px;
-                    border: 4px solid #e0e0e0;
-                    border-top: 4px solid #00BFA5;
+                    width: 30px; height: 30px;
+                    border: 3px solid #e0e0e0;
+                    border-top: 3px solid #00BFA5;
                     border-radius: 50%;
                     animation: spin 1s linear infinite; 
                     margin-bottom: 15px; 
@@ -563,8 +565,7 @@ export default function LoginPin() {
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
                 .loader-text { 
-                    font-size: 16px; 
-                    font-weight: 700; 
+                    font-size: 14.5px; font-weight: 700; 
                     color: #333333 !important; 
                     line-height: 1.2; 
                     white-space: nowrap; 
@@ -687,7 +688,7 @@ export default function LoginPin() {
                 .access-text { font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.4; }
 
                 .access-btn {
-                    width: 100%; padding: 14px; border-radius: 25px; font-size: 16px; font-weight: 700;
+                    width: 100%; padding: 14px; border-radius: 25px; font-size: 14.5px; font-weight: 700;
                     text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px;
                     margin-bottom: 12px; transition: transform 0.1s;
                 }

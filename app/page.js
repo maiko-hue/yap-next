@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Home() {
   const router = useRouter();
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => { if (typeof window !== "undefined") { return !localStorage.getItem("sesion_token_yape"); } return true; });
   const [splashOpacity, setSplashOpacity] = useState(1);
   const [showInstallScreen, setShowInstallScreen] = useState(false);
   const [installPromptEvent, setInstallPromptEvent] = useState(null);
@@ -34,12 +34,13 @@ export default function Home() {
   }, [router]);
 
   useEffect(() => {
+    if (!showSplash) return;
     const timer = setTimeout(() => {
       setSplashOpacity(0);
       setTimeout(() => setShowSplash(false), 500);
     }, 6500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [showSplash]);
 
   useEffect(() => {
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
@@ -199,9 +200,7 @@ export default function Home() {
             <img src="/img/logo_yape_header.png" alt="Logo" />
         </div>
 
-        <div className="welcome-title">
-            ¡Bienvenido!<br/>Tenemos funciones nuevas<br/>y mejoradas para ti...
-        </div>
+        
 
         <div className="action-box">
             <button className="btn-google" onClick={iniciarSesion}>
@@ -221,7 +220,7 @@ export default function Home() {
                 <i className="fa-brands fa-android" style={{ fontSize: '18px' }}></i> Instalar APK
             </a>
             
-            <button className="btn-help" onClick={() => setIsHelpOpen(true)}>¿Necesitas ayuda?</button>
+                <button className="btn-help" onClick={() => setIsHelpOpen(true)}>¿Necesitas ayuda?</button>
         </div>
 
         <div className="carousel-wrapper">
@@ -243,7 +242,7 @@ export default function Home() {
         </div>
 
         {isTermsOpen && (
-          <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if(e.target.className.includes('modal-overlay')) setIsTermsOpen(false); }}>
+          <div className="modal-overlay show" style={{ display: 'flex' }} onClick={(e) => { if(e.target === e.currentTarget) setIsTermsOpen(false); }}>
               <div className="modal-card">
                   <div className="modal-title">Términos y Condiciones</div>
                   <div className="modal-body">
@@ -263,7 +262,7 @@ export default function Home() {
         )}
 
         {isHelpOpen && (
-          <div className="modal-overlay" style={{ display: 'flex' }} onClick={(e) => { if(e.target.className.includes('modal-overlay')) setIsHelpOpen(false); }}>
+          <div className="modal-overlay show" style={{ display: 'flex' }} onClick={(e) => { if(e.target === e.currentTarget) setIsHelpOpen(false); }}>
               <div className="modal-card" style={{ textAlign: 'left', paddingBottom: '20px' }}>
                   <div className="modal-title" style={{ textAlign: 'center', color: 'var(--brand-purple)' }}>Guía de Instalación</div>
                   <div className="modal-body" style={{ marginBottom: '5px' }}>
@@ -292,7 +291,7 @@ export default function Home() {
         )}
 
         {isLoading && (
-          <div className="modal-overlay" style={{ display: 'flex', zIndex: 9999999 }}>
+          <div className="modal-overlay show" style={{ display: 'flex', zIndex: 9999999 }}>
             <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
               <path d="M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z" fill="#6A2080">
                  <animate attributeName="d" values="M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z; M 50 50 L 90 45 A 40 40 0 1 0 90 55 Z; M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z" dur="0.5s" repeatCount="indefinite" />
