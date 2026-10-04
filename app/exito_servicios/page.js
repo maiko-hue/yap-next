@@ -103,7 +103,7 @@ function ExitoServiciosContent() {
                     )}
 
                     {!isPhotoReady && (
-                        <div className="close-btn" onClick={() => router.push('/')}>
+                        <div className="close-btn" onClick={() => router.push('/inicio')}>
                             <i className="fa-solid fa-xmark"></i>
                         </div>
                     )}

@@ -180,7 +180,7 @@ function ExitoContent() {
             <img src="/img/LogoYape.svg" alt="Yape" className="exito-logo-header-img" />
           )}
           
-          <a onClick={() => router.push('/')} className="exito-close-btn" style={{ visibility: isPhotoReady ? 'hidden' : 'visible' }}>
+          <a onClick={() => router.push('/inicio')} className="exito-close-btn" style={{ visibility: isPhotoReady ? 'hidden' : 'visible' }}>
             <i className="fa-solid fa-xmark"></i>
           </a>
         </div>

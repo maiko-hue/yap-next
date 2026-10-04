@@ -278,8 +278,8 @@ function MontoContent() {
   return (
     <div className="container-monto">
       <div className="header-monto">
-        <a onClick={() => router.push('/')} className="back-btn-monto"><i className="fa-solid fa-chevron-left"></i> Yapear a</a>
-        <a onClick={() => router.push('/')} className="close-btn-monto"><i className="fa-solid fa-xmark"></i></a>
+        <a onClick={() => router.push('/inicio')} className="back-btn-monto"><i className="fa-solid fa-chevron-left"></i> Yapear a</a>
+        <a onClick={() => router.push('/inicio')} className="close-btn-monto"><i className="fa-solid fa-xmark"></i></a>
       </div>
       
       <div className="content-monto">
@@ -421,7 +421,7 @@ function MontoContent() {
         .amount-input-monto::placeholder { color: #742284; }
         .limit-text-monto { background-color: #f4f4f4; color: #888; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; margin: 0 20px 20px 20px; }
         
-        .bottom-section-monto { width: 100%; padding-bottom: max(60px, env(safe-area-inset-bottom)); flex-shrink: 0; background-color: white; z-index: 10; }
+        .bottom-section-monto { width: 100%; padding-bottom: max(20px, env(safe-area-inset-bottom)); flex-shrink: 0; background-color: white; z-index: 10; }
         .message-container-monto { width: 100%; padding: 0 25px; position: relative; }
         .message-input-monto { width: 100%; border: none; text-align: center; font-size: 16px; color: #333; font-family: inherit; padding-bottom: 15px; background: transparent; }
         .message-input-monto::placeholder { color: #aaa; outline: none; }

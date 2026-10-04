@@ -233,7 +233,7 @@ export default function Opciones() {
         
         {/* HEADER HERO */}
         <div className="header-hero">
-          <i className="fa-solid fa-arrow-left back-icon" onClick={() => router.push('/')}></i>
+          <i className="fa-solid fa-arrow-left back-icon" onClick={() => router.push('/inicio')}></i>
           <img src="/img/mascota.png" alt="Opciones" className="logo-img-custom" />
         </div>
 

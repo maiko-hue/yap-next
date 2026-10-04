@@ -21,7 +21,7 @@ export default function Servicios() {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
             <div className="container">
                 <div className="header-hero">
-                    <i className="fa-solid fa-arrow-left back-icon" onClick={() => router.push('/')}></i>
+                    <i className="fa-solid fa-arrow-left back-icon" onClick={() => router.push('/inicio')}></i>
                     <img src="/img/secondlogo.png" alt="Logo" className="logo-img-custom" />
                 </div>
 
