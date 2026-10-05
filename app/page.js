@@ -322,7 +322,7 @@ export default function Home() {
             overflow-y: auto;
             overflow-x: hidden;
             position: relative;
-            max-width: 480px;
+            max-width: 100%;
             margin: 0 auto;
             font-family: 'Nunito', sans-serif;
         }

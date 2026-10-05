@@ -496,7 +496,7 @@ export default function Inicio() {
       </div>
 
       {/* PANEL YAPEAR */}
-      <div id="pantalla-yapear" style={{ display: showYapear ? 'flex' : 'none', position: 'fixed', top: 0, left: 0, width: '100%', height: '100dvh', backgroundColor: 'white', zIndex: 2000, flexDirection: 'column' }}>
+      <div id="pantalla-yapear" style={{ display: showYapear ? 'flex' : 'none', position: 'fixed', top: 0, left: 0, width: '100%', height: 'calc(100dvh / var(--app-zoom, 1))', backgroundColor: 'white', zIndex: 2000, flexDirection: 'column' }}>
           <div className="top-bar">
               <div className="close-btn" onClick={() => { setShowYapear(false); setSearchYapear(''); }}>
                   <i className="fa-solid fa-xmark"></i>

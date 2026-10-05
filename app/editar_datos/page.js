@@ -221,7 +221,7 @@ export default function EditarDatos() {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        .container-ed { max-width: 480px; margin: 0 auto; min-height: 100dvh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; position: relative; background-color: #f2f4f6; }
+        .container-ed { max-width: 100%; margin: 0 auto; min-height: calc(100dvh / var(--app-zoom, 1)); height: calc(100dvh / var(--app-zoom, 1)); overflow-y: auto; display: flex; flex-direction: column; position: relative; background-color: #f2f4f6; }
         .header-hero-ed { background: linear-gradient(135deg, #742385 0%, #511973 100%); height: 200px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(81, 25, 115, 0.3); flex-shrink: 0; }
         .back-icon-ed { position: absolute; top: 25px; left: 25px; color: white; font-size: 24px; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
         .back-icon-ed:active { background: rgba(255,255,255,0.4); }

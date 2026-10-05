@@ -735,7 +735,7 @@ export default function Opciones() {
           </div>
         )}
         <style dangerouslySetInnerHTML={{__html: `
-        .pin-screen-overlay { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 480px; height: 100dvh; background-color: white; z-index: 6000; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; }
+        .pin-screen-overlay { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 100%; height: calc(100dvh / var(--app-zoom, 1)); background-color: white; z-index: 6000; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; }
         .pin-screen-overlay.show { display: flex; opacity: 1; }
         .pin-header { background-color: #742385; padding: 20px; display: flex; align-items: center; color: white; padding-top: max(20px, env(safe-area-inset-top)); }
         .pin-header-icon { font-size: 20px; cursor: pointer; padding: 5px; margin-right: 15px; }
@@ -752,7 +752,7 @@ export default function Opciones() {
         .yape-alert-actions-native { display: flex; justify-content: flex-end; width: 100%; }
         .yape-btn-text-only { background: transparent; border: none; color: #00BFA5; font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; padding: 8px; transition: 0.2s; }
         .yape-btn-text-only:active { background: #f0f0f0; border-radius: 4px; }
-        .container-opciones { max-width: 480px; margin: 0 auto; min-height: 100dvh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; position: relative; background-color: #f2f4f6; }
+        .container-opciones { max-width: 100%; margin: 0 auto; min-height: calc(100dvh / var(--app-zoom, 1)); height: calc(100dvh / var(--app-zoom, 1)); overflow-y: auto; display: flex; flex-direction: column; position: relative; background-color: #f2f4f6; }
         .header-hero { background: linear-gradient(135deg, #742385 0%, #511973 100%); height: 220px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(81, 25, 115, 0.3); flex-shrink: 0; padding-bottom: 20px; }
         .back-icon { position: absolute; top: 25px; left: 25px; color: white; font-size: 24px; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background 0.3s; z-index: 10; }
         .back-icon:active { background: rgba(255,255,255,0.4); }
@@ -784,7 +784,7 @@ export default function Opciones() {
 
         .modal-overlay-opciones { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 5000; display: none; justify-content: center; align-items: flex-end; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay-opciones.show { display: flex; opacity: 1; }
-        .modal-panel-opciones { background-color: white; width: 100%; max-width: 480px; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px 20px; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); max-height: 85vh; overflow-y: auto; }
+        .modal-panel-opciones { background-color: white; width: 100%; max-width: 100%; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px 20px; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); max-height: 85vh; overflow-y: auto; }
         .modal-overlay-opciones.show .modal-panel-opciones { transform: translateY(0); }
         .modal-header-opciones { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0;}
         .modal-title-opciones { font-size: 18px; font-weight: 700; color: #333; }

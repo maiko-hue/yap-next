@@ -402,7 +402,7 @@ function MontoContent() {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        .container-monto { width: 100%; height: 100dvh; display: flex; flex-direction: column; position: relative; background-color: white; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .container-monto { width: 100%; height: calc(100dvh / var(--app-zoom, 1)); display: flex; flex-direction: column; position: relative; background-color: white; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .header-monto { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; flex-shrink: 0; }
         .back-btn-monto { display: flex; align-items: center; text-decoration: none; color: #444; font-weight: 700; font-size: 17px; cursor: pointer; }
         .back-btn-monto i { margin-right: 10px; color: #666; font-size: 18px; }
@@ -434,7 +434,7 @@ function MontoContent() {
         .btn-primary-monto.active { background-color: #00BFA5; color: white; pointer-events: all; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); }
         .btn-primary-monto.active:active { transform: scale(0.98); }
         
-        .loader-overlay-monto { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background-color: rgba(0,0,0,0.6); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .loader-overlay-monto { position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1)); background-color: rgba(0,0,0,0.6); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .loader-overlay-monto.show { opacity: 1; pointer-events: all; }
         .loader-card-monto { background: white; width: 273px; height: 117px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .custom-spinner-monto { width: 38px; height: 38px; border: 4px solid #e0e0e0; border-top: 4px solid #00BFA5; border-radius: 50%; animation: spin-monto 1.5s linear infinite; margin-bottom: 12px; }
@@ -471,7 +471,7 @@ function MontoContent() {
 
 export default function MontoPage() {
   return (
-    <Suspense fallback={<div style={{height:'100dvh', background:'white'}}></div>}>
+    <Suspense fallback={<div style={{height:'calc(100dvh / var(--app-zoom, 1))', background:'white'}}></div>}>
       <MontoContent />
     </Suspense>
   );

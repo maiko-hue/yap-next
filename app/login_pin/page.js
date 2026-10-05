@@ -335,7 +335,7 @@ export default function LoginPin() {
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                     background-color: #742284;
                     color: white;
-                    height: 100dvh;
+                    height: calc(100dvh / var(--app-zoom, 1));
                     overflow: hidden;
                     display: flex;
                     flex-direction: column;
@@ -533,7 +533,7 @@ export default function LoginPin() {
                 }
 
                 .loader-overlay {
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+                    position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1));
                     background-color: rgba(0,0,0,0.6); z-index: 3000;
                     display: flex; justify-content: center; align-items: center;
                     opacity: 0; pointer-events: none; transition: opacity 0.3s;
@@ -572,7 +572,7 @@ export default function LoginPin() {
                 }
 
                 .bio-overlay {
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+                    position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1));
                     background-color: rgba(0,0,0,0.6); z-index: 4000;
                     justify-content: center; align-items: flex-end;
                     backdrop-filter: blur(3px);
@@ -665,7 +665,7 @@ export default function LoginPin() {
                 }
 
                 .access-overlay {
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+                    position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1));
                     background-color: rgba(0,0,0,0.7); z-index: 6000;
                     justify-content: center; align-items: center;
                     backdrop-filter: blur(4px);
@@ -699,7 +699,7 @@ export default function LoginPin() {
                 .access-btn.secondary { background-color: #0088cc; color: white; margin-bottom: 0; }
 
                 .yape-alert-overlay {
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+                    position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1));
                     background-color: rgba(0,0,0,0.6); z-index: 7000;
                     justify-content: center; align-items: center;
                 }

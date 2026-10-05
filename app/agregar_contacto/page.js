@@ -179,14 +179,14 @@ export default function AgregarContacto() {
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
                     background-color: var(--bg-gray); 
                     color: var(--text-dark); 
-                    height: 100dvh;
+                    height: calc(100dvh / var(--app-zoom, 1));
                     overflow-y: auto;
                 }
 
                 .container { 
-                    max-width: 480px; 
+                    max-width: 100%; 
                     margin: 0 auto; 
-                    height: 100dvh; 
+                    height: calc(100dvh / var(--app-zoom, 1)); 
                     display: flex; 
                     flex-direction: column; 
                     position: relative;

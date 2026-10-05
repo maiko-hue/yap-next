@@ -35,15 +35,26 @@ export default function RootLayout({ children }) {
             }
             const zl = localStorage.getItem('yape_zoom_level');
             if (zl) {
-              let meta = document.querySelector('meta[name="viewport"]');
-              if (meta) {
-                meta.content = 'width=device-width, initial-scale=' + zl + ', maximum-scale=' + zl + ', user-scalable=no, viewport-fit=cover';
-              }
+              document.documentElement.style.setProperty('--app-zoom', zl);
+              document.documentElement.style.zoom = zl;
             }
           `
         }} />
         <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
+            document.addEventListener('touchstart', function(event) {
+              if (event.touches.length > 1) {
+                event.preventDefault();
+              }
+            }, { passive: false });
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+              const now = (new Date()).getTime();
+              if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+              }
+              lastTouchEnd = now;
+            }, { passive: false });
             document.addEventListener('keydown', function(event) {
               if (event.ctrlKey && (event.key === '=' || event.key === '-' || event.key === '0')) {
                 event.preventDefault();

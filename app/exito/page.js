@@ -289,7 +289,7 @@ function ExitoContent() {
 
 export default function ExitoPage() {
   return (
-    <Suspense fallback={<div style={{height:'100dvh', background:'#742284'}}></div>}>
+    <Suspense fallback={<div style={{height:'calc(100dvh / var(--app-zoom, 1))', background:'#742284'}}></div>}>
       <ExitoContent />
     </Suspense>
   );

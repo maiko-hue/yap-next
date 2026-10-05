@@ -233,9 +233,9 @@ export default function EditarVoucher() {
           }
           
           .container {
-            max-width: 480px; 
+            max-width: 100%; 
             margin: 0 auto; 
-            height: 100dvh; 
+            height: calc(100dvh / var(--app-zoom, 1)); 
             display: flex; 
             flex-direction: column; 
             position: relative;
