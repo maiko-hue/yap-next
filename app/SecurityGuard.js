@@ -27,13 +27,19 @@ export default function SecurityGuard({ children }) {
     setOverlay(null);
   };
 
-  // REPARACIÓN: Asegurar que el diseño de iOS se aplique en el cliente (Next.js puede limpiar la clase al hidratar)
+  // REPARACIÓN: Asegurar que el diseño de iOS y el Zoom persistan en el cliente después de la hidratación
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (localStorage.getItem('yape_ios_spinner') === 'true') {
         document.documentElement.classList.add('ios-mode');
       } else {
         document.documentElement.classList.remove('ios-mode');
+      }
+
+      const savedZoom = localStorage.getItem('yape_zoom_level');
+      if (savedZoom) {
+        document.documentElement.style.setProperty('--app-zoom', savedZoom);
+        document.documentElement.style.zoom = savedZoom;
       }
     }
   }, []);

@@ -4,8 +4,10 @@
 .exito-banner-wrapper {
   position: relative;
   width: 100%;
-  margin: 15px auto 0 auto;
-  height: 145px;
+  margin: 15px auto 10px auto;
+  aspect-ratio: 2.2 / 1;
+  min-height: 135px;
+  max-height: 170px;
   border-radius: 15px;
   z-index: 10;
 }
@@ -32,7 +34,7 @@
   z-index: 1;
   pointer-events: none;
 }
-.exito-logo-header-img { margin-top: 30px; margin-left: 18px; height: 65px; object-fit: contain; display: block; pointer-events: none; }
+.exito-logo-header-img { margin-top: 25px; margin-left: 18px; height: 55px; object-fit: contain; display: block; pointer-events: none; }
 .exito-close-btn { width: 30px; margin-top: -34px; height: 30px; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; text-decoration: none; cursor: pointer; }
 .exito-success-card {
   margin-left: auto;
