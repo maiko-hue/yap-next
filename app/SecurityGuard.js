@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { auth, db } from './firebase';
@@ -13,6 +13,9 @@ export default function SecurityGuard({ children }) {
 
   const esIndex = pathname === '/';
 
+  // VALIDACIÓN SÍNCRONA: Si ya está activo, ocultamos el index al instante
+  const isVip = typeof window !== 'undefined' ? localStorage.getItem("pase_vip_activo") === "true" : false;
+
   const expulsarUsuario = async () => {
     localStorage.removeItem("pase_vip_activo");
     localStorage.removeItem("sesion_iniciada");
@@ -25,6 +28,12 @@ export default function SecurityGuard({ children }) {
   };
 
   useEffect(() => {
+    // Si estamos en el index y ya hay pase_vip_activo, redirigimos inmediatamente sin esperar a Firebase
+    if (esIndex && isVip) {
+      router.push('/login_pin');
+      return;
+    }
+
     let vigilanteActivo = null;
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -102,6 +111,12 @@ export default function SecurityGuard({ children }) {
   }, [pathname]);
 
   if (!esIndex && isChecking) {
+    return <div style={{opacity: 0, width: '100%', height: '100dvh', backgroundColor: 'white'}}></div>;
+  }
+
+  // Si estamos en el index y el usuario es VIP, mostramos una pantalla blanca (o nula) 
+  // para ocultar el destello de la página de inicio mientras se redirige a login_pin.
+  if (esIndex && isVip) {
     return <div style={{opacity: 0, width: '100%', height: '100dvh', backgroundColor: 'white'}}></div>;
   }
 
