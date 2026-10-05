@@ -6,11 +6,13 @@
   width: 96%;
   max-width: 400px;
   margin: 15px auto 0 auto;
-  height: auto;
-  aspect-ratio: 2.15;
   border-radius: 15px;
-  overflow: hidden;
   z-index: 10;
+}
+.exito-banner-wrapper::before {
+  content: "";
+  display: block;
+  padding-bottom: 46.5%;
 }
 .exito-header {
   position: absolute;
@@ -31,6 +33,7 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
+  border-radius: 15px;
   z-index: 1;
   pointer-events: none;
 }
