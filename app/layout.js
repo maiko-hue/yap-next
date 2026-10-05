@@ -34,11 +34,11 @@ export default function RootLayout({ children }) {
               document.documentElement.classList.add('ios-mode');
             }
             const zl = localStorage.getItem('yape_zoom_level');
-            if (zl && zl !== '1') {
-              
-              document.documentElement.style.setProperty('--app-zoom', zl);
-            } else {
-              document.documentElement.style.setProperty('--app-zoom', '1');
+            if (zl) {
+              let meta = document.querySelector('meta[name="viewport"]');
+              if (meta) {
+                meta.content = 'width=device-width, initial-scale=' + zl + ', maximum-scale=' + zl + ', user-scalable=no, viewport-fit=cover';
+              }
             }
           `
         }} />
@@ -64,9 +64,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SecurityGuard>
-          <div id="zoom-wrapper">
-            {children}
-          </div>
+          {children}
         </SecurityGuard>
       </body>
     </html>
