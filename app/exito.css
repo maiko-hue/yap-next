@@ -5,7 +5,7 @@
   position: relative;
   width: 100%;
   margin: 15px auto 0 auto;
-  height: clamp(120px, 22dvh, 180px);
+  height: 145px;
   border-radius: 15px;
   z-index: 10;
 }
@@ -32,7 +32,7 @@
   z-index: 1;
   pointer-events: none;
 }
-.exito-logo-header-img { margin-top: clamp(20px, 5dvh, 45px); margin-left: 18px; height: clamp(50px, 10dvh, 80px); object-fit: contain; display: block; pointer-events: none; }
+.exito-logo-header-img { margin-top: 30px; margin-left: 18px; height: 65px; object-fit: contain; display: block; pointer-events: none; }
 .exito-close-btn { width: 30px; margin-top: -34px; height: 30px; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; text-decoration: none; cursor: pointer; }
 .exito-success-card {
   margin-left: auto;

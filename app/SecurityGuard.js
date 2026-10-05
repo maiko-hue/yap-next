@@ -27,6 +27,17 @@ export default function SecurityGuard({ children }) {
     setOverlay(null);
   };
 
+  // REPARACIÓN: Asegurar que el diseño de iOS se aplique en el cliente (Next.js puede limpiar la clase al hidratar)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('yape_ios_spinner') === 'true') {
+        document.documentElement.classList.add('ios-mode');
+      } else {
+        document.documentElement.classList.remove('ios-mode');
+      }
+    }
+  }, []);
+
   useEffect(() => {
     // Si estamos en el index y ya hay pase_vip_activo, redirigimos inmediatamente sin esperar a Firebase
     if (esIndex && isVip) {
