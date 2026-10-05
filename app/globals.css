@@ -850,10 +850,10 @@
 .skeleton-box-monto { width: 140px; height: 18px; background-color: #e2e5e7; border-radius: 6px; margin-bottom: 2px; position: relative; overflow: hidden; }
 .skeleton-box-monto::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: shimmer 1.5s infinite; }
 .recipient-name-monto { font-size: 22px; font-weight: 700; color: var(--brand-purple); border: none; text-align: center; background: transparent; width: 100%; margin-bottom: 2px; font-family: inherit; display: none; outline: none; }
-.recipient-number-monto { font-size: 15px; color: #888; font-weight: 600; margin-bottom: 40px; letter-spacing: 1px; }
+.recipient-number-monto { font-size: 15px; color: #888; font-weight: 600; margin-bottom: clamp(10px, 4dvh, 40px); letter-spacing: 1px; }
 .amount-wrapper-monto { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; width: 100%; }
-.currency-symbol-monto { font-size: 45px; font-weight: 500; color: var(--brand-lilac); margin-right: 5px; margin-bottom: 8px; transition: #E3B2EC; }
-.amount-input-monto { font-size: 85px; font-weight: 500; color: var(--brand-purple); border: none; width: 1ch; text-align: left; background: transparent; font-family: inherit; line-height: 1; padding: 0; caret-color: var(--brand-purple); outline: none; }
+.currency-symbol-monto { font-size: clamp(25px, 6dvh, 45px); font-weight: 500; color: var(--brand-lilac); margin-right: 5px; margin-bottom: 8px; transition: #E3B2EC; }
+.amount-input-monto { font-size: clamp(45px, 12dvh, 85px); font-weight: 500; color: var(--brand-purple); border: none; width: 1ch; text-align: left; background: transparent; font-family: inherit; line-height: 1; padding: 0; caret-color: var(--brand-purple); outline: none; }
 .amount-input-monto::placeholder { color: #742284; }
 .limit-text-monto { background-color: #f4f4f4; color: #888; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; margin: 0 20px 20px 20px; }
 .bottom-section-monto { width: 100%; padding-bottom: max(60px, env(safe-area-inset-bottom)); flex-shrink: 0; background-color: white; z-index: 10; }
