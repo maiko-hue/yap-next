@@ -202,6 +202,8 @@ export default function Opciones() {
   const handleZoom = (level) => {
     setZoomLevel(level);
     localStorage.setItem('yape_zoom_level', level);
+      document.documentElement.style.zoom = level;
+      document.documentElement.style.setProperty('--app-zoom', level);
     showToast("Tamaño de Inicio actualizado");
   };
 

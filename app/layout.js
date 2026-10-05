@@ -33,6 +33,13 @@ export default function RootLayout({ children }) {
             if (localStorage.getItem('yape_ios_spinner') === 'true') {
               document.documentElement.classList.add('ios-mode');
             }
+            const zl = localStorage.getItem('yape_zoom_level');
+            if (zl && zl !== '1') {
+              document.documentElement.style.zoom = zl;
+              document.documentElement.style.setProperty('--app-zoom', zl);
+            } else {
+              document.documentElement.style.setProperty('--app-zoom', '1');
+            }
           `
         }} />
         <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{

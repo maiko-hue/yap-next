@@ -45,7 +45,7 @@ export default function Inicio() {
 
   useEffect(() => {
     // Splash screen timer
-    const zl = localStorage.getItem("yape_zoom_level") || "1"; setZoomLevel(zl); const animSpeed = typeof window !== "undefined" ? parseFloat(localStorage.getItem("yape_anim_speed") || "1") : 1;
+    const animSpeed = typeof window !== "undefined" ? parseFloat(localStorage.getItem("yape_anim_speed") || "1") : 1;
     const timer = setTimeout(() => {
       setShowSplash(false);
       const popupPref = localStorage.getItem('yape_show_popup');
@@ -328,7 +328,7 @@ export default function Inicio() {
         </div>
       </div>
 
-      <div className="app-container" style={{ zoom: zoomLevel, height: zoomLevel !== "1" ? `calc(100dvh / ${zoomLevel})` : "100dvh" }}>
+      <div className="app-container">
         
         {/* HEADER */}
         <div className="header">
