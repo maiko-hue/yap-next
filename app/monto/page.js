@@ -407,19 +407,19 @@ function MontoContent() {
         .back-btn-monto { display: flex; align-items: center; text-decoration: none; color: #444; font-weight: 700; font-size: 17px; cursor: pointer; }
         .back-btn-monto i { margin-right: 10px; color: #666; font-size: 18px; }
         .close-btn-monto { color: #666; font-size: 26px; text-decoration: none; font-weight: bold; cursor: pointer; }
-        .content-monto { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: clamp(5px, 2dvh, 20px); overflow-y: auto; min-height: 0; }
+        .content-monto { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 20px; overflow-y: auto; min-height: 0; }
         
         .skeleton-box-monto { width: 140px; height: 18px; background-color: #e2e5e7; border-radius: 6px; margin-bottom: 2px; position: relative; overflow: hidden; }
         .skeleton-box-monto::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: shimmer-monto 1.5s infinite; }
         @keyframes shimmer-monto { 100% { left: 200%; } }
 
         .recipient-name-monto { font-size: 22px; font-weight: 700; color: #742284; border: none; text-align: center; background: transparent; width: 100%; margin-bottom: 2px; font-family: inherit; }
-        .recipient-number-monto { font-size: 15px; color: #888; font-weight: 600; margin-bottom: clamp(10px, 4dvh, 40px); letter-spacing: 1px; }
-        .amount-wrapper-monto { display: flex; align-items: center; justify-content: center; margin-bottom: clamp(5px, 2dvh, 15px); width: 100%; }
-        .currency-symbol-monto { font-size: clamp(25px, 6dvh, 45px); font-weight: 500; margin-right: 5px; margin-bottom: 8px; transition: color 0.3s; }
-        .amount-input-monto { font-size: clamp(45px, 12dvh, 85px); font-weight: 500; color: #742284; border: none; text-align: left; background: transparent; font-family: inherit; line-height: 1; padding: 0; caret-color: #742284; }
+        .recipient-number-monto { font-size: 15px; color: #888; font-weight: 600; margin-bottom: 40px; letter-spacing: 1px; }
+        .amount-wrapper-monto { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; width: 100%; }
+        .currency-symbol-monto { font-size: 45px; font-weight: 500; margin-right: 5px; margin-bottom: 8px; transition: color 0.3s; }
+        .amount-input-monto { font-size: 85px; font-weight: 500; color: #742284; border: none; text-align: left; background: transparent; font-family: inherit; line-height: 1; padding: 0; caret-color: #742284; }
         .amount-input-monto::placeholder { color: #742284; }
-        .limit-text-monto { background-color: #f4f4f4; color: #888; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; margin: 0 20px clamp(5px, 2dvh, 20px) 20px; }
+        .limit-text-monto { background-color: #f4f4f4; color: #888; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; margin: 0 20px 20px 20px; }
         
         .bottom-section-monto { width: 100%; padding-bottom: max(20px, env(safe-area-inset-bottom)); flex-shrink: 0; background-color: white; z-index: 10; }
         .message-container-monto { width: 100%; padding: 0 25px; position: relative; }
@@ -428,7 +428,7 @@ function MontoContent() {
         .divider-line-monto { width: 90%; height: 1px; background-color: #e0e0e0; margin: 0 auto 20px auto; }
         
         .footer-monto { padding: 0 20px; display: flex; gap: 15px; background-color: white; }
-        .btn-monto { flex: 1; padding: clamp(10px, 2dvh, 16px); border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; border: none; transition: all 0.2s; }
+        .btn-monto { flex: 1; padding: 16px; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; border: none; transition: all 0.2s; }
         .btn-outline-monto { background-color: white; border: 1px solid #00BFA5; color: #00BFA5; }
         .btn-primary-monto { background-color: #e0e0e0; color: white; pointer-events: none; }
         .btn-primary-monto.active { background-color: #00BFA5; color: white; pointer-events: all; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); }

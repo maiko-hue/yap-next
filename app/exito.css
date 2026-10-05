@@ -1,19 +1,54 @@
 .exito-body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(180deg, #660185 0%, #5D037E 100%); background-attachment: fixed; color: #333; min-height: calc(100dvh / var(--app-zoom, 1)); width: 100%; overflow-x: hidden; position: relative; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-.exito-container { width: 100%; min-height: calc(100dvh / var(--app-zoom, 1)); display: flex; flex-direction: column; position: relative; padding: 10px 15px; z-index: 10; }
-.exito-header { display: flex; justify-content: space-between; align-items: center; padding: 0px 5px 5px 5px; position: relative; z-index: 30; }
-.exito-top-bg-banner { position: absolute; top: 15px; left: 2%; width: 96%; height: clamp(110px, 20dvh, 180px); border-radius: 15px; object-fit: cover; object-position: top center; z-index: 1; pointer-events: none; }
-.exito-logo-header-img { margin-top: clamp(15px, 4dvh, 45px); margin-left: 18px; height: clamp(40px, 8dvh, 80px); object-fit: contain; display: block; pointer-events: none; }
+.exito-container {
+  align-items: center; width: 100%; min-height: calc(100dvh / var(--app-zoom, 1)); display: flex; flex-direction: column; position: relative; padding: 10px 15px; z-index: 10; }
+.exito-banner-wrapper {
+  position: relative;
+  width: 96%;
+  max-width: 400px;
+  margin: 15px auto 0 auto;
+  height: auto;
+  aspect-ratio: 2.15;
+  border-radius: 15px;
+  overflow: hidden;
+  z-index: 10;
+}
+.exito-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 5px 5px 5px;
+  z-index: 30;
+}
+.exito-top-bg-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 1;
+  pointer-events: none;
+}
+.exito-logo-header-img { margin-top: 45px; margin-left: 18px; height: 80px; object-fit: contain; display: block; pointer-events: none; }
 .exito-close-btn { width: 30px; margin-top: -34px; height: 30px; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; text-decoration: none; cursor: pointer; }
-.exito-success-card { margin-top: clamp(30px, 6dvh, 65px); background-color: white; border-radius: 20px; padding: clamp(10px, 2dvh, 15px) 20px clamp(10px, 2dvh, 20px) 20px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; position: relative; z-index: 5; }
+.exito-success-card {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto; margin-top: 10px; background-color: white; border-radius: 20px; padding: 15px 20px 20px 20px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; position: relative; z-index: 5; }
 .exito-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
 .exito-yapeaste-title { color: #742284; font-size: 24px; font-weight: 700; }
 .exito-share-btn { display: flex; align-items: center; color: #00BFA5; font-weight: 700; font-size: 15px; cursor: pointer; background: none; border: none; }
 .exito-icon-share { width: 16px; height: 16px; margin-right: 5px; object-fit: contain; pointer-events: none; }
 .exito-amount-section { margin-bottom: 10px; }
-.exito-currency { font-size: clamp(18px, 3dvh, 25px); font-weight: 600; color: #333333; vertical-align: top; margin-right: 2px; }
-.exito-amount-value { font-size: clamp(32px, 6dvh, 50px); font-weight: 510; color: #333; line-height: 1; }
+.exito-currency { font-size: 25px; font-weight: 600; color: #333333; vertical-align: top; margin-right: 2px; }
+.exito-amount-value { font-size: 50px; font-weight: 510; color: #333; line-height: 1; }
 .exito-recipient-name { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 5px; }
-.exito-date-time { font-size: 14px; color: #777; margin-bottom: clamp(5px, 2dvh, 15px); display: flex; align-items: center; }
+.exito-date-time { font-size: 14px; color: #777; margin-bottom: 15px; display: flex; align-items: center; }
 .exito-icon-datetime { width: 14px; height: 14px; margin-right: 5px; object-fit: contain; opacity: 0.6; pointer-events: none; }
 .exito-separator { margin: 0 8px; color: #ddd; }
 .exito-message-bubble { background-color: #f2f3f5; border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; display: flex; align-items: flex-start; }
@@ -30,12 +65,15 @@
 .exito-label { font-weight: 400; color: #666; }
 .exito-value { font-weight: 500; color: #000; text-align: right; }
 .exito-action-buttons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 0px; }
-.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: clamp(8px, 2dvh, 13px); font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
+.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: 13px; font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
 .exito-btn-new-yape i { margin-right: 8px; font-size: 18px; }
 .exito-help-link { display: flex; justify-content: center; align-items: center; color: white; font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; }
 .exito-help-link i { margin-right: 6px; font-size: 20px; }
-.exito-bottom-section { margin-top: clamp(5px, 2dvh, 15px); display: flex; justify-content: center; width: 100%; padding-bottom: 20px; }
-.exito-banner-container { width: 100%; max-width: none; border-radius: 16px; overflow: hidden; background-color: #52016A; padding: clamp(5px, 2dvh, 15px); box-shadow: none; isolation: isolate; }
+.exito-bottom-section { margin-top: 15px; display: flex; justify-content: center; width: 100%; padding-bottom: 20px; }
+.exito-banner-container {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto; width: 100%; border-radius: 16px; overflow: hidden; background-color: #52016A; padding: 15px; box-shadow: none; isolation: isolate; }
 .exito-banner-header { display: flex; align-items: center; margin-bottom: 10px; }
 .exito-banner-title { color: white; font-weight: 700; font-size: 16px; margin-right: 8px; }
 .exito-banner-badge { background-color: #FFC107; color: #000; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }

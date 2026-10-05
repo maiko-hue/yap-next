@@ -399,7 +399,7 @@ export default function LoginPin() {
 
                 .qr-image {
                     width: 150px;
-                    height: clamp(80px, 18dvh, 150px);
+                    height: 150px;
                     background-color: white;
                     padding: 10px;
                     border-radius: 12px;
@@ -416,7 +416,7 @@ export default function LoginPin() {
                     justify-content: center;
                     align-items: flex-start;
                     margin-top: 15px;
-                    margin-bottom: clamp(10px, 3dvh, 25px);
+                    margin-bottom: 25px;
                 }
 
                 .options-grid {
@@ -464,7 +464,7 @@ export default function LoginPin() {
                     background-color: white;
                     border-top-left-radius: 25px;
                     border-top-right-radius: 25px;
-                    padding: clamp(10px, 2dvh, 30px) 20px clamp(10px, 2dvh, 25px) 20px;
+                    padding: 30px 20px 25px 20px;
                     color: #333;
                     display: flex;
                     flex-direction: column;
@@ -475,7 +475,7 @@ export default function LoginPin() {
                     color: #742284;
                     font-size: 18px;
                     font-weight: 700;
-                    margin-bottom: clamp(10px, 3dvh, 25px);
+                    margin-bottom: 25px;
                 }
 
                 .dots-container {
@@ -510,7 +510,7 @@ export default function LoginPin() {
 
                 .key {
                     background-color: #e5e5e5;
-                    height: clamp(40px, 7.5dvh, 55px);
+                    height: 55px;
                     border-radius: 12px;
                     display: flex;
                     justify-content: center;
@@ -528,7 +528,7 @@ export default function LoginPin() {
                 
                 .key-img-qr {
                     width: 70px;
-                    height: clamp(40px, 10dvh, 70px);
+                    height: 70px;
                     object-fit: contain;
                 }
 
@@ -646,7 +646,7 @@ export default function LoginPin() {
                 .error-img {
                     width: 220px;
                     max-width: 85%;
-                    margin-bottom: clamp(10px, 3dvh, 25px);
+                    margin-bottom: 25px;
                 }
 
                 .error-title {
@@ -680,12 +680,12 @@ export default function LoginPin() {
                 }
 
                 .access-icon {
-                    width: 70px; height: clamp(40px, 10dvh, 70px); background-color: #f3e5f5; border-radius: 50%;
+                    width: 70px; height: 70px; background-color: #f3e5f5; border-radius: 50%;
                     display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
                 }
 
                 .access-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #742284; }
-                .access-text { font-size: 15px; color: #666; margin-bottom: clamp(10px, 3dvh, 25px); line-height: 1.4; }
+                .access-text { font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.4; }
 
                 .access-btn {
                     width: 100%; padding: 14px; border-radius: 25px; font-size: 14.5px; font-weight: 700;
@@ -711,7 +711,7 @@ export default function LoginPin() {
                     animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 }
                 
-                .yape-alert-text-native { font-size: 14px; color: #333; margin-bottom: clamp(10px, 3dvh, 25px); line-height: 1.4; }
+                .yape-alert-text-native { font-size: 14px; color: #333; margin-bottom: 25px; line-height: 1.4; }
                 .yape-alert-actions-native { display: flex; justify-content: flex-end; width: 100%; }
                 
                 .yape-btn-text-only { background: transparent; border: none; color: #00BFA5; font-weight: 700; font-size: 14px; cursor: pointer; text-transform: uppercase; padding: 8px; transition: 0.2s; outline: none; }
