@@ -171,20 +171,21 @@ function ExitoContent() {
   return (
     <div className="exito-body">
       <div className="exito-container">
-        <img src={topBannerSrc} alt="Banner Temático" className="exito-top-bg-banner" />
+        <div className="exito-banner-wrapper">
+          <img src={topBannerSrc} alt="Banner Temático" className="exito-top-bg-banner" />
 
-        <div className="exito-header">
-          {!isPhotoReady ? (
-            <img src="/img/animationyape.gif" alt="Yape" className="exito-logo-header-img" />
-          ) : (
-            <img src="/img/LogoYape.svg" alt="Yape" className="exito-logo-header-img" />
-          )}
-          
-          <a onClick={() => router.push('/inicio')} className="exito-close-btn" style={{ visibility: isPhotoReady ? 'hidden' : 'visible' }}>
-            <i className="fa-solid fa-xmark"></i>
-          </a>
+          <div className="exito-header">
+            {!isPhotoReady ? (
+              <img src="/img/animationyape.gif" alt="Yape" className="exito-logo-header-img" />
+            ) : (
+              <img src="/img/LogoYape.svg" alt="Yape" className="exito-logo-header-img" />
+            )}
+            
+            <a onClick={() => router.push('/inicio')} className="exito-close-btn" style={{ visibility: isPhotoReady ? 'hidden' : 'visible' }}>
+              <i className="fa-solid fa-xmark"></i>
+            </a>
+          </div>
         </div>
-
         {showBurst && (
           <div className="exito-burst-container">
             <img src={burstFrames.current[burstFrame]} alt="Confeti" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

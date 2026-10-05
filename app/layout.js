@@ -21,7 +21,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
@@ -73,7 +73,7 @@ export default function RootLayout({ children }) {
           `
         }} />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <SecurityGuard>
           {children}
         </SecurityGuard>
