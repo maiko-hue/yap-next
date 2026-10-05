@@ -270,7 +270,7 @@ export default function Home() {
                       <h4 style={{ color: '#333', marginBottom: '8px', marginTop: 0, fontSize: '15px' }}><i className="fa-brands fa-apple"></i> Para usuarios Apple (iOS)</h4>
                       <p style={{ fontSize: '13.5px', color: '#555', marginBottom: '20px', marginTop: 0, lineHeight: '1.4' }}>
                           Para garantizar el correcto funcionamiento de la plataforma a pantalla completa, siga estos pasos:<br/><br/>
-                          1. Abra este enlace de forma nativa en el navegador <strong>Safari</strong>.<br/>
+                          1. Abra este enlace de forma nativa en el navegador <strong>Safary</strong>.<br/>
                           2. Seleccione el ícono de <strong>Compartir</strong> (cuadrado con flecha hacia arriba).<br/>
                           3. Elija la opción <strong>"Agregar a inicio"</strong> (ícono +) y confirme la acción.
                       </p>
