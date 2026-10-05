@@ -63,13 +63,22 @@ export default function MiCuenta() {
             </div>
 
             <div className="info-card">
-                <div className="section-title" style={{ marginTop: 0 }}>INFORMACIÓN DE MI CUENTA</div>
+                <div className="section-title" style={{ marginTop: 0 }}>INFORMACIÃ“N DE MI CUENTA</div>
                 
                 <div className="settings-section">
                     
                     <div className="setting-item-static">
                         <div className="setting-left-static">
-                            <div className="st-label">App</div><div className="st-value" style={{color: '#742385', fontWeight: '900'}}>YPTON</div></div></div><div className="divider"></div><div className="setting-item-static"><div className="setting-left-static"><div className="st-label">Email</div>
+                            <div className="st-label">App</div>
+                            <div className="st-value" style={{color: '#742385', fontWeight: '900'}}>YPTON</div>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    <div className="setting-item-static">
+                        <div className="setting-left-static">
+                            <div className="st-label">Email</div>
                             {isLoading ? (
                                 <div className="skeleton-box"></div>
                             ) : (
@@ -82,7 +91,7 @@ export default function MiCuenta() {
 
                     <div className="setting-item-static">
                         <div className="setting-left-static">
-                            <div className="st-label">Sesión Token</div>
+                            <div className="st-label">SesiÃ³n Token</div>
                             {isLoading ? (
                                 <div className="skeleton-box"></div>
                             ) : (
@@ -95,7 +104,7 @@ export default function MiCuenta() {
 
                     <div className="setting-item-static">
                         <div className="setting-left-static">
-                            <div className="st-label">Fecha de Activación</div>
+                            <div className="st-label">Fecha de ActivaciÃ³n</div>
                             {isLoading ? (
                                 <div className="skeleton-box"></div>
                             ) : (
@@ -153,3 +162,4 @@ export default function MiCuenta() {
         </div>
     );
 }
+
