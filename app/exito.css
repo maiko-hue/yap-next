@@ -3,8 +3,7 @@
   align-items: center; width: 100%; min-height: calc(100dvh / var(--app-zoom, 1)); display: flex; flex-direction: column; position: relative; padding: 10px 15px; z-index: 10; }
 .exito-banner-wrapper {
   position: relative;
-  width: 96%;
-  max-width: 400px;
+  width: 100%;
   margin: 15px auto 0 auto;
   border-radius: 15px;
   z-index: 10;
@@ -40,7 +39,6 @@
 .exito-logo-header-img { margin-top: 45px; margin-left: 18px; height: 80px; object-fit: contain; display: block; pointer-events: none; }
 .exito-close-btn { width: 30px; margin-top: -34px; height: 30px; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; text-decoration: none; cursor: pointer; }
 .exito-success-card {
-  max-width: 400px;
   margin-left: auto;
   margin-right: auto; margin-top: 10px; background-color: white; border-radius: 20px; padding: 15px 20px 20px 20px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; position: relative; z-index: 5; }
 .exito-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
@@ -68,13 +66,12 @@
 .exito-label { font-weight: 400; color: #666; }
 .exito-value { font-weight: 500; color: #000; text-align: right; }
 .exito-action-buttons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 0px; }
-.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: 13px; font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
+.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: clamp(8px, 2dvh, 13px); font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
 .exito-btn-new-yape i { margin-right: 8px; font-size: 18px; }
 .exito-help-link { display: flex; justify-content: center; align-items: center; color: white; font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; }
 .exito-help-link i { margin-right: 6px; font-size: 20px; }
 .exito-bottom-section { margin-top: 15px; display: flex; justify-content: center; width: 100%; padding-bottom: 20px; }
 .exito-banner-container {
-  max-width: 400px;
   margin-left: auto;
   margin-right: auto; width: 100%; border-radius: 16px; overflow: hidden; background-color: #52016A; padding: 15px; box-shadow: none; isolation: isolate; }
 .exito-banner-header { display: flex; align-items: center; margin-bottom: 10px; }
