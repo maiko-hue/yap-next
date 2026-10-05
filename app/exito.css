@@ -5,13 +5,9 @@
   position: relative;
   width: 100%;
   margin: 15px auto 0 auto;
+  height: clamp(120px, 22dvh, 180px);
   border-radius: 15px;
   z-index: 10;
-}
-.exito-banner-wrapper::before {
-  content: "";
-  display: block;
-  padding-bottom: 46.5%;
 }
 .exito-header {
   position: absolute;
@@ -36,7 +32,7 @@
   z-index: 1;
   pointer-events: none;
 }
-.exito-logo-header-img { margin-top: 45px; margin-left: 18px; height: 80px; object-fit: contain; display: block; pointer-events: none; }
+.exito-logo-header-img { margin-top: clamp(20px, 5dvh, 45px); margin-left: 18px; height: clamp(50px, 10dvh, 80px); object-fit: contain; display: block; pointer-events: none; }
 .exito-close-btn { width: 30px; margin-top: -34px; height: 30px; background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; text-decoration: none; cursor: pointer; }
 .exito-success-card {
   margin-left: auto;
@@ -66,7 +62,7 @@
 .exito-label { font-weight: 400; color: #666; }
 .exito-value { font-weight: 500; color: #000; text-align: right; }
 .exito-action-buttons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 0px; }
-.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: clamp(8px, 2dvh, 13px); font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
+.exito-btn-new-yape { background-color: #00BFA5; color: white; border: none; border-radius: 8px; padding: 14px; font-size: 16px; font-weight: 700; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3); text-decoration: none; }
 .exito-btn-new-yape i { margin-right: 8px; font-size: 18px; }
 .exito-help-link { display: flex; justify-content: center; align-items: center; color: white; font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; }
 .exito-help-link i { margin-right: 6px; font-size: 20px; }
