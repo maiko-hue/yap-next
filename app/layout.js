@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
             }
             const zl = localStorage.getItem('yape_zoom_level');
             if (zl && zl !== '1') {
-              document.documentElement.style.zoom = zl;
+              
               document.documentElement.style.setProperty('--app-zoom', zl);
             } else {
               document.documentElement.style.setProperty('--app-zoom', '1');
@@ -64,7 +64,9 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SecurityGuard>
-          {children}
+          <div id="zoom-wrapper">
+            {children}
+          </div>
         </SecurityGuard>
       </body>
     </html>

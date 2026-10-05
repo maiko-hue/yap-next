@@ -907,3 +907,21 @@ html.ios-mode .st-desc-ed,
 html.ios-mode .m-desc {
     font-weight: 500 !important;
 }
+
+#zoom-wrapper {
+    transform: scale(var(--app-zoom, 1));
+    transform-origin: top left;
+    width: calc(100% / var(--app-zoom, 1));
+    height: calc(100dvh / var(--app-zoom, 1));
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+}
+html {
+    background-color: white;
+}
+
+/* HIDE OTROS BANCOS IN IOS MODE */
+html.ios-mode .btn-outline-monto {
+    display: none !important;
+}

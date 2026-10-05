@@ -202,8 +202,7 @@ export default function Opciones() {
   const handleZoom = (level) => {
     setZoomLevel(level);
     localStorage.setItem('yape_zoom_level', level);
-      document.documentElement.style.zoom = level;
-      document.documentElement.style.setProperty('--app-zoom', level);
+            document.documentElement.style.setProperty('--app-zoom', level);
     showToast("Tamaño de Inicio actualizado");
   };
 
@@ -396,10 +395,7 @@ export default function Opciones() {
                 <i className="fa-solid fa-magnifying-glass-plus"></i>
                 <span style={{ fontSize: '11px' }}>Grande</span>
               </button>
-              <button className={`zoom-btn ${zoomLevel === '1.3' ? 'active' : ''}`} onClick={() => handleZoom('1.3')}>
-                <i className="fa-solid fa-magnifying-glass-plus" style={{ transform: 'scale(1.2)' }}></i>
-                <span style={{ fontSize: '11px' }}>Extra</span>
-              </button>
+              
                           </div>
             </div>
             <hr className="divider" />
