@@ -48,7 +48,7 @@ export default function Opciones() {
   const [newContactNum, setNewContactNum] = useState('');
 
   // ZOOM STATE
-  const [zoomLevel, setZoomLevel] = useState('1');
+  const [zoomPercent, setZoomPercent] = useState(100);
   const [iosMode, setIosMode] = useState(false);
   const [animSpeed, setAnimSpeed] = useState('1');
 
@@ -75,7 +75,7 @@ export default function Opciones() {
     setCustomContacts(JSON.parse(localStorage.getItem('yape_custom_contacts')) || []);
 
     // Load Zoom
-    setZoomLevel(localStorage.getItem('yape_zoom_level') || '1');
+    setZoomPercent(Math.round(parseFloat(localStorage.getItem('yape_zoom_level') || '1') * 100));
     setIosMode(localStorage.getItem('yape_ios_spinner') === 'true');
   }, []);
 
@@ -199,11 +199,17 @@ export default function Opciones() {
     else document.documentElement.classList.remove('ios-mode');
     showToast(val ? "Modo iPhone activado" : "Modo iPhone desactivado");
   };
-  const handleZoom = (level) => {
-    setZoomLevel(level);
+  const handleZoomChange = (delta) => {
+    let newZoom = zoomPercent + delta;
+    if (newZoom < 50) newZoom = 50;
+    if (newZoom > 150) newZoom = 150;
+    setZoomPercent(newZoom);
+    
+    let level = (newZoom / 100).toString();
     localStorage.setItem('yape_zoom_level', level);
-            document.documentElement.style.setProperty('--app-zoom', level);
-    showToast("Tamaño de Inicio actualizado");
+    document.documentElement.style.setProperty('--app-zoom', level);
+    document.documentElement.style.zoom = level;
+    showToast("Zoom actualizado: " + newZoom + "%");
   };
 
   // PIN CONFIG
@@ -380,23 +386,19 @@ export default function Opciones() {
 
           <hr className="divider" />
 
-          <div className="section-title">Accesibilidad (Zoom Inicio)</div>
-          <div className="settings-section">
-            <div className="zoom-container">
-              <button className={`zoom-btn ${zoomLevel === '0.85' ? 'active' : ''}`} onClick={() => handleZoom('0.85')}>
-                <i className="fa-solid fa-magnifying-glass-minus"></i>
-                <span style={{ fontSize: '11px' }}>Pequeño</span>
-              </button>
-              <button className={`zoom-btn ${zoomLevel === '1' ? 'active' : ''}`} onClick={() => handleZoom('1')}>
-                <i className="fa-solid fa-expand"></i>
-                <span style={{ fontSize: '11px' }}>Normal</span>
-              </button>
-              <button className={`zoom-btn ${zoomLevel === '1.15' ? 'active' : ''}`} onClick={() => handleZoom('1.15')}>
-                <i className="fa-solid fa-magnifying-glass-plus"></i>
-                <span style={{ fontSize: '11px' }}>Grande</span>
-              </button>
-              
-                          </div>
+          <div className="section-title">Accesibilidad (Zoom Global)</div>
+            <div className="settings-section">
+              <div className="zoom-stepper-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: '15px 20px', borderRadius: '12px', border: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                <button className="zoom-btn-stepper" onClick={() => handleZoomChange(-5)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <i className="fa-solid fa-minus"></i>
+                </button>
+                <div style={{ fontSize: '20px', fontWeight: '800', color: '#333' }}>
+                  {zoomPercent}%
+                </div>
+                <button className="zoom-btn-stepper" onClick={() => handleZoomChange(5)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#00BFA5', color: 'white', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 10px rgba(0, 191, 165, 0.3)' }}>
+                  <i className="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
             <hr className="divider" />
 
