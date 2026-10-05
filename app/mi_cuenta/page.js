@@ -32,6 +32,27 @@ export default function MiCuenta() {
         return () => unsubscribe();
     }, [router]);
 
+    
+    const formatToken = (token) => {
+        if (!token) return 'No disponible';
+        if (token.length <= 6) return token;
+        return '*'.repeat(token.length - 6) + token.slice(-6);
+    };
+
+    const formatDate = (dateStr) => {
+        if (!dateStr) return 'No disponible';
+        try {
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleString('es-PE', { 
+                day: '2-digit', month: '2-digit', year: 'numeric', 
+                hour: '2-digit', minute: '2-digit', hour12: true 
+            });
+        } catch (e) {
+            return dateStr;
+        }
+    };
+
     return (
         <div className="main-container">
             <div className="header-hero">
@@ -65,7 +86,7 @@ export default function MiCuenta() {
                             {isLoading ? (
                                 <div className="skeleton-box"></div>
                             ) : (
-                                <div className="st-value truncate">{userData?.sesion_token || 'No disponible'}</div>
+                                <div className="st-value truncate" style={{ letterSpacing: "1px" }}>{formatToken(userData?.sesion_token)}</div>
                             )}
                         </div>
                     </div>
@@ -78,7 +99,7 @@ export default function MiCuenta() {
                             {isLoading ? (
                                 <div className="skeleton-box"></div>
                             ) : (
-                                <div className="st-value">{userData?.fecha || 'No disponible'}</div>
+                                <div className="st-value">{formatDate(userData?.fecha)}</div>
                             )}
                         </div>
                     </div>
