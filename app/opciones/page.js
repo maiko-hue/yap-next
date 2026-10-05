@@ -49,6 +49,7 @@ export default function Opciones() {
 
   // ZOOM STATE
   const [zoomLevel, setZoomLevel] = useState('1');
+  const [iosMode, setIosMode] = useState(false);
   const [animSpeed, setAnimSpeed] = useState('1');
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function Opciones() {
 
     // Load Zoom
     setZoomLevel(localStorage.getItem('yape_zoom_level') || '1');
+    setIosMode(localStorage.getItem('yape_ios_spinner') === 'true');
   }, []);
 
   // Handlers for Noti
@@ -188,6 +190,14 @@ export default function Opciones() {
     setAnimSpeed(speed);
     localStorage.setItem('yape_anim_speed', speed);
     showToast("Velocidad de animacion actualizada");
+  };
+  const handleIosModeChange = (e) => {
+    const val = e.target.checked;
+    setIosMode(val);
+    localStorage.setItem('yape_ios_spinner', val);
+    if(val) document.documentElement.classList.add('ios-mode');
+    else document.documentElement.classList.remove('ios-mode');
+    showToast(val ? "Modo iPhone activado" : "Modo iPhone desactivado");
   };
   const handleZoom = (level) => {
     setZoomLevel(level);
@@ -388,13 +398,23 @@ export default function Opciones() {
                 <i className="fa-solid fa-magnifying-glass-plus" style={{ transform: 'scale(1.2)' }}></i>
                 <span style={{ fontSize: '11px' }}>Extra</span>
               </button>
+                          </div>
             </div>
-          </div>
+            <hr className="divider" />
 
-          <hr className="divider" />
-
-          
-          <div className="section-title">Tiempos de animaciones</div>
+            <div className="section-title">Diseño de carga</div>
+            <div className="settings-section">
+              <div className="switch-container-opciones" style={{ marginBottom: 0 }}>
+                <span className="switch-label-opciones">Modo iPhone (Spinners)</span>
+                <label className="switch-opciones">
+                  <input type="checkbox" checked={iosMode} onChange={handleIosModeChange} />
+                  <span className="slider-opciones"></span>
+                </label>
+              </div>
+            </div>
+            <hr className="divider" />
+            
+            <div className="section-title">Tiempos de animaciones</div>
           <div className="settings-section">
             <div className="zoom-container">
               <button className={`zoom-btn ${animSpeed === '0.01' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.01')}>
