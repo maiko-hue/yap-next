@@ -29,6 +29,7 @@ function MontoContent() {
   const [bancoSeleccionado, setBancoSeleccionado] = useState("");
   const [showAccordion, setShowAccordion] = useState(false);
   const [showPhoneCheckbox, setShowPhoneCheckbox] = useState(false);
+  const [isUnregisteredQr, setIsUnregisteredQr] = useState(false);
 
   // Computed
   const maskedNumber = passedDestino === "Yape" ? (qrData ? (passedDestino) : `*** *** ${rawNumber.slice(-3)}`) : passedDestino;
@@ -43,7 +44,9 @@ function MontoContent() {
           if (docSnap.exists()) {
             displayLoadedName(docSnap.data().nombre);
           } else {
-            displayLoadedName("Negocio QR");
+            setIsUnregisteredQr(true);
+            setRecipientName(""); // blank name for user to fill
+            setLoadingName(false);
           }
         } catch (error) {
           displayLoadedName("Error QR");
@@ -209,6 +212,14 @@ function MontoContent() {
 
     if (tipoMovimiento === 'gasto') procesarEnvioCorreo(nuevoMovimiento);
 
+    if (isUnregisteredQr && qrData) {
+      const safeId = qrData.replace(/\//g, '_slash_');
+      setDoc(doc(db, "codigos_qr", safeId), {
+          nombre: nombreFinal || "Sin nombre",
+          destino: destinoReal
+      }).catch(console.error);
+    }
+
     setTimeout(() => {
       let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${rawNumber}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${destinoReal === "Yape" ? "asteriscos" : "false"}&recien_yapeado=true`;
       if (tipoMovimiento === 'ingreso') url += '&tipo=ingreso';
@@ -236,8 +247,9 @@ function MontoContent() {
     const codigoSeguridadRandom = Math.floor(100 + Math.random() * 900).toString();
 
     let destinoReal = bancoSeleccionado;
-    let esQrLogica = "false";
+    let esQrLogica = qrData ? "true" : "false";
     let mostrarCelular = showPhoneCheckbox ? "true" : "false";
+    if (qrData) mostrarCelular = "false";
 
     let tipoMovimiento = 'gasto';
     if (mensajeFinal.trim() === "Auto") tipoMovimiento = 'ingreso';
@@ -265,6 +277,14 @@ function MontoContent() {
     localStorage.setItem('yape_movements', JSON.stringify(movimientos));
 
     if(tipoMovimiento === 'gasto') procesarEnvioCorreo(nuevoMovimiento);
+
+    if (isUnregisteredQr && qrData) {
+      const safeId = qrData.replace(/\//g, '_slash_');
+      setDoc(doc(db, "codigos_qr", safeId), {
+          nombre: nombreFinal || "Sin nombre",
+          destino: destinoReal
+      }).catch(console.error);
+    }
 
     setTimeout(() => {
         let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${rawNumber}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${mostrarCelular}&recien_yapeado=true`;
@@ -383,7 +403,7 @@ function MontoContent() {
               <div onClick={() => setShowAccordion(!showAccordion)} style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', color: '#555', fontSize: '14px', cursor: 'pointer' }}>
                 Más opciones <i className={`fa-solid fa-chevron-${showAccordion ? 'up' : 'down'}`} style={{ marginLeft: '8px' }}></i>
               </div>
-              {showAccordion && (
+              {showAccordion && !isUnregisteredQr && (
                 <div style={{ marginTop: '15px' }}>
                   <label className="custom-checkbox-container-monto">
                     <input type="checkbox" checked={showPhoneCheckbox} onChange={e => setShowPhoneCheckbox(e.target.checked)} />
