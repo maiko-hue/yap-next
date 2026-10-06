@@ -97,7 +97,13 @@ function MontoContent() {
 
   const displayLoadedName = (name) => {
     let nombreMostrar = name;
-    if (localStorage.getItem('yape_censurar_baucher') === 'true' && typeof nombreMostrar === 'string') {
+    
+    const isCensurarBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
+    const isCensurarNombresQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
+    
+    const shouldCensor = qrData ? isCensurarNombresQr : isCensurarBaucher;
+
+    if (shouldCensor && typeof nombreMostrar === 'string') {
       let partes = nombreMostrar.trim().split(/\s+/);
       if (partes.length === 2) {
         nombreMostrar = partes[0] + " " + partes[1].substring(0, 3) + "*";
@@ -217,10 +223,11 @@ function MontoContent() {
 
     if (qrData) {
       const safeId = qrData.replace(/\//g, '_slash_');
-      setDoc(doc(db, "codigos_qr", safeId), {
-          nombre: nombreFinal || "Sin nombre",
-          destino: destinoReal
-      }, { merge: true }).catch(console.error);
+      const updateData = { destino: destinoReal };
+      if (isUnregisteredQr) {
+        updateData.nombre = nombreFinal || "Sin nombre";
+      }
+      setDoc(doc(db, "codigos_qr", safeId), updateData, { merge: true }).catch(console.error);
     }
 
     setTimeout(() => {
@@ -285,10 +292,11 @@ function MontoContent() {
 
     if (qrData) {
       const safeId = qrData.replace(/\//g, '_slash_');
-      setDoc(doc(db, "codigos_qr", safeId), {
-          nombre: nombreFinal || "Sin nombre",
-          destino: destinoReal
-      }, { merge: true }).catch(console.error);
+      const updateData = { destino: destinoReal };
+      if (isUnregisteredQr) {
+        updateData.nombre = nombreFinal || "Sin nombre";
+      }
+      setDoc(doc(db, "codigos_qr", safeId), updateData, { merge: true }).catch(console.error);
     }
 
     setTimeout(() => {

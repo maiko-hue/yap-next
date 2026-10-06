@@ -48,6 +48,7 @@ export default function Opciones() {
   // ADVANCED CONFIG STATE
   const [censurarNombres, setCensurarNombres] = useState(true);
   const [censurarBaucher, setCensurarBaucher] = useState(false);
+  const [censurarNombresQr, setCensurarNombresQr] = useState(false);
   const [frecuentes, setFrecuentes] = useState([]);
   const [newFreqName, setNewFreqName] = useState('');
   const [newFreqNum, setNewFreqNum] = useState('');
@@ -78,6 +79,7 @@ export default function Opciones() {
     // Load Advanced Config
     setCensurarNombres(localStorage.getItem('yape_censurar_nombres') !== 'false');
     setCensurarBaucher(localStorage.getItem('yape_censurar_baucher') === 'true');
+    setCensurarNombresQr(localStorage.getItem('yape_censurar_nombres_qr') === 'true');
     setFrecuentes(JSON.parse(localStorage.getItem('yape_frecuentes')) || []);
 
     setAnimSpeed(localStorage.getItem('yape_anim_speed') || '1');
@@ -149,6 +151,12 @@ export default function Opciones() {
     setCensurarBaucher(val);
     localStorage.setItem('yape_censurar_baucher', val);
     showToast(val ? "Nombres del baucher se reducirán" : "Nombres del baucher completos");
+  };
+  const handleCensurarNombresQr = (e) => {
+    const val = e.target.checked;
+    setCensurarNombresQr(val);
+    localStorage.setItem('yape_censurar_nombres_qr', val);
+    showToast(val ? "Nombres de QRs se censurarán" : "Nombres de QRs completos");
   };
   const handleAddFrecuente = () => {
     if (!newFreqName.trim()) return showToast("Escribe un nombre");
@@ -669,6 +677,13 @@ export default function Opciones() {
             <span className="switch-label-opciones">Censurar nombres (En Monto)</span>
             <label className="switch-opciones">
               <input type="checkbox" checked={censurarBaucher} onChange={handleCensurarBaucher} />
+              <span className="slider-opciones"></span>
+            </label>
+          </div>
+          <div className="switch-container-opciones">
+            <span className="switch-label-opciones">Censurar nombres en QRs</span>
+            <label className="switch-opciones">
+              <input type="checkbox" checked={censurarNombresQr} onChange={handleCensurarNombresQr} />
               <span className="slider-opciones"></span>
             </label>
           </div>
