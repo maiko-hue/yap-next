@@ -146,7 +146,7 @@ export default function EscanearQR() {
                 body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; }
                 .escanear-wrapper {
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                    background-color: black; color: white; width: 100%; height: 100dvh; display: flex; flex-direction: column; position: relative; overflow: hidden;
+                    background-color: black; color: white; width: 100%; height: calc(100dvh / var(--app-zoom, 1)); display: flex; flex-direction: column; position: relative; overflow: hidden;
                 }
                 .camera-stream { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
                 .container-escanear { max-width: 480px; margin: 0 auto; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; z-index: 1; }
@@ -161,7 +161,7 @@ export default function EscanearQR() {
                 .bottom-sheet { background-color: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px 20px; padding-bottom: max(60px, env(safe-area-inset-bottom)); color: #333; position: absolute; bottom: 0; left: 0; width: 100%; box-sizing: border-box; }
                 .upload-btn { display: flex; align-items: center; justify-content: flex-start; border: 1px solid #eee; border-radius: 8px; padding: 15px; font-weight: 600; color: #333; cursor: pointer; width: 100%; box-sizing: border-box; }
                 .upload-icon { width: 24px; height: 24px; margin-right: 15px; object-fit: contain; }
-                .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background-color: rgba(0,0,0,0.6); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+                .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1)); background-color: rgba(0,0,0,0.6); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
                 .loader-overlay.show { opacity: 1; pointer-events: all; }
                 .loader-card { background: white; width: 220px; height: 100px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
                 .custom-spinner { width: 40px; height: 40px; border: 4px solid #e0e0e0; border-top: 4px solid #00BFA5; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }

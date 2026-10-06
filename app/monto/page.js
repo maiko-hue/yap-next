@@ -15,6 +15,7 @@ function MontoContent() {
   let qrData = searchParams.get('qr_data');
   let passedDestino = searchParams.get('destino') || "Yape";
 
+  const [currentDestino, setCurrentDestino] = useState(passedDestino);
   const [loadingName, setLoadingName] = useState(true);
   const [recipientName, setRecipientName] = useState("");
   const [amount, setAmount] = useState("");
@@ -32,7 +33,7 @@ function MontoContent() {
   const [isUnregisteredQr, setIsUnregisteredQr] = useState(false);
 
   // Computed
-  const maskedNumber = passedDestino === "Yape" ? (qrData ? (passedDestino) : `*** *** ${rawNumber.slice(-3)}`) : passedDestino;
+  const maskedNumber = currentDestino === "Yape" ? (qrData ? currentDestino : `*** *** ${rawNumber.slice(-3)}`) : currentDestino;
 
   useEffect(() => {
     async function loadContactData() {
@@ -43,6 +44,7 @@ function MontoContent() {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             displayLoadedName(docSnap.data().nombre);
+            setCurrentDestino(docSnap.data().destino || "Yape");
           } else {
             setIsUnregisteredQr(true);
             setRecipientName("Ingresa el nombre aqui");
@@ -177,7 +179,7 @@ function MontoContent() {
     const operacionRandom = Math.floor(10000000 + Math.random() * 90000000).toString();
     const codigoSeguridadRandom = Math.floor(100 + Math.random() * 900).toString();
 
-    let destinoReal = passedDestino; 
+    let destinoReal = currentDestino; 
     let esQrLogica = "false";
     
     if (qrData) {
@@ -313,7 +315,7 @@ function MontoContent() {
           <input type="text" value={recipientName} onChange={e => setRecipientName(e.target.value)} className="recipient-name-monto" spellCheck="false" style={{ display: 'block' }} />
         )}
         
-        <div className="recipient-number-monto">{qrData ? (passedDestino || 'Yape') : maskedNumber}</div>
+        <div className="recipient-number-monto">{qrData ? currentDestino : maskedNumber}</div>
         
         <div className="amount-wrapper-monto">
           <span className="currency-symbol-monto" style={{ color: isAmountValid ? '#a86cc1' : '#bfaec4' }}>S/</span>
