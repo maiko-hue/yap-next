@@ -158,7 +158,7 @@ export default function EscanearQR() {
                 .scan-box::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 16px; }
                 .scan-box::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 16px; }
                 .joke-btn { background-color: rgba(77, 77, 77, 0.8); border: none; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; backdrop-filter: blur(5px); }
-                .bottom-sheet { background-color: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px 20px; padding-bottom: max(30px, env(safe-area-inset-bottom)); color: #333; }
+                .bottom-sheet { background-color: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px 20px; padding-bottom: max(60px, env(safe-area-inset-bottom)); color: #333; position: absolute; bottom: 0; left: 0; width: 100%; box-sizing: border-box; }
                 .upload-btn { display: flex; align-items: center; justify-content: flex-start; border: 1px solid #eee; border-radius: 8px; padding: 15px; font-weight: 600; color: #333; cursor: pointer; width: 100%; box-sizing: border-box; }
                 .upload-icon { width: 24px; height: 24px; margin-right: 15px; object-fit: contain; }
                 .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background-color: rgba(0,0,0,0.6); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }

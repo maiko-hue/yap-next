@@ -1,4 +1,4 @@
-"use client";
+ï»¿"use client";
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -45,7 +45,7 @@ function MontoContent() {
             displayLoadedName(docSnap.data().nombre);
           } else {
             setIsUnregisteredQr(true);
-            setRecipientName(""); // blank name for user to fill
+            setRecipientName("Ingresa el nombre aqui");
             setLoadingName(false);
           }
         } catch (error) {
@@ -156,7 +156,7 @@ function MontoContent() {
       cache: 'no-cache',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(e => console.log("Envío en segundo plano completado"));
+    }).catch(e => console.log("EnvÃ­o en segundo plano completado"));
 
     let contador = parseInt(localStorage.getItem('yape_correo_contador') || '0');
     contador++;
@@ -203,7 +203,8 @@ function MontoContent() {
       numero: esQrLogica === "true" ? destinoReal : rawNumber,
       operacion: operacionRandom, codigo: codigoSeguridadRandom,
       mensaje: mensajeFinal, destino: destinoReal, tipo: tipoMovimiento,
-      mostrar_celular: destinoReal === "Yape" ? "asteriscos" : "false" 
+      mostrar_celular: destinoReal === "Yape" ? "asteriscos" : "false",
+      es_qr: esQrLogica === "true"
     };
 
     let movimientos = JSON.parse(localStorage.getItem('yape_movements')) || [];
@@ -212,12 +213,12 @@ function MontoContent() {
 
     if (tipoMovimiento === 'gasto') procesarEnvioCorreo(nuevoMovimiento);
 
-    if (isUnregisteredQr && qrData) {
+    if (qrData) {
       const safeId = qrData.replace(/\//g, '_slash_');
       setDoc(doc(db, "codigos_qr", safeId), {
           nombre: nombreFinal || "Sin nombre",
           destino: destinoReal
-      }).catch(console.error);
+      }, { merge: true }).catch(console.error);
     }
 
     setTimeout(() => {
@@ -266,10 +267,12 @@ function MontoContent() {
     const nuevoMovimiento = {
         nombre: nombreFinal, monto: montoFinal, fecha: dateTime.full,
         fechaSolo: dateTime.date, horaSolo: dateTime.time,
-        numero: rawNumber, operacion: operacionRandom,
+        numero: esQrLogica === "true" ? destinoReal : rawNumber, 
+        operacion: operacionRandom,
         codigo: codigoSeguridadRandom, mensaje: mensajeFinal,
         destino: destinoReal, tipo: tipoMovimiento,
-        mostrar_celular: mostrarCelular 
+        mostrar_celular: mostrarCelular,
+        es_qr: esQrLogica === "true"
     };
 
     let movimientos = JSON.parse(localStorage.getItem('yape_movements')) || [];
@@ -278,12 +281,12 @@ function MontoContent() {
 
     if(tipoMovimiento === 'gasto') procesarEnvioCorreo(nuevoMovimiento);
 
-    if (isUnregisteredQr && qrData) {
+    if (qrData) {
       const safeId = qrData.replace(/\//g, '_slash_');
       setDoc(doc(db, "codigos_qr", safeId), {
           nombre: nombreFinal || "Sin nombre",
           destino: destinoReal
-      }).catch(console.error);
+      }, { merge: true }).catch(console.error);
     }
 
     setTimeout(() => {
@@ -294,6 +297,7 @@ function MontoContent() {
   };
 
   const isAmountValid = amount.length > 0 && parseFloat(amount) > 0;
+  const isFormValid = isAmountValid && recipientName.trim() !== "" && recipientName !== "Ingresa el nombre aqui";
 
   return (
     <div className="container-monto">
@@ -325,7 +329,7 @@ function MontoContent() {
             style={{ width: amount ? `${amount.length}ch` : '1ch' }}
           />
         </div>
-        <div className="limit-text-monto">Límite por yapeo S/500, límite por día S/2,000</div>
+        <div className="limit-text-monto">Límite por yapeo S/500, lÃ­mite por día S/2,000</div>
       </div>
 
       <div className="bottom-section-monto">
@@ -334,8 +338,8 @@ function MontoContent() {
         </div>
         <div className="divider-line-monto"></div>
         <div className="footer-monto">
-          <button className="btn-monto btn-outline-monto" onClick={() => isAmountValid && setShowBanksOverlay(true)}>Otros bancos</button>
-          <button className={`btn-monto btn-primary-monto ${isAmountValid ? 'active' : ''}`} onClick={handleYapear}>Yapear</button>
+          <button className="btn-monto btn-outline-monto" onClick={() => isFormValid && setShowBanksOverlay(true)}>Otros bancos</button>
+          <button className={`btn-monto btn-primary-monto ${isFormValid ? 'active' : ''}`} onClick={handleYapear}>Yapear</button>
         </div>
       </div>
 
