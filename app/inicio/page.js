@@ -496,7 +496,7 @@ export default function Inicio() {
             <div className="footer-spacer"></div>
 
             <div className="footer-buttons-container">
-                <button className="btn btn-outline">
+                <button className="btn btn-outline" onClick={() => router.push('/escanear')}>
                     <img src="/img/qr-icon.svg" className="btn-img-icon" alt="" /> ESCANEAR QR
                 </button>
                 <a className="btn btn-fill" onClick={() => setShowYapear(true)}>
