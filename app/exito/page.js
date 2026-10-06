@@ -65,14 +65,12 @@ function ExitoContent() {
   const [nombreMostrado, setNombreMostrado] = useState(nombreRaw);
 
   useEffect(() => {
-    // Censurar logic para EXITO.HTML ("En Monto" que realmente mapea a yape_censurar_baucher según el request del user)
-    // El user dijo: "El boton de (En monto) tiene que funcionar para el exito.html" (ID toggleCensuraBaucherSwitch)
-    // Pero en el original exito.html leía 'yape_censurar_nombres'. Ajustaremos para que use 'yape_censurar_baucher'
-    let isCensored = localStorage.getItem('yape_censurar_baucher');
-    if (isCensored === null) {
-      isCensored = 'false';
-    }
-    if (isCensored === 'true') {
+    let isCensoredBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
+    let isCensoredQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
+    
+    let shouldCensor = esQrParam ? isCensoredQr : isCensoredBaucher;
+
+    if (shouldCensor) {
       const partesNombre = nombreRaw.trim().split(/\s+/);
       if (partesNombre.length === 2) {
         setNombreMostrado(`${partesNombre[0]} ${partesNombre[1].substring(0, 3)}*`);
@@ -82,7 +80,7 @@ function ExitoContent() {
     } else {
       setNombreMostrado(nombreRaw);
     }
-  }, [nombreRaw]);
+  }, [nombreRaw, esQrParam]);
 
   useEffect(() => {
     // Carga de Ads
