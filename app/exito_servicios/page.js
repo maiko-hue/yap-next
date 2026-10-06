@@ -183,7 +183,7 @@ function ExitoServiciosContent() {
                     background: linear-gradient(180deg, #581c78 0%, #742284 100%) !important;
                     background-attachment: fixed !important;
                     color: #333;
-                    min-height: 100dvh;
+                    min-height: calc(100dvh / var(--app-zoom, 1));
                     width: 100%;
                     overflow-x: hidden;
                     position: relative;
@@ -192,7 +192,7 @@ function ExitoServiciosContent() {
                 }
                 .container {
                     width: 100%;
-                    min-height: 100dvh;
+                    min-height: calc(100dvh / var(--app-zoom, 1));
                     display: flex;
                     flex-direction: column;
                     position: relative;
@@ -374,7 +374,7 @@ function ExitoServiciosContent() {
 
 export default function ExitoServicios() {
     return (
-        <Suspense fallback={<div style={{height:'100dvh', background:'#742284'}}></div>}>
+        <Suspense fallback={<div style={{height:'calc(100dvh / var(--app-zoom, 1))', background:'#742284'}}></div>}>
             <ExitoServiciosContent />
         </Suspense>
     );

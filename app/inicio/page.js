@@ -43,6 +43,18 @@ export default function Inicio() {
   const totalSlides = 6;
   const lottieRef = useRef(null);
 
+  const [sliderTouchStartX, setSliderTouchStartX] = useState(null);
+  const handleSliderTouchStart = (e) => setSliderTouchStartX(e.touches[0].clientX);
+  const handleSliderTouchEnd = (e) => {
+    if (sliderTouchStartX === null) return;
+    const diff = sliderTouchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) setCurrentSlide(prev => (prev + 1) % totalSlides);
+      else setCurrentSlide(prev => (prev === 0 ? totalSlides - 1 : prev - 1));
+    }
+    setSliderTouchStartX(null);
+  };
+
   useEffect(() => {
     // Splash screen timer
     const animSpeed = typeof window !== "undefined" ? parseFloat(localStorage.getItem("yape_anim_speed") || "1") : 1;
@@ -394,7 +406,7 @@ export default function Inicio() {
             </div>
 
             {/* CARRUSEL DE PROMOS */}
-            <div className="slider-container" id="promoSlider">
+            <div className="slider-container" id="promoSlider" onTouchStart={handleSliderTouchStart} onTouchEnd={handleSliderTouchEnd}>
               <div className="slider-track" id="sliderTrack" style={{ transform: `translateX(-${currentSlide * (100 / totalSlides)}%)`, transition: 'transform 0.3s ease-out' }}>
                   <div className="slide"><div className="banner-card"><img src="/img/h_fondo1.jpg" alt="" /></div></div>
                   <div className="slide"><div className="banner-card"><img src="/img/h_fondo2.jpg" alt="" /></div></div>

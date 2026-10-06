@@ -11,6 +11,12 @@ export default function LoginPin() {
 
     const [currentPin, setCurrentPin] = useState("");
     const maxDigits = 6;
+    const [keysReady, setKeysReady] = useState(false);
+    
+    useEffect(() => {
+        const timer = setTimeout(() => setKeysReady(true), 1000);
+        return () => clearTimeout(timer);
+    }, []);
     
     // UI states
     const [showSplash, setShowSplash] = useState(true);
@@ -218,23 +224,22 @@ export default function LoginPin() {
                         </div>
 
                         <div className="keypad">
-                            <div className="key" onClick={() => pressNum('9')}>9</div>
-                            <div className="key" onClick={() => pressNum('1')}>1</div>
-                            <div className="key" onClick={() => pressNum('5')}>5</div>
-                            <div className="key" onClick={() => pressNum('7')}>7</div>
-                            <div className="key" onClick={() => pressNum('4')}>4</div>
-                            <div className="key" onClick={() => pressNum('0')}>0</div>
-                            <div className="key" onClick={() => pressNum('6')}>6</div>
-                            <div className="key" onClick={() => pressNum('3')}>3</div>
-                            <div className="key" onClick={() => pressNum('2')}>2</div>
+                            {['9', '1', '5', '7', '4', '0', '6', '3', '2'].map((num, i) => (
+                                <div key={i} className="key" onClick={() => keysReady && pressNum(num)} style={{ touchAction: 'manipulation' }}>
+                                    {keysReady ? num : <div className="skeleton-box" style={{width: '24px', height: '24px', borderRadius: '4px', margin: 'auto'}}></div>}
+                                </div>
+                            ))}
                             
-                            <div className="key" onClick={abrirBiometrico} style={{ background: 'transparent' }}>
-                                <img src="/img/loginanim1.gif" alt="QR" className="key-img-qr" />
+                            <div className="key" onClick={() => keysReady && abrirBiometrico()} style={{ background: 'transparent', touchAction: 'manipulation' }}>
+                                {keysReady ? <img src="/img/loginanim1.gif" alt="QR" className="key-img-qr" /> : null}
                             </div>
                             
-                            <div className="key" onClick={() => pressNum('8')}>8</div>
-                            <div className="key" onClick={deleteNum} style={{ background: 'transparent' }}>
-                                <i className="fa-solid fa-delete-left" style={{ color: '#888' }}></i>
+                            <div className="key" onClick={() => keysReady && pressNum('8')} style={{ touchAction: 'manipulation' }}>
+                                {keysReady ? '8' : <div className="skeleton-box" style={{width: '24px', height: '24px', borderRadius: '4px', margin: 'auto'}}></div>}
+                            </div>
+                            
+                            <div className="key" onClick={() => keysReady && deleteNum()} style={{ background: 'transparent', touchAction: 'manipulation' }}>
+                                {keysReady ? <i className="fa-solid fa-delete-left" style={{ color: '#888' }}></i> : null}
                             </div>
                         </div>
                     </div>

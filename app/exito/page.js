@@ -136,11 +136,23 @@ function ExitoContent() {
 
   const handleCompartir = () => {
     setIsPhotoReady(true);
+    
+    // Almacenamos el zoom original y lo quitamos temporalmente para la captura
+    const htmlEl = document.documentElement;
+    const originalZoom = htmlEl.style.zoom;
+    htmlEl.style.zoom = '1';
+
     setTimeout(() => {
-      html2canvas(document.body, { 
+      const container = document.querySelector('.exito-container') || document.body;
+      html2canvas(container, { 
         backgroundColor: '#742284', 
-        scale: 2 
+        scale: 2,
+        windowWidth: container.scrollWidth,
+        windowHeight: container.scrollHeight
       }).then(canvas => {
+        // Restaurar el zoom original
+        if (originalZoom) htmlEl.style.zoom = originalZoom;
+
         canvas.toBlob(blob => {
           let nameFile = nombreMostrado.replace(/[^a-zA-Z0-9]/g, "_");
           const file = new File([blob], `Yape_${nameFile}.png`, { type: 'image/png' });
@@ -158,6 +170,10 @@ function ExitoContent() {
             setIsPhotoReady(false);
           }
         });
+      }).catch(() => {
+        // Restaurar en caso de error
+        if (originalZoom) htmlEl.style.zoom = originalZoom;
+        setIsPhotoReady(false);
       });
     }, 150);
   };

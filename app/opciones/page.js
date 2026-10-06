@@ -3,11 +3,22 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../firebase';
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 export default function Opciones() {
   const router = useRouter();
   
+  const [userName, setUserName] = useState("Usuario");
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserName(user.displayName || "Usuario");
+      }
+    });
+    return () => unsub();
+  }, []);
+
   // TOAST
   const [toast, setToast] = useState({ show: false, msg: "" });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -387,6 +398,12 @@ export default function Opciones() {
           <hr className="divider" />
 
           <div className="section-title">Accesibilidad (Zoom Global)</div>
+          <div style={{display: 'flex', alignItems: 'flex-start', background: 'rgba(0,191,165,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '15px'}}>
+            <svg style={{width: '20px', height: '20px', flexShrink: 0, marginRight: '10px', color: '#00BFA5'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div style={{fontSize: '13px', lineHeight: '1.4', color: '#555', fontWeight: '600'}}>
+              El nivel de zoom se aplicará para toda la APP, busca el nivel que más se adapte a tu tipo de celular.
+            </div>
+          </div>
             <div className="settings-section">
               <div className="zoom-stepper-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: '15px 20px', borderRadius: '12px', border: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
                 <button className="zoom-btn-stepper" onClick={() => handleZoomChange(-5)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -480,6 +497,27 @@ export default function Opciones() {
               </div>
           </div>
 
+        </div>
+
+        <div className="promo-bubble" style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          right: '20px',
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          padding: '15px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          zIndex: 100,
+          animation: 'popIn 0.5s ease-out'
+        }}>
+          <img src="/img/cheque.png" alt="Cheque" style={{width: '60px', marginBottom: '10px'}} />
+          <div style={{fontSize: '14px', color: '#333', textAlign: 'center', fontWeight: '600', lineHeight: '1.4'}}>
+            ¡Bienvenido <strong>{userName}</strong>, tenemos nuevas funciones para ti! Disfruta esta versión 5.0 de AppsReborn.
+          </div>
         </div>
       </div>
 
