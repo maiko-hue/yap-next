@@ -63,7 +63,7 @@ export default function MovimientosPage() {
     };
 
     return (
-        <div style={{ backgroundColor: '#FFFFFF', minHeight: '100dvh', paddingBottom: '30px' }}>
+        <div style={{ backgroundColor: '#FFFFFF', height: 'calc(100dvh / var(--app-zoom, 1))', overflowY: 'auto', paddingBottom: '30px' }}>
             <div className="movimientos-header">
                 <i className="fa-solid fa-arrow-left movimientos-header-icon" onClick={() => router.push('/inicio')}></i>
                 <div className="movimientos-header-title">Movimientos</div>

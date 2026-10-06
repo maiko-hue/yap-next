@@ -81,6 +81,7 @@ export default function Opciones() {
     setCensurarBaucher(localStorage.getItem('yape_censurar_baucher') === 'true');
     setCensurarNombresQr(localStorage.getItem('yape_censurar_nombres_qr') === 'true');
     setFrecuentes(JSON.parse(localStorage.getItem('yape_frecuentes')) || []);
+    setSavedPin(localStorage.getItem('yape_custom_pin'));
 
     setAnimSpeed(localStorage.getItem('yape_anim_speed') || '1');
     // Load Contacts Config
@@ -237,6 +238,7 @@ export default function Opciones() {
   const [pinStep, setPinStep] = useState(1);
   const [tempPin, setTempPin] = useState('');
   const [pinInput, setPinInput] = useState('');
+  const [savedPin, setSavedPin] = useState(null);
 
   const handleStartPin = () => setShowPinConfirmModal(true);
   const proceedToPin = () => {
@@ -255,6 +257,7 @@ export default function Opciones() {
     } else {
       if (pinInput === tempPin) {
         localStorage.setItem('yape_custom_pin', pinInput);
+        setSavedPin(pinInput);
         setShowPinPromptModal(false);
         showToast("PIN definido correctamente");
       } else {
@@ -264,6 +267,11 @@ export default function Opciones() {
         setPinInput('');
       }
     }
+  };
+  const handleDeletePin = () => {
+    localStorage.removeItem('yape_custom_pin');
+    setSavedPin(null);
+    showToast("PIN borrado correctamente");
   };
 
   return (
@@ -723,6 +731,15 @@ export default function Opciones() {
 
       {/* PANTALLA COMPLETA PIN */}
       <div className={`pin-screen-overlay ${showPinConfirmModal ? 'show' : ''}`}>
+        <div className="pin-floating-bubble">
+          <div className="bubble-text">
+            {savedPin 
+              ? `Tu PIN definido es ${savedPin}` 
+              : "Cualquier PIN te dejara entrar, mejora esa seguridad definiendo un pin personalizado"}
+          </div>
+          <img src="/img/pensando1.png" alt="Pensando" />
+        </div>
+
         <div className="pin-header">
             <i className="fa-solid fa-chevron-left pin-header-icon" onClick={() => setShowPinConfirmModal(false)}></i>
             <span className="pin-header-title">Cambiar PIN</span>
@@ -732,6 +749,9 @@ export default function Opciones() {
         </div>
         <div className="pin-btn-container">
             <button className="btn-teal-pin" onClick={() => setShowPinConfirmModal('native_alert')}>Definir Pin</button>
+            {savedPin && (
+              <button className="btn-outline-pin" onClick={handleDeletePin} style={{ marginTop: '10px' }}>Borrar PIN</button>
+            )}
         </div>
       </div>
 
@@ -791,6 +811,13 @@ export default function Opciones() {
           </div>
         )}
         <style dangerouslySetInnerHTML={{__html: `
+        .pin-floating-bubble { position: absolute; bottom: 120px; right: 20px; max-width: 200px; display: flex; align-items: flex-end; z-index: 10; animation: floatBubble 3s ease-in-out infinite; }
+        .pin-floating-bubble img { width: 50px; height: 50px; object-fit: contain; margin-left: 10px; margin-bottom: -15px; position: relative; z-index: 2; transform: scaleX(-1); }
+        .pin-floating-bubble .bubble-text { background: white; padding: 12px 15px; border-radius: 15px; font-size: 13px; color: #555; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eee; position: relative; line-height: 1.4; border-bottom-right-radius: 0; }
+        .pin-floating-bubble .bubble-text::after { content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; background: white; border-bottom: 1px solid #eee; border-right: 1px solid #eee; transform: rotate(45deg); }
+        @keyframes floatBubble { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .btn-outline-pin { width: 100%; border: 1px solid #ff5252; background: white; color: #ff5252; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+        .btn-outline-pin:active { background: #ffebee; }
         .pin-screen-overlay { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 100%; height: calc(100dvh / var(--app-zoom, 1)); background-color: white; z-index: 6000; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; }
         .pin-screen-overlay.show { display: flex; opacity: 1; }
         .pin-header { background-color: #742385; padding: 20px; display: flex; align-items: center; color: white; padding-top: max(20px, env(safe-area-inset-top)); }
