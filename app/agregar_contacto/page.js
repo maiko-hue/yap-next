@@ -56,38 +56,11 @@ export default function AgregarContacto() {
             
             {isLoading && (
                 <div className="custom-loader-overlay">
-                    <svg height="108px" width="108px" viewBox="0 0 128 128" className="loader">
-                        <defs>
-                          <clipPath id="loader-eyes">
-                            <circle transform="rotate(-40,64,64) translate(0,-56)" r="8" cy="64" cx="64" className="loader__eye1"></circle>
-                            <circle transform="rotate(40,64,64) translate(0,-56)" r="8" cy="64" cx="64" className="loader__eye2"></circle>
-                          </clipPath>
-                          <linearGradient y2="1" x2="0" y1="0" x1="0" id="loader-grad">
-                            <stop stopColor="#000" offset="0%"></stop>
-                            <stop stopColor="#fff" offset="100%"></stop>
-                          </linearGradient>
-                          <mask id="loader-mask">
-                            <rect fill="url(#loader-grad)" height="128" width="128" y="0" x="0"></rect>
-                          </mask>
-                        </defs>
-                        <g strokeDasharray="175.93 351.86" strokeWidth="12" strokeLinecap="round">
-                          <g>
-                            <rect clipPath="url(#loader-eyes)" height="64" width="128" fill="hsl(193,90%,50%)"></rect>
-                            <g stroke="hsl(193,90%,50%)" fill="none">
-                              <circle transform="rotate(180,64,64)" r="56" cy="64" cx="64" className="loader__mouth1"></circle>
-                              <circle transform="rotate(0,64,64)" r="56" cy="64" cx="64" className="loader__mouth2"></circle>
-                            </g>
-                          </g>
-                          <g mask="url(#loader-mask)">
-                            <rect clipPath="url(#loader-eyes)" height="64" width="128" fill="hsl(223,90%,50%)"></rect>
-                            <g stroke="hsl(223,90%,50%)" fill="none">
-                              <circle transform="rotate(180,64,64)" r="56" cy="64" cx="64" className="loader__mouth1"></circle>
-                              <circle transform="rotate(0,64,64)" r="56" cy="64" cx="64" className="loader__mouth2"></circle>
-                            </g>
-                          </g>
-                        </g>
-                    </svg>
-                    <p style={{ marginTop: '20px', fontWeight: 600, color: 'white' }}>Guardando en la Nube...</p>
+                    <div style={{position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90px', height: '90px'}}>
+                        <div className="custom-spinner" style={{width: '90px', height: '90px', border: '4px solid rgba(255,255,255,0.2)', borderTop: '4px solid #00BFA5', position: 'absolute', margin: 0}}></div>
+                        <img src="/img/secondlogo.png" alt="Loading" style={{width: '50px', height: '50px', objectFit: 'contain', zIndex: 1}} />
+                    </div>
+                    <p style={{ marginTop: '20px', fontWeight: 700, color: 'white', fontSize: '15px' }}>Guardando en la Nube...</p>
                 </div>
             )}
 
@@ -130,6 +103,13 @@ export default function AgregarContacto() {
                                 value={nombre}
                                 onChange={(e) => setNombre(e.target.value)}
                             />
+                        </div>
+                    </div>
+
+                    <div style={{display: 'flex', alignItems: 'flex-start', background: 'rgba(0,191,165,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '25px'}}>
+                        <svg style={{width: '20px', height: '20px', flexShrink: 0, marginRight: '10px', color: '#00BFA5'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <div style={{fontSize: '13px', lineHeight: '1.4', color: '#555', fontWeight: '600'}}>
+                            Recuerda que al guardar un contacto se almacena en nuestra base general, osea estará disponible para todos los usuarios y todas nuestras APPs.
                         </div>
                     </div>
 

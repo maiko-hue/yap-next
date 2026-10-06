@@ -345,7 +345,7 @@ function MontoContent() {
               <div className="bank-item-text-monto" style={{ fontWeight: 700 }}>Yape</div>
             </div>
             <div className="subtitle-banks-monto">Selecciona una entidad financiera</div>
-            {['Plin', 'Bim', 'Tunki', 'Agora / Oh!', 'BCP', 'BBVA', 'Interbank', 'Financiera Efectiva', 'Dale', 'IziPay'].map(b => (
+            {['Plin', 'Bim', 'Tunki', 'Agora / Oh!', 'BCP', 'BBVA', 'Interbank', 'Financiera Efectiva', 'Dale', 'IziPay', 'SIP'].map(b => (
               <div key={b} className="bank-item-monto" onClick={() => handleBankSelect(b)}>
                 <div className="bank-item-icon-monto"><img src="/img/arrows.svg" alt="" /></div>
                 <div className="bank-item-text-monto">{b}</div>

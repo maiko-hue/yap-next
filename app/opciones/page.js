@@ -502,20 +502,21 @@ export default function Opciones() {
         <div className="promo-bubble" style={{
           position: 'fixed',
           bottom: '20px',
-          left: '20px',
           right: '20px',
+          width: '240px',
           backgroundColor: 'white',
           borderRadius: '16px',
-          padding: '15px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+          padding: '12px 15px',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.18)',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
+          gap: '12px',
           zIndex: 100,
           animation: 'popIn 0.5s ease-out'
         }}>
-          <img src="/img/cheque.png" alt="Cheque" style={{width: '60px', marginBottom: '10px'}} />
-          <div style={{fontSize: '14px', color: '#333', textAlign: 'center', fontWeight: '600', lineHeight: '1.4'}}>
+          <img src="/img/cheque.png" alt="Cheque" style={{width: '45px', flexShrink: 0}} />
+          <div style={{fontSize: '12.5px', color: '#444', textAlign: 'left', fontWeight: '600', lineHeight: '1.3'}}>
             ¡Bienvenido <strong>{userName}</strong>, tenemos nuevas funciones para ti! Disfruta esta versión 5.0 de AppsReborn.
           </div>
         </div>
