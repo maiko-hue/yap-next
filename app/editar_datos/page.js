@@ -20,22 +20,39 @@ export default function EditarDatos() {
   const [correoError, setCorreoError] = useState(false);
   const [phone, setPhone] = useState('');
 
+  const [initialData, setInitialData] = useState(null);
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+
   useEffect(() => {
     // Load existing data from localStorage
-    setName(localStorage.getItem('yape_name') || '');
+    const initName = localStorage.getItem('yape_name') || '';
     
     let savedBal = parseFloat(localStorage.getItem('yape_balance'));
-    if (!isNaN(savedBal)) {
-      setBalance(savedBal.toFixed(2));
-    } else {
-      setBalance('0.00');
-    }
+    const initBal = !isNaN(savedBal) ? savedBal.toFixed(2) : '0.00';
 
-    setIsPopupEnabled(localStorage.getItem('yape_show_popup') !== 'false');
-    setIsBotEnabled(localStorage.getItem('yape_bot_telegram_activo') === 'true');
-    setCorreo(localStorage.getItem('yape_correo') || '');
-    setPhone(localStorage.getItem('yape_user_phone') || '');
-    setIsCorreoEnabled(localStorage.getItem('yape_envio_correo_activo') === 'true');
+    const initPopup = localStorage.getItem('yape_show_popup') !== 'false';
+    const initBot = localStorage.getItem('yape_bot_telegram_activo') === 'true';
+    const initCorreoStr = localStorage.getItem('yape_correo') || '';
+    const initPhoneStr = localStorage.getItem('yape_user_phone') || '';
+    const initCorreoEn = localStorage.getItem('yape_envio_correo_activo') === 'true';
+
+    setName(initName);
+    setBalance(initBal);
+    setIsPopupEnabled(initPopup);
+    setIsBotEnabled(initBot);
+    setCorreo(initCorreoStr);
+    setPhone(initPhoneStr);
+    setIsCorreoEnabled(initCorreoEn);
+
+    setInitialData({
+      name: initName,
+      balance: initBal,
+      isPopupEnabled: initPopup,
+      isBotEnabled: initBot,
+      correo: initCorreoStr,
+      phone: initPhoneStr,
+      isCorreoEnabled: initCorreoEn
+    });
 
     // Remove skeleton after 1s
     const timer = setTimeout(() => {
@@ -43,6 +60,25 @@ export default function EditarDatos() {
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  const hasChanges = () => {
+    if (!initialData) return false;
+    return name !== initialData.name ||
+           balance !== initialData.balance ||
+           isPopupEnabled !== initialData.isPopupEnabled ||
+           isBotEnabled !== initialData.isBotEnabled ||
+           correo !== initialData.correo ||
+           phone !== initialData.phone ||
+           isCorreoEnabled !== initialData.isCorreoEnabled;
+  };
+
+  const handleBack = () => {
+    if (hasChanges()) {
+      setShowUnsavedModal(true);
+    } else {
+      router.push('/opciones');
+    }
+  };
 
   const handleBalanceChange = (e) => {
     let value = e.target.value.replace(/[^0-9]/g, '');
@@ -102,7 +138,7 @@ export default function EditarDatos() {
       <div className="container-ed">
         
         <div className="header-hero-ed">
-          <i className="fa-solid fa-arrow-left back-icon-ed" onClick={() => router.push('/opciones')}></i>
+          <i className="fa-solid fa-arrow-left back-icon-ed" onClick={handleBack}></i>
           <img src="/img/secondlogo.png" alt="Logo" className="logo-img-custom-ed" />
         </div>
 
@@ -220,7 +256,54 @@ export default function EditarDatos() {
         </div>
       </div>
 
+      {showUnsavedModal && (
+        <div className="unsaved-modal-overlay">
+          <div className="unsaved-modal-content">
+            <div className="unsaved-icon"><i className="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Cambios sin guardar</h3>
+            <p>Los cambios no se van a aplicar mientras no los guardes, ¿estás seguro de continuar?</p>
+            <div className="unsaved-buttons">
+              <button className="btn-leave" onClick={() => router.push('/opciones')}>Salir sin aplicar cambios</button>
+              <button className="btn-save" onClick={() => {
+                handleSave();
+              }}>Guardar cambios y salir</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style dangerouslySetInnerHTML={{__html: `
+        .unsaved-modal-overlay {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.6); z-index: 1000;
+          display: flex; justify-content: center; align-items: center;
+          padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px);
+        }
+        .unsaved-modal-content {
+          background: white; border-radius: 16px; padding: 25px 20px;
+          text-align: center; width: 100%; max-width: 320px;
+          animation: scaleUp 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .unsaved-icon {
+          font-size: 40px; color: #ffb300; margin-bottom: 15px;
+        }
+        .unsaved-modal-content h3 {
+          margin: 0 0 10px 0; color: #333; font-size: 18px; font-weight: 700;
+        }
+        .unsaved-modal-content p {
+          margin: 0 0 25px 0; color: #666; font-size: 14px; line-height: 1.5;
+        }
+        .unsaved-buttons {
+          display: flex; flex-direction: column; gap: 10px;
+        }
+        .btn-leave {
+          background: #f5f5f5; border: none; padding: 12px; border-radius: 25px;
+          color: #666; font-weight: 600; font-size: 14px; cursor: pointer;
+        }
+        .btn-save {
+          background: #00BFA5; border: none; padding: 12px; border-radius: 25px;
+          color: white; font-weight: 700; font-size: 14px; cursor: pointer;
+        }
         .container-ed { max-width: 100%; margin: 0 auto; min-height: calc(100dvh / var(--app-zoom, 1)); height: calc(100dvh / var(--app-zoom, 1)); overflow-y: auto; display: flex; flex-direction: column; position: relative; background-color: #f2f4f6; }
         .header-hero-ed { background: linear-gradient(135deg, #742385 0%, #511973 100%); height: 200px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(81, 25, 115, 0.3); flex-shrink: 0; }
         .back-icon-ed { position: absolute; top: 25px; left: 25px; color: white; font-size: 24px; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background 0.3s; }
