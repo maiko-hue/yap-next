@@ -32,6 +32,7 @@ function ExitoContent() {
   const fechaParam = searchParams.get('fecha');
   const horaParam = searchParams.get('hora');
   const tipoParam = searchParams.get('tipo');
+  const animacionParam = searchParams.get('animacion') !== 'false';
 
   const valorNumericoMonto = parseFloat(monto);
   let topBannerSrc = "/img/10.jpg";
@@ -95,42 +96,44 @@ function ExitoContent() {
     setTimeout(() => setLoadingAds(false), 2000);
 
     // Animación Confeti
-    const frameNames = [
-      'download.png', 'download1.png', 'download2.png', 'download3.png', 'download4.png',
-      'download5.png', 'download6.png', 'download7.png', 'download8.png', 'download9.png',
-      'download10.png', 'download11.png', 'download13.png', 'download14.png' 
-    ];
-    let loaded = 0;
-    const frames = [];
-    frameNames.forEach((name, i) => {
-      const img = new Image();
-      img.onload = () => {
-        loaded++;
-        if (loaded === frameNames.length) playSeq(frames);
-      };
-      img.onerror = () => {
-        loaded++;
-        if (loaded === frameNames.length) playSeq(frames);
-      };
-      img.src = '/img/' + name;
-      frames[i] = img.src;
-    });
+      if (animacionParam) {
+        const frameNames = [
+          'download.png', 'download1.png', 'download2.png', 'download3.png', 'download4.png',
+          'download5.png', 'download6.png', 'download7.png', 'download8.png', 'download9.png',
+          'download10.png', 'download11.png', 'download13.png', 'download14.png' 
+        ];
+        let loaded = 0;
+        const frames = [];
+        frameNames.forEach((name, i) => {
+          const img = new Image();
+          img.onload = () => {
+            loaded++;
+            if (loaded === frameNames.length) playSeq(frames);
+          };
+          img.onerror = () => {
+            loaded++;
+            if (loaded === frameNames.length) playSeq(frames);
+          };
+          img.src = '/img/' + name;
+          frames[i] = img.src;
+        });
 
-    const playSeq = (loadedFrames) => {
-      burstFrames.current = loadedFrames;
-      setShowBurst(true);
-      let curr = 0;
-      const interval = setInterval(() => {
-        if (curr >= loadedFrames.length) {
-          clearInterval(interval);
-          setShowBurst(false);
-          return;
-        }
-        setBurstFrame(curr);
-        curr++;
-      }, 80);
-    };
-  }, []);
+        const playSeq = (loadedFrames) => {
+          burstFrames.current = loadedFrames;
+          setShowBurst(true);
+          let curr = 0;
+          const interval = setInterval(() => {
+            if (curr >= loadedFrames.length) {
+              clearInterval(interval);
+              setShowBurst(false);
+              return;
+            }
+            setBurstFrame(curr);
+            curr++;
+          }, 80);
+        };
+      }
+    }, []);
 
   const handleCompartir = () => {
     setIsPhotoReady(true);
@@ -190,8 +193,12 @@ function ExitoContent() {
 
           <div className="exito-header">
             {!isPhotoReady ? (
-              <img src="/img/animationyape.gif" alt="Yape" className="exito-logo-header-img" />
-            ) : (
+                animacionParam ? (
+                  <img src="/img/animationyape.gif" alt="Yape" className="exito-logo-header-img" />
+                ) : (
+                  <img src="/img/logo_yape_header.png" alt="Yape" className="exito-logo-header-img exito-logo-history" />
+                )
+              ) : (
               <img src="/img/LogoYape.svg" alt="Yape" className="exito-logo-header-img" />
             )}
             

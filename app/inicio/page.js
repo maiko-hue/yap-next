@@ -474,7 +474,7 @@ export default function Inicio() {
                                 let rawNum = mov.numero || "999";
                                 let isQr = isNaN(rawNum.replace(/\s/g, ''));
                                 let mostrarCelular = mov.mostrar_celular || "asteriscos";
-                                const url = `/exito?monto=${mov.monto}&nombre=${encodeURIComponent(mov.nombre)}&fecha=${encodeURIComponent(mov.fechaSolo || '')}&hora=${encodeURIComponent(mov.horaSolo || '')}&numero=${encodeURIComponent(rawNum)}&operacion=${mov.operacion || '00000000'}&codigo=${mov.codigo || '000'}&mensaje=${encodeURIComponent(mov.mensaje || '')}&destino=${encodeURIComponent(mov.destino || 'Yape')}&tipo=${mov.tipo || 'gasto'}&es_qr=${isQr}&mostrar_celular=${mostrarCelular}`;
+                                const url = `/exito?monto=${mov.monto}&nombre=${encodeURIComponent(mov.nombre)}&fecha=${encodeURIComponent(mov.fechaSolo || '')}&hora=${encodeURIComponent(mov.horaSolo || '')}&numero=${encodeURIComponent(rawNum)}&operacion=${mov.operacion || '00000000'}&codigo=${mov.codigo || '000'}&mensaje=${encodeURIComponent(mov.mensaje || '')}&destino=${encodeURIComponent(mov.destino || 'Yape')}&tipo=${mov.tipo || 'gasto'}&es_qr=${isQr}&mostrar_celular=${mostrarCelular}&animacion=false`;
                                 router.push(url);
                             }}>
                                 <div className="mov-info">

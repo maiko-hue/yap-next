@@ -57,7 +57,7 @@ export default function MovimientosPage() {
         let isQr = mov.es_qr !== undefined ? mov.es_qr : isNaN(rawNum.replace(/\s/g, ''));
         let mostrarCelular = mov.mostrar_celular || "asteriscos"; 
         
-        const url = `/exito?monto=${mov.monto}&nombre=${encodeURIComponent(mov.nombre)}&fecha=${encodeURIComponent(mov.fechaSolo || '')}&hora=${encodeURIComponent(mov.horaSolo || '')}&numero=${encodeURIComponent(rawNum)}&operacion=${mov.operacion || '00000000'}&codigo=${mov.codigo || '000'}&mensaje=${encodeURIComponent(mov.mensaje || '')}&destino=${encodeURIComponent(mov.destino || 'Yape')}&tipo=${mov.tipo || 'gasto'}&es_qr=${isQr}&mostrar_celular=${mostrarCelular}`;
+        const url = `/exito?monto=${mov.monto}&nombre=${encodeURIComponent(mov.nombre)}&fecha=${encodeURIComponent(mov.fechaSolo || '')}&hora=${encodeURIComponent(mov.horaSolo || '')}&numero=${encodeURIComponent(rawNum)}&operacion=${mov.operacion || '00000000'}&codigo=${mov.codigo || '000'}&mensaje=${encodeURIComponent(mov.mensaje || '')}&destino=${encodeURIComponent(mov.destino || 'Yape')}&tipo=${mov.tipo || 'gasto'}&es_qr=${isQr}&mostrar_celular=${mostrarCelular}&animacion=false`;
         
         router.push(url);
     };
