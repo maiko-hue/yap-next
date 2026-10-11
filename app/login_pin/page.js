@@ -72,6 +72,9 @@ export default function LoginPin() {
                         `Hola, <b>${nombreUsr}</b> tu correo <b>${correoUsr}</b> no se encuentra activo.<br><br>Compra tu acceso con:`
                     );
                     setShowAccessModal(true);
+                } else {
+                    localStorage.setItem("pase_vip_activo", "true");
+                    localStorage.setItem("ultimo_check_seguridad", Date.now().toString());
                 }
             } else {
                  setAccessTextDynamic(
@@ -104,6 +107,7 @@ export default function LoginPin() {
                         setShowLoaderModal(true);
                         setTimeout(() => {
                             localStorage.setItem('sesion_iniciada', 'true');
+                            localStorage.setItem('ultimo_check_seguridad', Date.now().toString());
                             router.push('/inicio');
                         }, 2000);
                     }, 150);
