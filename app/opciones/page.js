@@ -22,6 +22,7 @@ export default function Opciones() {
   // TOAST
   const [toast, setToast] = useState({ show: false, msg: "" });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showResetWeightModal, setShowResetWeightModal] = useState(false);
   const showToast = (msg) => {
     setToast({ show: true, msg });
     setTimeout(() => setToast({ show: false, msg: "" }), 2000);
@@ -230,6 +231,10 @@ export default function Opciones() {
     document.documentElement.style.setProperty('--amount-weight', newWeight.toString());
   };
 
+  const handleResetWeight = () => {
+    setShowResetWeightModal(true);
+  };
+
   const handleZoomChange = (delta) => {
     let newZoom = zoomPercent + delta;
     if (newZoom < 50) newZoom = 50;
@@ -433,51 +438,23 @@ export default function Opciones() {
           </div>
             <div className="settings-section">
               <div className="zoom-stepper-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: '15px 20px', borderRadius: '12px', border: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-                <button className="zoom-btn-stepper" onClick={() => handleZoomChange(-5)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <i className="fa-solid fa-minus"></i>
-                </button>
-                <div style={{ fontSize: '20px', fontWeight: '800', color: '#333' }}>
-                  {zoomPercent}%
-                </div>
-                <button className="zoom-btn-stepper" onClick={() => handleZoomChange(5)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#00BFA5', color: 'white', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 10px rgba(0, 191, 165, 0.3)' }}>
-                  <i className="fa-solid fa-plus"></i>
-                </button>
-              </div>
-            </div>
-            <hr className="divider" />
-
-            <div className="section-title">Diseño de carga</div>
-            <div className="settings-section">
-              <div className="switch-container-opciones" style={{ marginBottom: 0 }}>
-                <span className="switch-label-opciones">Modo iPhone (Spinners)</span>
-                <label className="switch-opciones">
-                  <input type="checkbox" checked={iosMode} onChange={handleIosModeChange} />
-                  <span className="slider-opciones"></span>
-                </label>
-              </div>
-            </div>
-            <hr className="divider" />
-            
-            
-              <div className="section-title">Grosor del monto (Voucher)</div>
-              <div style={{display: 'flex', alignItems: 'flex-start', background: 'rgba(0,191,165,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '15px'}}>
-                <svg style={{width: '20px', height: '20px', flexShrink: 0, marginRight: '10px', color: '#00BFA5'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <div style={{fontSize: '13px', lineHeight: '1.4', color: '#555', fontWeight: '600'}}>
-                  Ajusta únicamente el grosor (peso de la fuente) del número del monto en la pantalla de éxito.
-                </div>
-              </div>
-              <div className="settings-section">
-                <div className="zoom-stepper-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: '15px 20px', borderRadius: '12px', border: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-                  <button className="zoom-btn-stepper" onClick={() => handleWeightChange(-10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <i className="fa-solid fa-minus"></i>
-                  </button>
-                  <div style={{ fontSize: '20px', fontWeight: '800', color: '#333' }}>
-                    {amountWeight}
+                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start' }}>
+                      <button className="zoom-btn-stepper" onClick={() => handleWeightChange(-10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <i className="fa-solid fa-minus"></i>
+                      </button>
+                    </div>
+                    <div style={{ fontSize: '20px', fontWeight: '800', color: '#333', flex: 1, textAlign: 'center' }}>
+                      {amountWeight}
+                    </div>
+                    <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', gap: '10px' }}>
+                      <button className="zoom-btn-stepper" onClick={() => handleWeightChange(10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#00BFA5', color: 'white', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 10px rgba(0, 191, 165, 0.3)' }}>
+                        <i className="fa-solid fa-plus"></i>
+                      </button>
+                      <button onClick={handleResetWeight} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#ffebee', color: '#ff5252', fontSize: '18px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <i className="fa-solid fa-rotate-left"></i>
+                      </button>
+                    </div>
                   </div>
-                  <button className="zoom-btn-stepper" onClick={() => handleWeightChange(10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#00BFA5', color: 'white', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 10px rgba(0, 191, 165, 0.3)' }}>
-                    <i className="fa-solid fa-plus"></i>
-                  </button>
-                </div>
               </div>
               <hr className="divider" />
 
@@ -755,7 +732,7 @@ export default function Opciones() {
       <div className={`modal-overlay-opciones ${showDeleteModal ? 'show' : ''}`} style={{ alignItems: 'center' }}>
         <div className="yape-alert-card">
           <div className="yape-alert-title">Advertencia</div>
-          <div className="yape-alert-text">Estas a punto de borrar todos tus movimientos ¿Esta usted seguro?</div>
+          <div className="yape-alert-text">Estas a punto de borrar todos tus movimientos ¿¿Esta usted seguro?</div>
           <div className="yape-alert-actions">
             <button className="yape-btn-cancel" onClick={() => setShowDeleteModal(false)}>No</button>
             <button className="yape-btn-confirm" onClick={handleDeleteMovements}>Si</button>
@@ -824,6 +801,26 @@ export default function Opciones() {
 
       {/* TOAST NATIVO */}
       <div id="modalToast" style={{ opacity: toast.show ? 1 : 0 }}>{toast.msg}</div>
+
+      
+      {showResetWeightModal && (
+        <div className="loader-overlay show" style={{ zIndex: 10000 }} onClick={(e) => { if (e.target.className.includes('loader-overlay')) setShowResetWeightModal(false); }}>
+          <div className="yape-alert-card">
+            <div className="yape-alert-title" style={{ fontSize: '18px', fontWeight: '700', color: '#742385', marginBottom: '10px' }}>Restablecer grosor</div>
+            <div className="yape-alert-text" style={{ fontSize: '14.5px', color: '#555', marginBottom: '20px', lineHeight: '1.4' }}>¿Esta usted seguro que quiere restablecer el grosor del monto a su valor por defecto?</div>
+            <div className="yape-alert-actions" style={{ display: 'flex', width: '100%', gap: '10px' }}>
+              <button className="yape-btn-cancel" onClick={() => setShowResetWeightModal(false)} style={{ flex: 1, padding: '12px', borderRadius: '25px', border: '1px solid #ccc', background: 'white', color: '#666', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>Cancelar</button>
+              <button className="yape-btn-confirm" onClick={() => {
+                setAmountWeight(510);
+                localStorage.setItem('yape_amount_weight', '510');
+                document.documentElement.style.setProperty('--amount-weight', '510');
+                setShowResetWeightModal(false);
+                showToast("Valores restablecidos");
+              }} style={{ flex: 1, padding: '12px', borderRadius: '25px', border: 'none', background: '#00BFA5', color: 'white', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}>Sí, restablecer</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showLogoutModal && (
           <div className="loader-overlay show" style={{ zIndex: 10000 }} onClick={(e) => { if (e.target.className.includes('loader-overlay')) setShowLogoutModal(false); }}>
