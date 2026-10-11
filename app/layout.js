@@ -38,6 +38,10 @@ export default function RootLayout({ children }) {
               document.documentElement.style.setProperty('--app-zoom', zl);
               document.documentElement.style.zoom = zl;
             }
+            const aw = localStorage.getItem('yape_amount_weight');
+            if (aw) {
+              document.documentElement.style.setProperty('--amount-weight', aw);
+            }
           `
         }} />
         <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{

@@ -61,6 +61,7 @@ export default function Opciones() {
 
   // ZOOM STATE
   const [zoomPercent, setZoomPercent] = useState(100);
+  const [amountWeight, setAmountWeight] = useState(510);
   const [iosMode, setIosMode] = useState(false);
   const [animSpeed, setAnimSpeed] = useState('1');
 
@@ -90,6 +91,7 @@ export default function Opciones() {
 
     // Load Zoom
     setZoomPercent(Math.round(parseFloat(localStorage.getItem('yape_zoom_level') || '1') * 100));
+    setAmountWeight(parseInt(localStorage.getItem('yape_amount_weight') || '510', 10));
     setIosMode(localStorage.getItem('yape_ios_spinner') === 'true');
   }, []);
 
@@ -219,6 +221,15 @@ export default function Opciones() {
     else document.documentElement.classList.remove('ios-mode');
     showToast(val ? "Modo iPhone activado" : "Modo iPhone desactivado");
   };
+  const handleWeightChange = (delta) => {
+    let newWeight = amountWeight + delta;
+    if (newWeight < 100) newWeight = 100;
+    if (newWeight > 900) newWeight = 900;
+    setAmountWeight(newWeight);
+    localStorage.setItem('yape_amount_weight', newWeight.toString());
+    document.documentElement.style.setProperty('--amount-weight', newWeight.toString());
+  };
+
   const handleZoomChange = (delta) => {
     let newZoom = zoomPercent + delta;
     if (newZoom < 50) newZoom = 50;
@@ -447,7 +458,30 @@ export default function Opciones() {
             </div>
             <hr className="divider" />
             
-            <div className="section-title">Tiempos de animaciones</div>
+            
+              <div className="section-title">Grosor del monto (Voucher)</div>
+              <div style={{display: 'flex', alignItems: 'flex-start', background: 'rgba(0,191,165,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '15px'}}>
+                <svg style={{width: '20px', height: '20px', flexShrink: 0, marginRight: '10px', color: '#00BFA5'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <div style={{fontSize: '13px', lineHeight: '1.4', color: '#555', fontWeight: '600'}}>
+                  Ajusta únicamente el grosor (peso de la fuente) del número del monto en la pantalla de éxito.
+                </div>
+              </div>
+              <div className="settings-section">
+                <div className="zoom-stepper-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', padding: '15px 20px', borderRadius: '12px', border: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                  <button className="zoom-btn-stepper" onClick={() => handleWeightChange(-10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#f2f4f6', color: '#742385', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <i className="fa-solid fa-minus"></i>
+                  </button>
+                  <div style={{ fontSize: '20px', fontWeight: '800', color: '#333' }}>
+                    {amountWeight}
+                  </div>
+                  <button className="zoom-btn-stepper" onClick={() => handleWeightChange(10)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: 'none', background: '#00BFA5', color: 'white', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 10px rgba(0, 191, 165, 0.3)' }}>
+                    <i className="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <hr className="divider" />
+
+              <div className="section-title">Tiempos de animaciones</div>
           <div className="settings-section">
             <div className="zoom-container">
               <button className={`zoom-btn ${animSpeed === '0.01' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.01')}>
