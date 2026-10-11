@@ -45,7 +45,7 @@
 .exito-icon-share { width: 16px; height: 16px; margin-right: 5px; object-fit: contain; pointer-events: none; }
 .exito-amount-section { margin-bottom: 10px; }
 .exito-currency { font-size: 25px; font-weight: 600; color: #333333; vertical-align: top; margin-right: 2px; }
-.exito-amount-value { font-size: 50px; font-weight: var(--amount-weight, 510); color: #333; line-height: 1; }
+.exito-amount-value { font-size: 50px; font-weight: var(--amount-weight, 510); color: #333; line-height: 1; -webkit-text-stroke: calc(max(0, var(--amount-weight, 510) - 510) * 0.005px) #333; }
 .exito-recipient-name { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 5px; }
 .exito-date-time { font-size: 14px; color: #777; margin-bottom: 15px; display: flex; align-items: center; }
 .exito-icon-datetime { width: 14px; height: 14px; margin-right: 5px; object-fit: contain; opacity: 0.6; pointer-events: none; }
