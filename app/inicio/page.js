@@ -722,7 +722,7 @@ export default function Inicio() {
         .frecuentes-scroll { display: flex; overflow-x: auto; padding: 0 20px; gap: 18px; scrollbar-width: none; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; }
         .frecuentes-scroll::-webkit-scrollbar { display: none; }
         .frecuente-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 65px; }
-        .frecuente-circle { width: 52px; height: 52px; background-color: #f0f0f0; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #742284; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+        .frecuente-circle { width: 52px; height: 52px; background-color: #f0f0f0; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #888888; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
         .frecuente-name { font-size: 13px; font-weight: 600; color: #333; text-align: center; line-height: 1.1; margin-bottom: 3px; }
         .frecuente-num { font-size: 11px; color: #888; text-align: center; }
       `}} />

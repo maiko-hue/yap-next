@@ -99,6 +99,17 @@ export default function MiCuenta() {
                             )}
                         </div>
                     </div>
+                    
+                    <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '10px', background: 'rgba(0,191,165,0.05)', padding: '10px', borderRadius: '8px' }}>
+                        <svg style={{ width: '16px', height: '16px', color: '#00BFA5', flexShrink: 0, marginRight: '8px', marginTop: '2px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <div style={{ fontSize: '11px', color: '#666', lineHeight: '1.4' }}>
+                            Tu token de sesion es unico, solo cambia cuando cambias de dispositivo, este nos ayuda a identificar si estas compartiendo tu cuenta.
+                        </div>
+                    </div>
 
                     <div className="divider"></div>
 
