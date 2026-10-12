@@ -28,6 +28,24 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="beforeInteractive" />
         
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            html.vip-preload-hide body {
+              opacity: 0 !important;
+              pointer-events: none !important;
+            }
+          `
+        }} />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              if (window.location.pathname === '/' && localStorage.getItem('pase_vip_activo') === 'true') {
+                document.documentElement.classList.add('vip-preload-hide');
+              }
+            } catch(e) {}
+          `
+        }} />
+        
         <Script id="ios-mode-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{
           __html: `
             if (localStorage.getItem('yape_ios_spinner') === 'true') {

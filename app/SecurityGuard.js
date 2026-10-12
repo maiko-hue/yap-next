@@ -19,6 +19,7 @@ export default function SecurityGuard({ children }) {
   const isVip = typeof window !== 'undefined' ? localStorage.getItem("pase_vip_activo") === "true" : false;
 
   const expulsarUsuario = async () => {
+    document.documentElement.classList.remove('vip-preload-hide');
     localStorage.removeItem("pase_vip_activo");
     localStorage.removeItem("sesion_iniciada");
     localStorage.removeItem("sesion_token_yape");
@@ -57,6 +58,8 @@ export default function SecurityGuard({ children }) {
     if (esIndex && localStorage.getItem("pase_vip_activo") === "true") {
       setIsChecking(false);
       router.push('/login_pin');
+    } else {
+      document.documentElement.classList.remove('vip-preload-hide');
     }
   }, [pathname]);
 
