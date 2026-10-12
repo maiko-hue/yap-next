@@ -44,12 +44,18 @@ export default function SecurityGuard({ children }) {
         document.documentElement.style.setProperty('--app-zoom', savedZoom);
         document.documentElement.style.zoom = savedZoom;
       }
+
+      // Si ya cuenta con pase VIP activo, desbloqueamos la pantalla inmediatamente en el cliente
+      if (localStorage.getItem('pase_vip_activo') === 'true') {
+        setIsChecking(false);
+      }
     }
   }, []);
 
   // Redirección reactiva en el index sin consultar a Firestore
   useEffect(() => {
     if (esIndex && localStorage.getItem("pase_vip_activo") === "true") {
+      setIsChecking(false);
       router.push('/login_pin');
     }
   }, [pathname]);
@@ -137,6 +143,7 @@ export default function SecurityGuard({ children }) {
       }
 
       if (esIndex && localStorage.getItem("pase_vip_activo") === "true") {
+        setIsChecking(false);
         router.push('/login_pin');
         return;
       }
