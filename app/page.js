@@ -23,6 +23,13 @@ export default function Home() {
   
   const [isLoading, setIsLoading] = useState(false);
   const isLoggingIn = useRef(false);
+  const [isNewUser, setIsNewUser] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("pase_vip_activo") !== "true") {
+      setIsNewUser(true);
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -130,7 +137,7 @@ export default function Home() {
   return (
     <>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-      <div className="main-container">
+      <div className="main-container" style={{ opacity: isNewUser ? 1 : 0, pointerEvents: isNewUser ? 'auto' : 'none', transition: 'opacity 0.15s ease' }}>
         {showSplash && (
           <div id="splash-screen-anim" style={{ opacity: splashOpacity }}>
             <div className="contenedor-principal">
