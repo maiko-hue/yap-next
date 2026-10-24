@@ -90,7 +90,7 @@ function ExitoContent() {
       'lntvtu6siosxnkxwyazk.webp', 'dfxexhqz0ljgixgrc71s.webp', 'hgdybgbebofngmi3q8dr.webp',
       'cnjvw02u0kiizr7cmdze.webp', 'z9xriezpfzkwylyqfpdt.webp', 'zhx1nztq3y8bocojgtol.webp',
       'hbi3k6wkz09e5sggstxp.webp', 'oy0kuhvapnkwtazyyozh.webp', 'nrewunfzaog5j43g4ned.webp',
-      'n2htnzpfyn7wlwixuchk.webp', 'ygfgjoyhfhxkdbqtrsvk.jpg'
+      'n2htnzpfyn7wlwixuchk.webp', 'ygfgjoyhfhxkdbqtrsvk.jpg', 'bna.webp', 'avf.webp'
     ];
     setAdImage('/img/' + ads[Math.floor(Math.random() * ads.length)]);
     setTimeout(() => setLoadingAds(false), 2000);

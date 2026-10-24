@@ -40,7 +40,7 @@ export default function Inicio() {
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 6;
+  const totalSlides = 8;
   const lottieRef = useRef(null);
 
   const [sliderTouchStartX, setSliderTouchStartX] = useState(null);
@@ -414,10 +414,12 @@ export default function Inicio() {
                   <div className="slide"><div className="banner-card"><img src="/img/h_fondo5.jpg" alt="" /></div></div>
                   <div className="slide"><div className="banner-card"><img src="/img/h_fondo6.jpg" alt="" /></div></div>
                   <div className="slide"><div className="banner-card"><img src="/img/h_fondo4.jpg" alt="" /></div></div>
+                  <div className="slide"><div className="banner-card"><img src="/img/postcret.webp" alt="" /></div></div>
+                  <div className="slide"><div className="banner-card"><img src="/img/redm.webp" alt="" /></div></div>
               </div>
             </div>
             <div className="pagination">
-                {[0, 1, 2, 3, 4, 5].map((idx) => (
+                {Array.from({ length: totalSlides }).map((_, idx) => (
                   <div key={idx} className={`dot ${currentSlide === idx ? 'active' : ''}`} onClick={() => setCurrentSlide(idx)}></div>
                 ))}
             </div>
