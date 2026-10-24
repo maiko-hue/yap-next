@@ -26,8 +26,6 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="beforeInteractive" />
-        
         <style dangerouslySetInnerHTML={{
           __html: `
             html.vip-preload-hide body {
@@ -36,7 +34,11 @@ export default function RootLayout({ children }) {
             }
           `
         }} />
-        <script dangerouslySetInnerHTML={{
+      </head>
+      <body suppressHydrationWarning>
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="afterInteractive" />
+        
+        <Script id="vip-preload-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             try {
               if (window.location.pathname === '/' && localStorage.getItem('pase_vip_activo') === 'true') {
@@ -46,7 +48,7 @@ export default function RootLayout({ children }) {
           `
         }} />
         
-        <Script id="ios-mode-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{
+        <Script id="ios-mode-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             if (localStorage.getItem('yape_ios_spinner') === 'true') {
               document.documentElement.classList.add('ios-mode');
@@ -62,6 +64,7 @@ export default function RootLayout({ children }) {
             }
           `
         }} />
+
         <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             document.addEventListener('touchstart', function(event) {
@@ -94,6 +97,7 @@ export default function RootLayout({ children }) {
             }, { passive: false });
           `
         }} />
+
         <Script id="sw-register" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             if ('serviceWorker' in navigator) {
@@ -107,8 +111,7 @@ export default function RootLayout({ children }) {
             }
           `
         }} />
-      </head>
-      <body suppressHydrationWarning>
+
         <SecurityGuard>
           {children}
         </SecurityGuard>

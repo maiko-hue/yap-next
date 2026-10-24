@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Home() {
   const router = useRouter();
-  const [showSplash, setShowSplash] = useState(() => { if (typeof window !== "undefined") { return !localStorage.getItem("has_seen_splash"); } return true; });
+  const [showSplash, setShowSplash] = useState(false);
   const [splashOpacity, setSplashOpacity] = useState(1);
   const [showInstallScreen, setShowInstallScreen] = useState(false);
   const [installPromptEvent, setInstallPromptEvent] = useState(null);
@@ -29,11 +29,14 @@ export default function Home() {
     if (localStorage.getItem("pase_vip_activo") !== "true") {
       setIsNewUser(true);
     }
+    if (!localStorage.getItem("has_seen_splash")) {
+      setShowSplash(true);
+    }
   }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && !isLoggingIn.current) {
+      if (user && !isLoggingIn.current && localStorage.getItem("pase_vip_activo") === "true") {
         router.push('/login_pin');
       }
     });

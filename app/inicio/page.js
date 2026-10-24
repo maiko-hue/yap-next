@@ -395,7 +395,7 @@ export default function Inicio() {
               <div className="grid-item"><div className="icon-circle"><img src="/img/icono8.png" alt="" /></div><span className="grid-label">Remesas</span></div>
               <div className="grid-item"><div className="icon-circle"><img src="/img/icono9.png" alt="" /></div><span className="grid-label">SOAT</span></div>
               <div className="grid-item"><div className="icon-circle"><img src="/img/icono10.png" alt="" /></div><span className="grid-label">Viajar en bus</span></div>
-              <div className="grid-item"><div className="icon-circle"><img src="/img/icono11.png" alt="" /></div><span className="grid-label">Gaming</span></div>
+              <div className="grid-item"><div className="icon-circle"><img src="/img/listos.png" alt="" /></div><span className="grid-label">Siempre<br/>Listos</span></div>
               
               <div className="grid-item" onClick={() => setShowFullMenu(true)}>
                   <div className="icon-circle" style={{background:'transparent', boxShadow:'none', padding:0}}>
@@ -698,7 +698,7 @@ export default function Inicio() {
                   <div className="grid-item"><div className="icon-circle"><img src="/img/icono10.png" alt="" /></div><span className="grid-label">Viajar en<br/>bus</span></div>
                   <div className="grid-item"><div className="icon-circle"><img src="/img/icono6.png" alt="" /></div><span className="grid-label">Tienda</span></div>
                   <div className="grid-item"><div className="icon-circle" style={{padding:0, overflow:'hidden'}}><img src="/img/prom-1.jpg" className="menu-icon-rounded" alt="" /></div><span className="grid-label">Entradas</span></div>
-                  <div className="grid-item"><div className="icon-circle"><img src="/img/icono11.png" alt="" /></div><span className="grid-label">Gaming</span></div>
+                  <div className="grid-item"><div className="icon-circle"><img src="/img/listos.png" alt="" /></div><span className="grid-label">Siempre<br/>Listos</span></div>
                   <div className="grid-item"><div className="icon-circle"><img src="/img/promos-il-icon.svg" alt="" /></div><span className="grid-label">Promos</span></div>
                   <div className="grid-item"><div className="icon-circle" style={{padding:0, overflow:'hidden'}}><img src="/img/prom-6.jpg" className="menu-icon-rounded" alt="" /></div><span className="grid-label">Delivery</span></div>
                   <div className="grid-item"><div className="icon-circle" style={{padding:0, overflow:'hidden'}}><img src="/img/prom-3.jpg" className="menu-icon-rounded" alt="" /></div><span className="grid-label">Pedir gas</span></div>

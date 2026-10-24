@@ -24,11 +24,11 @@ export default function SecurityGuard({ children }) {
     localStorage.removeItem("sesion_iniciada");
     localStorage.removeItem("sesion_token_yape");
     localStorage.removeItem("ultimo_check_seguridad");
+    setOverlay(null);
     try {
       await signOut(auth);
     } catch(e) { console.error("Error cerrando sesion:", e); }
-    router.push('/');
-    setOverlay(null);
+    window.location.href = '/';
   };
 
   // REPARACIÓN: Asegurar que el diseño de iOS y el Zoom persistan en el cliente después de la hidratación
@@ -88,8 +88,14 @@ export default function SecurityGuard({ children }) {
 
       const userData = userSnap.data();
 
-      // Validación Anti-Clon
+      // Validación Anti-Clon: Se detectó otro dispositivo activo
       if (userData.sesion_token && userData.sesion_token !== miTicket) {
+        document.documentElement.classList.remove('vip-preload-hide');
+        localStorage.removeItem("pase_vip_activo");
+        localStorage.removeItem("sesion_iniciada");
+        localStorage.removeItem("sesion_token_yape");
+        localStorage.removeItem("ultimo_check_seguridad");
+
         setOverlay(
           <div className="seguridad-overlay">
             <div className="seguridad-card">

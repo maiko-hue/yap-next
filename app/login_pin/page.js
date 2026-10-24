@@ -22,6 +22,7 @@ export default function LoginPin() {
     const [showSplash, setShowSplash] = useState(true);
     const [showErrorScreen, setShowErrorScreen] = useState(false);
     const [showAccessModal, setShowAccessModal] = useState(false);
+    const [showSessionClosedModal, setShowSessionClosedModal] = useState(false);
     const [accessTextDynamic, setAccessTextDynamic] = useState("");
     const [showLoaderModal, setShowLoaderModal] = useState(false);
     const [showBioModal, setShowBioModal] = useState(false);
@@ -57,10 +58,12 @@ export default function LoginPin() {
                 // Anti-clone check
                 const localToken = localStorage.getItem("sesion_token_yape");
                 if (userData.sesion_token && userData.sesion_token !== localToken) {
-                    setAccessTextDynamic(
-                        `Hola, <b>${userData.nombre || "Usuario"}</b>. Tu cuenta ha sido bloqueada por uso simultáneo (Clonación detectada).<br><br>Contacta a soporte.`
-                    );
-                    setShowAccessModal(true);
+                    if (typeof document !== 'undefined') document.documentElement.classList.remove('vip-preload-hide');
+                    localStorage.removeItem("pase_vip_activo");
+                    localStorage.removeItem("sesion_iniciada");
+                    localStorage.removeItem("sesion_token_yape");
+                    localStorage.removeItem("ultimo_check_seguridad");
+                    setShowSessionClosedModal(true);
                     return;
                 }
 
@@ -167,13 +170,16 @@ export default function LoginPin() {
         setIsScanning(false);
     };
 
-    const handleVolverIndex = () => {
-        signOut(auth).then(() => {
-            localStorage.removeItem('sesion_iniciada');
-            router.push('/');
-        }).catch(() => {
-            router.push('/');
-        });
+    const handleVolverIndex = async () => {
+        if (typeof document !== 'undefined') document.documentElement.classList.remove('vip-preload-hide');
+        localStorage.removeItem('sesion_iniciada');
+        localStorage.removeItem('pase_vip_activo');
+        localStorage.removeItem('sesion_token_yape');
+        localStorage.removeItem('ultimo_check_seguridad');
+        try {
+            await signOut(auth);
+        } catch(e) {}
+        window.location.href = '/';
     };
 
     return (
@@ -257,6 +263,23 @@ export default function LoginPin() {
                     </div>
                 )}
             </div>
+
+            {showSessionClosedModal && (
+                <div className="access-overlay" id="sessionClosedModal" style={{ display: 'flex' }}>
+                    <div className="access-card">
+                        <div className="access-icon">
+                            <i className="fa-solid fa-right-from-bracket" style={{ color: '#ef4444', fontSize: '30px' }}></i>
+                        </div>
+                        <div className="access-title">Sesión Cerrada</div>
+                        <div className="access-text" style={{ fontSize: '14px', color: '#666', lineHeight: '1.6', margin: '15px 0 20px' }}>
+                            Tu sesión se ha cerrado porque se inició sesión en otro dispositivo.
+                        </div>
+                        <button onClick={handleVolverIndex} className="access-btn primary" style={{ backgroundColor: '#742284', border: 'none', cursor: 'pointer', width: '100%' }}>
+                            Entendido
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {showAccessModal && (
                 <div className="access-overlay" id="accessModal" style={{ display: 'flex' }}>
