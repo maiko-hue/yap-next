@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { auth } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
@@ -9,6 +10,27 @@ export default function Opciones() {
   const router = useRouter();
   
   const [userName, setUserName] = useState("Usuario");
+
+  // POPUP PUBLICIDAD ALEATORIA EN OPCIONES
+  const [showAdPopup, setShowAdPopup] = useState(false);
+  const [randomAdImg, setRandomAdImg] = useState("");
+
+  useEffect(() => {
+    const adImages = [
+      "/img/publicidad_1.jpg",
+      "/img/publicidad_2.jpg",
+      "/img/publicidad_3.jpg",
+      "/img/publicidad_4.jpg",
+      "/img/publicidad_5.jpg",
+      "/img/publicidad_6.jpg"
+    ];
+    const picked = adImages[Math.floor(Math.random() * adImages.length)];
+    setRandomAdImg(picked);
+    const timer = setTimeout(() => {
+      setShowAdPopup(true);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -415,6 +437,17 @@ export default function Opciones() {
 
           <div className="section-title">Mas de AppsReborn</div>
           <div className="settings-section">
+            <Link href="/shop" className="setting-item" style={{textDecoration: 'none'}}>
+              <div className="setting-left">
+                <div className="icon-circle bg-teal"><i className="fa-solid fa-bag-shopping"></i></div>
+                <div className="setting-text">
+                  <span className="st-title">Maikols Shop</span>
+                  <span className="st-desc">Productos en venta</span>
+                </div>
+              </div>
+              <i className="fa-solid fa-chevron-right arrow-icon"></i>
+            </Link>
+
             <a href="https://reniecdni.vercel.app" target="_blank" className="setting-item" style={{textDecoration: 'none'}}>
               <div className="setting-left">
                 <div className="icon-circle bg-purple"><i className="fa-solid fa-globe"></i></div>
@@ -875,6 +908,47 @@ export default function Opciones() {
             </div>
           </div>
         )}
+      {/* POPUP PUBLICIDAD ALEATORIA */}
+      <div 
+        className={`modal-overlay ${showAdPopup ? 'show' : ''}`} 
+        id="modalPopup" 
+        style={{ zIndex: 11000 }}
+        onClick={(e) => { if (e.target.id === 'modalPopup') setShowAdPopup(false); }}
+      >
+        <div className="modal-content">
+          <div 
+            className="modal-close-btn" 
+            id="closeModal" 
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              setShowAdPopup(false); 
+            }}
+          >
+            X
+          </div>
+          {randomAdImg && (
+            <a 
+              href={randomAdImg.includes('publicidad_6.jpg') ? 'https://t.me/addlist/2LeWY70DlMExNTg5' : 'https://t.me/MaikolEsleiter'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ display: 'block', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden' }}
+              onClick={(e) => {
+                if (!showAdPopup) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <img 
+                src={randomAdImg} 
+                alt="Publicidad" 
+                onError={(e) => { e.target.src = '/img/publicidad_1.jpg'; }} 
+                style={{ width: '100%', display: 'block', cursor: 'pointer' }}
+              />
+            </a>
+          )}
+        </div>
+      </div>
+
         <style dangerouslySetInnerHTML={{__html: `
         .pin-floating-bubble { position: absolute; bottom: 120px; right: 20px; max-width: 200px; display: flex; align-items: flex-end; z-index: 10; animation: floatBubble 3s ease-in-out infinite; }
         .pin-floating-bubble img { width: 50px; height: 50px; object-fit: contain; margin-left: 10px; margin-bottom: -15px; position: relative; z-index: 2; transform: scaleX(-1); }
