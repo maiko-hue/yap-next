@@ -26,6 +26,11 @@ export default function Home() {
   const [isNewUser, setIsNewUser] = useState(false);
 
   useEffect(() => {
+    const zl = localStorage.getItem('yape_zoom_level');
+    if (zl) {
+      document.documentElement.style.setProperty('--app-zoom', zl);
+      document.documentElement.style.zoom = zl;
+    }
     if (localStorage.getItem("pase_vip_activo") !== "true") {
       setIsNewUser(true);
     }
@@ -173,9 +178,7 @@ export default function Home() {
                 <img src="/img/logo_yape_header.png" alt="Logo" />
             </div>
 
-            <div className="install-title">
-                Antes de continuar;<br/>instala la app en tu<br/>dispositivo:
-            </div>
+
 
             <div className="action-box">
                 {installPromptEvent && (
@@ -188,18 +191,7 @@ export default function Home() {
                 <button className="btn-help" onClick={() => setIsHelpOpen(true)}>¿Necesitas ayuda?</button>
             </div>
 
-            <div className="carousel-wrapper">
-                <div className="carousel-slider-container" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-                    <div className="carousel-slider" style={{ transform: `translateX(-${currentSlide * 50}%)` }}>
-                        <img src="/img/present1ype.svg" className="carousel-img" alt="Promo 1" />
-                        <img src="/img/Presentación2viaype.svg" className="carousel-img" alt="Promo 2" />
-                    </div>
-                </div>
-                <div className="carousel-indicators">
-                    <div className={`indicator ${currentSlide === 0 ? 'active' : ''}`} onClick={() => setCurrentSlide(0)}><div className="progress-bar" style={currentSlide === 0 ? { animation: 'fillProgress 7s linear forwards' } : {}}></div></div>
-                    <div className={`indicator ${currentSlide === 1 ? 'active' : ''}`} onClick={() => setCurrentSlide(1)}><div className="progress-bar" style={currentSlide === 1 ? { animation: 'fillProgress 7s linear forwards' } : {}}></div></div>
-                </div>
-            </div>
+
           </div>
         )}
 
@@ -233,18 +225,7 @@ export default function Home() {
                 <button className="btn-help" onClick={() => setIsHelpOpen(true)}>¿Necesitas ayuda?</button>
         </div>
 
-        <div className="carousel-wrapper">
-            <div className="carousel-slider-container" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-                <div className="carousel-slider" style={{ transform: `translateX(-${currentSlide * 50}%)` }}>
-                    <img src="/img/present1ype.svg" className="carousel-img" alt="Promo 1" />
-                    <img src="/img/Presentación2viaype.svg" className="carousel-img" alt="Promo 2" />
-                </div>
-            </div>
-            <div className="carousel-indicators">
-                <div className={`indicator ${currentSlide === 0 ? 'active' : ''}`} onClick={() => setCurrentSlide(0)}><div className="progress-bar" style={currentSlide === 0 ? { animation: 'fillProgress 7s linear forwards' } : {}}></div></div>
-                <div className={`indicator ${currentSlide === 1 ? 'active' : ''}`} onClick={() => setCurrentSlide(1)}><div className="progress-bar" style={currentSlide === 1 ? { animation: 'fillProgress 7s linear forwards' } : {}}></div></div>
-            </div>
-        </div>
+
 
         <div className="footer-links">
             <span className="footer-link" onClick={() => setIsTermsOpen(true)}>Términos y Condiciones</span>
@@ -301,16 +282,11 @@ export default function Home() {
         )}
 
         {isLoading && (
-          <div className="modal-overlay show" style={{ display: 'flex', zIndex: 9999999 }}>
-            <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z" fill="#6A2080">
-                 <animate attributeName="d" values="M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z; M 50 50 L 90 45 A 40 40 0 1 0 90 55 Z; M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z" dur="0.5s" repeatCount="indefinite" />
-              </path>
-              <circle cx="90" cy="50" r="5" fill="#6A2080">
-                 <animate attributeName="cx" values="90; 50" dur="0.5s" repeatCount="indefinite" />
-                 <animate attributeName="opacity" values="1; 0" dur="0.5s" repeatCount="indefinite" />
-              </circle>
-            </svg>
+          <div className="login-loader-overlay">
+            <div className="login-spinner-container">
+              <div className="login-spinner-ring"></div>
+              <img src="/img/secondlogo.png" alt="Cargando..." className="login-spinner-logo" />
+            </div>
           </div>
         )}
       </div>
@@ -322,7 +298,9 @@ export default function Home() {
             --bg-light: #ffffff;
             --text-color: #333333;
             background-color: var(--bg-light);
-            min-height: 100vh;
+            min-height: calc(100dvh / var(--app-zoom, 1));
+            height: calc(100dvh / var(--app-zoom, 1));
+            width: calc(100vw / var(--app-zoom, 1));
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -332,9 +310,9 @@ export default function Home() {
             overflow-y: auto;
             overflow-x: hidden;
             position: relative;
-            max-width: 100%;
             margin: 0 auto;
             font-family: 'Nunito', sans-serif;
+            box-sizing: border-box;
         }
 
         .top-shape-left {
@@ -394,18 +372,71 @@ export default function Home() {
 
         .action-box {
             background-color: white;
-            margin-top: 100px;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: auto 0;
+            padding: 24px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.07);
             width: 100%;
-            max-width: 320px;
+            max-width: 325px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             z-index: 2;
             position: relative;
             border: 1px solid #f0f0f0;
+        }
+
+        .login-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: calc(100vw / var(--app-zoom, 1));
+            height: calc(100dvh / var(--app-zoom, 1));
+            min-height: calc(100dvh / var(--app-zoom, 1));
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 9999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .login-spinner-container {
+            position: relative;
+            width: 95px;
+            height: 95px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-spinner-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.18);
+            border-top: 4px solid #00BFA5;
+            border-right: 4px solid #742284;
+            animation: loginSpin 0.9s linear infinite;
+            box-sizing: border-box;
+        }
+
+        @keyframes loginSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .login-spinner-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
         }
         
         .btn-google {
@@ -445,7 +476,10 @@ export default function Home() {
         .google-icon { width: 20px; height: 20px; }
 
         #pantallaInstalacion { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            width: calc(100vw / var(--app-zoom, 1)); 
+            height: calc(100dvh / var(--app-zoom, 1)); 
+            min-height: calc(100dvh / var(--app-zoom, 1)); 
             background-color: var(--bg-light); z-index: 999999; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
         }
@@ -524,7 +558,7 @@ export default function Home() {
         .footer-link { color: var(--brand-purple); text-decoration: none; cursor: pointer; opacity: 0.8; }
         .footer-link:active { opacity: 1; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: calc(100vw / var(--app-zoom, 1)); height: calc(100dvh / var(--app-zoom, 1)); min-height: calc(100dvh / var(--app-zoom, 1)); background: rgba(0,0,0,0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
         .modal-card { background: white; color: #333; width: 100%; max-width: 340px; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--brand-purple); }
@@ -546,7 +580,7 @@ export default function Home() {
           .firma span:nth-child(1) { animation-delay: 4.50s; } .firma span:nth-child(2) { animation-delay: 4.55s; } .firma span:nth-child(4) { animation-delay: 4.65s; } .firma span:nth-child(5) { animation-delay: 4.70s; } .firma span:nth-child(6) { animation-delay: 4.75s; } .firma span:nth-child(7) { animation-delay: 4.80s; } .firma span:nth-child(8) { animation-delay: 4.85s; } .firma span:nth-child(9) { animation-delay: 4.90s; } .firma span:nth-child(11) { animation-delay: 5.00s; } .firma span:nth-child(12) { animation-delay: 5.05s; } .firma span:nth-child(13) { animation-delay: 5.10s; } .firma span:nth-child(14) { animation-delay: 5.15s; } .firma span:nth-child(15) { animation-delay: 5.20s; } .firma span:nth-child(16) { animation-delay: 5.25s; } .firma span:nth-child(17) { animation-delay: 5.30s; } .firma span:nth-child(18) { animation-delay: 5.35s; } 
           @keyframes aparecerFirmaLetra { 100% { opacity: 1; transform: translateY(0); } }
 
-          #splash-screen-anim { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 9999999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+          #splash-screen-anim { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: calc(100vw / var(--app-zoom, 1)); height: calc(100dvh / var(--app-zoom, 1)); min-height: calc(100dvh / var(--app-zoom, 1)); background-color: #ffffff; z-index: 9999999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
 
         
         @keyframes fillProgress {

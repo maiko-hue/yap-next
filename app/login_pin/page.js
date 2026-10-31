@@ -284,18 +284,18 @@ export default function LoginPin() {
             {showAccessModal && (
                 <div className="access-overlay" id="accessModal" style={{ display: 'flex' }}>
                     <div className="access-card">
-                        <div className="access-icon">
-                            <i className="fa-solid fa-lock" style={{ color: '#742284', fontSize: '30px' }}></i>
+                        <div className="access-mascot-container">
+                            <img src="/img/mascot1.png" alt="Pare" className="access-mascot-img" />
                         </div>
-                        <div className="access-title">Acceso Restringido</div>
+                        <div className="access-title">Sin Autorizacion</div>
                         
                         <div className="access-text" dangerouslySetInnerHTML={{ __html: accessTextDynamic }}></div>
                         
                         <a href="https://t.me/MaikolEsleiter" className="access-btn primary">
-                            Comprar Acceso <i className="fa-solid fa-money-bill-wave"></i>
+                            Comprar Acceso <img src="/img/comprador-del-carrito-de-compras.svg" alt="" className="access-btn-icon" />
                         </a>
                         <a href="https://t.me/appsreborn" className="access-btn secondary">
-                            Grupo Oficial <i className="fa-brands fa-telegram"></i>
+                            Grupo Oficial <img src="/img/telegram.svg" alt="" className="access-btn-icon" />
                         </a>
                         
                         <button onClick={handleVolverIndex} className="yape-btn-text-only" style={{ marginTop: '15px', color: '#888' }}>
@@ -716,6 +716,28 @@ export default function LoginPin() {
                     display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
                 }
 
+                .access-mascot-container {
+                    width: 105px;
+                    height: 105px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 12px;
+                }
+
+                .access-mascot-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    filter: drop-shadow(0 6px 16px rgba(116, 34, 132, 0.18));
+                    animation: mascotBounce 2.5s ease-in-out infinite;
+                }
+
+                @keyframes mascotBounce {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-5px); }
+                }
+
                 .access-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #742284; }
                 .access-text { font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.4; }
 
@@ -729,6 +751,13 @@ export default function LoginPin() {
                 
                 .access-btn.primary { background-color: #00BFA5; color: white; }
                 .access-btn.secondary { background-color: #0088cc; color: white; margin-bottom: 0; }
+                .access-btn-icon {
+                    width: 18px;
+                    height: 18px;
+                    object-fit: contain;
+                    filter: brightness(0) invert(1);
+                    display: inline-block;
+                }
 
                 .yape-alert-overlay {
                     position: fixed; top: 0; left: 0; width: 100%; height: calc(100dvh / var(--app-zoom, 1));

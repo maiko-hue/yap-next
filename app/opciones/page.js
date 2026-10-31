@@ -624,6 +624,26 @@ export default function Opciones() {
             <button className="close-modal-btn-opciones" onClick={() => setShowNotiModal(false)}><i className="fa-solid fa-xmark"></i></button>
           </div>
           
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: 'rgba(116, 35, 133, 0.08)',
+            border: '1px solid rgba(116, 35, 133, 0.15)',
+            padding: '12px 14px',
+            borderRadius: '12px',
+            marginBottom: '16px',
+            gap: '12px'
+          }}>
+            <img 
+              src="/img/icono5.png" 
+              alt="Créditos" 
+              style={{ width: '40px', height: '40px', objectFit: 'contain', flexShrink: 0 }} 
+            />
+            <div style={{ fontSize: '13px', lineHeight: '1.4', color: '#444', fontWeight: '600' }}>
+              Click en el bot&oacute;n de <strong>&quot;Cr&eacute;ditos&quot;</strong> del inicio para que llegue la noti, los datos var&iacute;an seg&uacute;n tu configuraci&oacute;n
+            </div>
+          </div>
+
           <div className="switch-container-opciones">
             <span className="switch-label-opciones">Notificaciones con datos randoms</span>
             <label className="switch-opciones">
