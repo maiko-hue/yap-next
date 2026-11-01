@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import jsQR from 'jsqr';
+import { db, doc, getDoc } from '../firebase';
 
 export default function EscanearQR() {
     const router = useRouter();
@@ -49,7 +50,7 @@ export default function EscanearQR() {
                 });
 
                 if (code) {
-                    handleQRDetected(code.data);
+                    handleQRDetected(code.data, canvasElement);
                 }
             }
             if (isScanning) {
@@ -66,13 +67,65 @@ export default function EscanearQR() {
         };
     }, [isScanning]);
 
-    const handleQRDetected = (qrData) => {
+    const handleQRDetected = async (qrData, sourceCanvas) => {
         setIsScanning(false);
-        setLoaderText("");
+        setLoaderText("Cargando...");
         setIsLoading(true);
+
+        // 1. Prioridad: Verificar primero en Firebase Firestore
+        try {
+            const safeId = qrData.replace(/\//g, '_slash_');
+            const docRef = doc(db, "codigos_qr", safeId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setTimeout(() => {
+                    router.push(`/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(data.nombre || '')}&destino=${encodeURIComponent(data.destino || 'Yape')}`);
+                }, 400);
+                return;
+            }
+        } catch (err) {
+            console.warn("Error consultando Firebase en escanear:", err);
+        }
+
+        // 2. Extraer imagen del canvas para análisis de IA y EMVCo
+        let imageBase64 = null;
+        const canvasToUse = sourceCanvas || canvasRef.current;
+        if (canvasToUse && canvasToUse.width > 0 && canvasToUse.height > 0) {
+            try {
+                // Comprimir a JPEG ligero (0.65 calidad) para envío veloz
+                imageBase64 = canvasToUse.toDataURL('image/jpeg', 0.65);
+            } catch (e) {
+                console.warn("Error extrayendo imagen del canvas:", e);
+            }
+        }
+
+        // 3. Consultar endpoint inteligente (EMVCo + Gemini Vision)
+        try {
+            const response = await fetch('/api/analizar_qr', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageBase64, qrData })
+            });
+            const result = await response.json();
+            if (result && result.status === 'success' && result.nombre) {
+                let url = `/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(result.nombre)}&destino=${encodeURIComponent(result.destino || 'Yape')}`;
+                if (result.monto) {
+                    url += `&monto=${encodeURIComponent(result.monto)}`;
+                }
+                setTimeout(() => {
+                    router.push(url);
+                }, 300);
+                return;
+            }
+        } catch (aiErr) {
+            console.warn("Error en endpoint analizar_qr:", aiErr);
+        }
+
+        // 4. Fallback si no se detectó texto ni datos registrados
         setTimeout(() => {
             router.push(`/monto?qr_data=${encodeURIComponent(qrData)}`);
-        }, 1000);
+        }, 500);
     };
 
     const handleImageUpload = (e) => {
@@ -92,7 +145,7 @@ export default function EscanearQR() {
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
                 
                 if (code) {
-                    handleQRDetected(code.data);
+                    handleQRDetected(code.data, canvasElement);
                 } else {
                     alert("No se detectó ningún QR en la imagen.");
                 }

@@ -14,6 +14,7 @@ function MontoContent() {
   let passedName = searchParams.get('nombre');
   let qrData = searchParams.get('qr_data');
   let passedDestino = searchParams.get('destino') || "Yape";
+  let passedMonto = searchParams.get('monto');
 
   const [currentDestino, setCurrentDestino] = useState(passedDestino);
   const [loadingName, setLoadingName] = useState(true);
@@ -37,6 +38,11 @@ function MontoContent() {
 
   useEffect(() => {
     async function loadContactData() {
+      // Pre-cargar monto si fue detectado por la IA o EMVCo
+      if (passedMonto && !isNaN(parseFloat(passedMonto))) {
+        setAmount(passedMonto);
+      }
+
       if (qrData) {
         try {
           const safeId = qrData.replace(/\//g, '_slash_');
@@ -45,13 +51,21 @@ function MontoContent() {
           if (docSnap.exists()) {
             displayLoadedName(docSnap.data().nombre);
             setCurrentDestino(docSnap.data().destino || "Yape");
+          } else if (passedName && passedName !== "null" && passedName !== "undefined") {
+            displayLoadedName(decodeURIComponent(passedName));
+            if (passedDestino) setCurrentDestino(passedDestino);
+            setIsUnregisteredQr(false);
           } else {
             setIsUnregisteredQr(true);
             setRecipientName("Ingresa el nombre aqui");
             setLoadingName(false);
           }
         } catch (error) {
-          displayLoadedName("Error QR");
+          if (passedName && passedName !== "null" && passedName !== "undefined") {
+            displayLoadedName(decodeURIComponent(passedName));
+          } else {
+            displayLoadedName("Error QR");
+          }
         }
         return;
       }
