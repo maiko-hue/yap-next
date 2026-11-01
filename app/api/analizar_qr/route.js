@@ -1,5 +1,15 @@
 import { NextResponse } from 'next/server';
 
+function toTitleCase(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 // Parser para estándar EMVCo (usado en códigos QR oficiales de Yape, BCP, Plin, Niubiz)
 function parseEMVCo(payload) {
   if (!payload || typeof payload !== 'string' || !payload.startsWith('000201')) {
@@ -19,7 +29,8 @@ function parseEMVCo(payload) {
 
     // Tag 59: Merchant Name
     // Tag 54: Transaction Amount
-    const nombre = tags['59'] ? tags['59'].trim() : null;
+    const rawNombre = tags['59'] ? tags['59'].trim() : null;
+    const nombre = rawNombre ? toTitleCase(rawNombre) : null;
     const monto = tags['54'] && !isNaN(parseFloat(tags['54'])) ? parseFloat(tags['54']).toFixed(2) : null;
 
     let destino = 'Yape';
@@ -149,7 +160,7 @@ Responde ÚNICAMENTE en formato JSON con la siguiente estructura exacta:
       return NextResponse.json({
         status: 'success',
         source: 'ia',
-        nombre: parsed.nombre || null,
+        nombre: parsed.nombre ? toTitleCase(parsed.nombre) : null,
         destino: parsed.destino || 'Yape',
         monto: parsed.monto || null
       });

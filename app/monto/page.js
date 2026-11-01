@@ -6,6 +6,16 @@ import { db, doc, getDoc, setDoc } from '../firebase';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5h6Q9mRk9E5ug_oNSI_B4EPxse2f4KLfbxUJoSx0zOSyzFoe3_eLC7zmjeM4qePes/exec";
 
+function toTitleCase(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 function MontoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -110,19 +120,23 @@ function MontoContent() {
   }, [qrData, rawNumber, passedName]);
 
   const displayLoadedName = (name) => {
-    let nombreMostrar = name;
+    let cleanName = toTitleCase(name);
     
     const isCensurarBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
     const isCensurarNombresQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
     
-    const shouldCensor = qrData ? isCensurarNombresQr : isCensurarBaucher;
+    // Respeta tanto "Censurar nombres (en monto)" como "Censurar nombres en QRs"
+    const shouldCensor = isCensurarBaucher || (qrData ? isCensurarNombresQr : false);
 
-    if (shouldCensor && typeof nombreMostrar === 'string') {
-      let partes = nombreMostrar.trim().split(/\s+/);
+    let nombreMostrar = cleanName;
+    if (shouldCensor && typeof cleanName === 'string' && !cleanName.includes('*')) {
+      let partes = cleanName.trim().split(/\s+/);
       if (partes.length === 2) {
         nombreMostrar = partes[0] + " " + partes[1].substring(0, 3) + "*";
       } else if (partes.length >= 3) {
         nombreMostrar = partes[0] + " " + partes[2].substring(0, 3) + "*";
+      } else if (partes.length === 1 && partes[0].length > 3) {
+        nombreMostrar = partes[0].substring(0, 3) + "*";
       }
     }
     setRecipientName(nombreMostrar);

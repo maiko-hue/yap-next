@@ -5,6 +5,16 @@ import { useRouter } from 'next/navigation';
 import jsQR from 'jsqr';
 import { db, doc, getDoc } from '../firebase';
 
+function toTitleCase(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 export default function EscanearQR() {
     const router = useRouter();
     const videoRef = useRef(null);
@@ -80,7 +90,7 @@ export default function EscanearQR() {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 setTimeout(() => {
-                    router.push(`/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(data.nombre || '')}&destino=${encodeURIComponent(data.destino || 'Yape')}`);
+                    router.push(`/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(toTitleCase(data.nombre || ''))}&destino=${encodeURIComponent(data.destino || 'Yape')}`);
                 }, 400);
                 return;
             }
@@ -109,7 +119,7 @@ export default function EscanearQR() {
             });
             const result = await response.json();
             if (result && result.status === 'success' && result.nombre) {
-                let url = `/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(result.nombre)}&destino=${encodeURIComponent(result.destino || 'Yape')}`;
+                let url = `/monto?qr_data=${encodeURIComponent(qrData)}&nombre=${encodeURIComponent(toTitleCase(result.nombre))}&destino=${encodeURIComponent(result.destino || 'Yape')}`;
                 if (result.monto) {
                     url += `&monto=${encodeURIComponent(result.monto)}`;
                 }
