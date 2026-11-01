@@ -28,7 +28,7 @@ html, body {
             --brand-header: #742385; 
             --brand-teal: #00BFA5;
             --bg-gray: #f2f4f6;
-            --main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --main-font: 'Roboto', sans-serif;
             
             /* Variables heredadas de yapear.html */
             --brand-purple: #742284;
@@ -38,6 +38,18 @@ html, body {
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, input, button, textarea, select, div, span, p, h1, h2, h3, h4, h5, h6, label, a {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        }
+
+        i[class*="fa-"], .fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+        }
+
+        .firma {
+            font-family: 'Caveat', cursive !important;
+        }
 
         body {
             margin: 0;
@@ -282,11 +294,11 @@ html, body {
 
         .card-block {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
             margin-bottom: 15px;
             overflow: hidden;
-            border: 1px solid #f0f0f0;
+            border: 1px solid #eaeaea;
             flex: 0 0 auto; 
             width: 100%; 
         }
@@ -613,7 +625,7 @@ html, body {
             width: 100%;
             height: calc(100dvh / var(--app-zoom, 1));
             background-color: rgba(0, 0, 0, 0.5); /* Sombra de fondo */
-            z-index: 9999;
+            z-index: 9999999 !important;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -708,7 +720,7 @@ html, body {
     display: flex;
     align-items: flex-start;
     padding: 14px 16px;
-    z-index: 9999;
+    z-index: 9999999 !important;
     transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     opacity: 0;
     pointer-events: auto;

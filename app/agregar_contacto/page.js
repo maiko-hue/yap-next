@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { db, doc, setDoc } from '../firebase';
+import TourSpotlight, { typeWriter } from '../components/TourSpotlight';
 
 export default function AgregarContacto() {
     const router = useRouter();
@@ -10,6 +11,35 @@ export default function AgregarContacto() {
     const [nombre, setNombre] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [toast, setToast] = useState({ show: false, message: '', type: '' });
+
+    // TOUR STATE
+    const [tourActive, setTourActive] = useState(false);
+    const [tourStep, setTourStep] = useState(0);
+
+    useEffect(() => {
+        const isTour = localStorage.getItem('yape_tour_active') === 'true';
+        const step = parseInt(localStorage.getItem('yape_tour_step') || '0', 10);
+        if (isTour && step >= 11 && step <= 13) {
+            setTourActive(true);
+            setTourStep(step);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!tourActive) return;
+        if (tourStep === 11) {
+            typeWriter('987654321', setNumero, () => {}, 95);
+        } else if (tourStep === 12) {
+            typeWriter('Carlos Mendoza', setNombre, () => {}, 95);
+        }
+    }, [tourStep, tourActive]);
+
+    const onTourSkip = () => {
+        localStorage.removeItem('yape_tour_active');
+        localStorage.removeItem('yape_tour_step');
+        localStorage.setItem('yape_tutorial_visto', 'true');
+        router.push('/opciones');
+    };
 
     const showToast = (message, type) => {
         setToast({ show: true, message, type });
@@ -77,7 +107,7 @@ export default function AgregarContacto() {
                 <div className="info-card">
                     <div className="section-title">Agregar Contacto Rápido</div>
 
-                    <div className="form-group">
+                    <div id="tour-ac-celular" className="form-group">
                         <label className="label">Número de Celular</label>
                         <div className="input-card">
                             <i className="fa-solid fa-mobile-screen input-icon"></i>
@@ -92,7 +122,7 @@ export default function AgregarContacto() {
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    <div id="tour-ac-nombre" className="form-group">
                         <label className="label">Nombre y Apellido</label>
                         <div className="input-card">
                             <i className="fa-regular fa-user input-icon"></i>
@@ -113,9 +143,52 @@ export default function AgregarContacto() {
                         </div>
                     </div>
 
-                    <button className="btn-save" onClick={handleSave}>Guardar</button>
+                    <button id="tour-ac-guardar" className="btn-save" onClick={handleSave}>Guardar</button>
                 </div>
             </div>
+
+            {/* TOUR SPOTLIGHT (EN AGREGAR CONTACTO) */}
+            {tourActive && tourStep === 11 && (
+                <TourSpotlight
+                    targetId="tour-ac-celular"
+                    title="Celular del Destinatario"
+                    description="Ingresa el número de 9 dígitos del contacto que deseas tener en tu agenda."
+                    stepText="Siguiente 11/19"
+                    onNext={() => {
+                        setTourStep(12);
+                        localStorage.setItem('yape_tour_step', '12');
+                    }}
+                    onSkip={onTourSkip}
+                />
+            )}
+
+            {tourActive && tourStep === 12 && (
+                <TourSpotlight
+                    targetId="tour-ac-nombre"
+                    title="Nombre Completo"
+                    description="Escribe el nombre y apellido con el que aparecerá en tu lista al momento de yapear."
+                    stepText="Siguiente 12/19"
+                    onNext={() => {
+                        setTourStep(13);
+                        localStorage.setItem('yape_tour_step', '13');
+                    }}
+                    onSkip={onTourSkip}
+                />
+            )}
+
+            {tourActive && tourStep === 13 && (
+                <TourSpotlight
+                    targetId="tour-ac-guardar"
+                    title="Guardar Contacto"
+                    description="Al presionar Guardar, el contacto se almacena en la nube y estará listo para usarse."
+                    stepText="Siguiente 13/19"
+                    onNext={() => {
+                        localStorage.setItem('yape_tour_step', '14');
+                        router.push('/agregar_qr');
+                    }}
+                    onSkip={onTourSkip}
+                />
+            )}
 
             <style jsx global>{`
                 /* Original styles are included and adapted here with camelCase animations for React... */

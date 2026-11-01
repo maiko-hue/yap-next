@@ -3,12 +3,17 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import TourSpotlight from '../components/TourSpotlight';
 
 export default function Inicio() {
   const router = useRouter();
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
   const [balance, setBalance] = useState("1,200.00");
+
+  const [miniTourCreditosActive, setMiniTourCreditosActive] = useState(false);
+  const [tourInicioActive, setTourInicioActive] = useState(false);
+  const [tourInicioStep, setTourInicioStep] = useState(1);
 
   const [movementsVisible, setMovementsVisible] = useState(false);
   const [isMovementsLoading, setIsMovementsLoading] = useState(false);
@@ -58,11 +63,26 @@ export default function Inicio() {
   useEffect(() => {
     // Splash screen timer
     const animSpeed = typeof window !== "undefined" ? parseFloat(localStorage.getItem("yape_anim_speed") || "1") : 1;
+    const isMiniTour = typeof window !== "undefined" ? localStorage.getItem('yape_mini_tour_creditos') === 'true' : false;
+    const tourInicioVisto = typeof window !== "undefined" ? localStorage.getItem('yape_inicio_tour_visto') === 'true' : true;
+
     const timer = setTimeout(() => {
       setShowSplash(false);
-      const popupPref = localStorage.getItem('yape_show_popup');
-      if (popupPref !== 'false') {
-        setTimeout(() => setShowPopup(true), 500);
+
+      if (isMiniTour) {
+        setTimeout(() => {
+          setMiniTourCreditosActive(true);
+        }, 350);
+      } else if (!tourInicioVisto) {
+        setTimeout(() => {
+          setTourInicioActive(true);
+          setTourInicioStep(1);
+        }, 350);
+      } else {
+        const popupPref = localStorage.getItem('yape_show_popup');
+        if (popupPref !== 'false') {
+          setTimeout(() => setShowPopup(true), 500);
+        }
       }
     }, 1500 * animSpeed);
 
@@ -129,6 +149,26 @@ export default function Inicio() {
     }
   };
 
+  // Helper Functions
+  const getInitials = (nombre) => {
+    if (!nombre) return "";
+    let partes = nombre.trim().split(/\s+/);
+    if (partes.length >= 2) return (partes[0][0] + partes[1][0]).toUpperCase();
+    if (partes.length === 1 && partes[0].length > 0) return partes[0].substring(0, 2).toUpperCase();
+    return "";
+  };
+
+  const getShortName = (nombre) => {
+    if (!nombre) return "Usuario";
+    let partes = nombre.trim().split(/\s+/);
+    if (partes.length === 2) {
+      return partes[0] + " " + partes[1].substring(0, 3) + "*";
+    } else if (partes.length >= 3) {
+      return partes[0] + " " + partes[2].substring(0, 3) + "*";
+    }
+    return nombre;
+  };
+
   // Notification State
   const [noti, setNoti] = useState({ show: false, dark: false, nombre: '', monto: '', codigo: '', hora: '' });
   const [isNotifying, setIsNotifying] = useState(false);
@@ -138,106 +178,131 @@ export default function Inicio() {
     setIsNotifying(true);
     setShowFullMenu(false);
 
-    let isRandom = localStorage.getItem('yape_noti_random') !== 'false';
-    let isDark = localStorage.getItem('yape_noti_dark') === 'true';
-
-    let nombreCompleto = "";
-    let montoRandom = "0.00";
-    let codigoRandom = "";
-
-    if (isRandom) {
-      const nombres = ["Juan", "Maria", "Carlos", "Ana", "Luis", "Jorge", "Lucia", "Diego", "Valeria", "Maikol", "Jose", "Cristian", "Armando", "Pedro", "Sofia"];
-      const apellidos = ["Perez", "Garcia", "Torres", "Rojas", "Flores", "Sanchez", "Diaz", "Chavez", "Gomez", "Huaman", "Crisanto", "Gonzales", "Ramirez"];
-      nombreCompleto = nombres[Math.floor(Math.random() * nombres.length)] + " " + apellidos[Math.floor(Math.random() * apellidos.length)];
-    } else {
-      let customNames = JSON.parse(localStorage.getItem('yape_noti_remitentes')) || [];
-      if(customNames.length > 0) {
-        nombreCompleto = customNames[Math.floor(Math.random() * customNames.length)];
-      } else {
-        nombreCompleto = "Usuario Desconocido"; 
-      }
-    }
-
-    if (isRandom) {
-      montoRandom = (Math.random() * (500 - 100) + 100).toFixed(2);
-    } else {
-      let tipoMonto = localStorage.getItem('yape_noti_monto_tipo') || 'rango';
-      if (tipoMonto === 'rango') {
-        let min = parseFloat(localStorage.getItem('yape_noti_monto_min')) || 0;
-        let max = parseFloat(localStorage.getItem('yape_noti_monto_max')) || 500;
-        if (min > max) { let t = min; min = max; max = t; } 
-        montoRandom = (Math.random() * (max - min) + min).toFixed(2);
-      } else {
-        let fijo = parseFloat(localStorage.getItem('yape_noti_monto_fijo')) || 70;
-        montoRandom = fijo.toFixed(2);
-      }
-    }
-
-    let numOpRandom = Math.floor(10000000 + Math.random() * 90000000).toString();
-    
-    if (isRandom) {
-      codigoRandom = numOpRandom.slice(-3); 
-    } else {
-      let isCodRandom = localStorage.getItem('yape_noti_cod_random') !== 'false';
-      if (isCodRandom) {
-        codigoRandom = numOpRandom.slice(-3);
-      } else {
-        codigoRandom = localStorage.getItem('yape_noti_cod_fijo') || "123";
-        codigoRandom = codigoRandom.padStart(3, '0');
-        numOpRandom = numOpRandom.slice(0, 5) + codigoRandom; 
-      }
-    }
-
-    let nombreNoti = getShortName(nombreCompleto);
-
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    const ampmNoti = hours >= 12 ? 'p.m.' : 'a.m.'; 
-    hours = hours % 12;
-    hours = hours ? hours : 12; 
-    let minStr = minutes < 10 ? '0' + minutes : minutes;
-    const horaString = `${hours}:${minStr} ${ampmNoti}`;
-    
-    // Update balance natively
-    let currentBalance = parseFloat(balance.replace(/,/g, '')) || 0;
-    let newBalance = currentBalance + parseFloat(montoRandom);
-    setBalance(newBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-    localStorage.setItem('yape_balance', newBalance.toFixed(2));
-    
-    // Add movement
-    let movs = [...movements];
-    const mesesStr = ["ene.", "feb.", "mar.", "abr.", "may.", "jun.", "jul.", "ago.", "sep.", "oct.", "nov.", "dic."];
-    const ampmHist = now.getHours() >= 12 ? 'p. m.' : 'a. m.';
-    let hrHist = now.getHours() % 12 || 12;
-    const fechaLarga = `${now.getDate()} ${mesesStr[now.getMonth()]} ${now.getFullYear()}`;
-    const horaStringHist = `${hrHist < 10 ? '0'+hrHist : hrHist}:${minStr} ${ampmHist}`;
-    
-    movs.unshift({
-        monto: montoRandom,
-        nombre: nombreCompleto,
-        fecha: `${fechaLarga} - ${horaStringHist}`,
-        fechaSolo: fechaLarga,
-        horaSolo: horaStringHist,
-        tipo: 'ingreso',
-        numero: "9" + Math.floor(10000000 + Math.random() * 90000000),
-        operacion: numOpRandom,
-        codigo: codigoRandom,
-        destino: 'Yape'
-    });
-    setMovements(movs.slice(0,7));
-    localStorage.setItem('yape_movements', JSON.stringify(movs));
-
-    // Display Notification
-    setNoti({ show: true, dark: isDark, nombre: nombreNoti, monto: parseFloat(montoRandom) % 1 === 0 ? parseInt(montoRandom) : parseFloat(montoRandom).toFixed(2), codigo: codigoRandom, hora: horaString });
     try {
-      new Audio('/img/ysnid.mp3').play();
-    } catch(e) {}
-    
-    setTimeout(() => {
-      setNoti(prev => ({ ...prev, show: false }));
+      let isRandom = localStorage.getItem('yape_noti_random') !== 'false';
+      let isDark = localStorage.getItem('yape_noti_dark') === 'true';
+
+      let nombreCompleto = "";
+      let montoRandom = "0.00";
+      let codigoRandom = "";
+
+      if (isRandom) {
+        const nombres = ["Juan", "Maria", "Carlos", "Ana", "Luis", "Jorge", "Lucia", "Diego", "Valeria", "Maikol", "Jose", "Cristian", "Armando", "Pedro", "Sofia"];
+        const apellidos = ["Perez", "Garcia", "Torres", "Rojas", "Flores", "Sanchez", "Diaz", "Chavez", "Gomez", "Huaman", "Crisanto", "Gonzales", "Ramirez"];
+        nombreCompleto = nombres[Math.floor(Math.random() * nombres.length)] + " " + apellidos[Math.floor(Math.random() * apellidos.length)];
+      } else {
+        let customNames = [];
+        try {
+          customNames = JSON.parse(localStorage.getItem('yape_noti_remitentes')) || [];
+        } catch(e) {}
+        if(customNames.length > 0) {
+          nombreCompleto = customNames[Math.floor(Math.random() * customNames.length)];
+        } else {
+          nombreCompleto = "Usuario Desconocido"; 
+        }
+      }
+
+      if (isRandom) {
+        montoRandom = (Math.random() * (500 - 100) + 100).toFixed(2);
+      } else {
+        let tipoMonto = localStorage.getItem('yape_noti_monto_tipo') || 'rango';
+        if (tipoMonto === 'rango') {
+          let min = parseFloat(localStorage.getItem('yape_noti_monto_min')) || 0;
+          let max = parseFloat(localStorage.getItem('yape_noti_monto_max')) || 500;
+          if (min > max) { let t = min; min = max; max = t; } 
+          montoRandom = (Math.random() * (max - min) + min).toFixed(2);
+        } else {
+          let fijo = parseFloat(localStorage.getItem('yape_noti_monto_fijo')) || 70;
+          montoRandom = fijo.toFixed(2);
+        }
+      }
+
+      let numOpRandom = Math.floor(10000000 + Math.random() * 90000000).toString();
+      
+      if (isRandom) {
+        codigoRandom = numOpRandom.slice(-3); 
+      } else {
+        let isCodRandom = localStorage.getItem('yape_noti_cod_random') !== 'false';
+        if (isCodRandom) {
+          codigoRandom = numOpRandom.slice(-3);
+        } else {
+          codigoRandom = localStorage.getItem('yape_noti_cod_fijo') || "123";
+          codigoRandom = codigoRandom.padStart(3, '0');
+          numOpRandom = numOpRandom.slice(0, 5) + codigoRandom; 
+        }
+      }
+
+      let nombreNoti = getShortName(nombreCompleto);
+
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      const ampmNoti = hours >= 12 ? 'p.m.' : 'a.m.'; 
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      let minStr = minutes < 10 ? '0' + minutes : minutes;
+      const horaString = `${hours}:${minStr} ${ampmNoti}`;
+      
+      // Update balance natively
+      let currentBalance = parseFloat(String(balance).replace(/,/g, '')) || 0;
+      let newBalance = currentBalance + parseFloat(montoRandom);
+      setBalance(newBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+      localStorage.setItem('yape_balance', newBalance.toFixed(2));
+      
+      // Add movement
+      let movs = Array.isArray(movements) ? [...movements] : [];
+      const mesesStr = ["ene.", "feb.", "mar.", "abr.", "may.", "jun.", "jul.", "ago.", "sep.", "oct.", "nov.", "dic."];
+      const ampmHist = now.getHours() >= 12 ? 'p. m.' : 'a. m.';
+      let hrHist = now.getHours() % 12 || 12;
+      const fechaLarga = `${now.getDate()} ${mesesStr[now.getMonth()]} ${now.getFullYear()}`;
+      const horaStringHist = `${hrHist < 10 ? '0'+hrHist : hrHist}:${minStr} ${ampmHist}`;
+      
+      movs.unshift({
+          monto: montoRandom,
+          nombre: nombreCompleto,
+          fecha: `${fechaLarga} - ${horaStringHist}`,
+          fechaSolo: fechaLarga,
+          horaSolo: horaStringHist,
+          tipo: 'ingreso',
+          numero: "9" + Math.floor(10000000 + Math.random() * 90000000),
+          operacion: numOpRandom,
+          codigo: codigoRandom,
+          destino: 'Yape'
+      });
+      setMovements(movs.slice(0,7));
+      localStorage.setItem('yape_movements', JSON.stringify(movs));
+
+      // Display Notification
+      setNoti({ 
+        show: true, 
+        dark: isDark, 
+        nombre: nombreNoti, 
+        monto: parseFloat(montoRandom) % 1 === 0 ? parseInt(montoRandom) : parseFloat(montoRandom).toFixed(2), 
+        codigo: codigoRandom, 
+        hora: horaString 
+      });
+
+      try {
+        const audio = new Audio('/img/ysnid.mp3');
+        audio.play().catch(() => {});
+      } catch(e) {}
+      
+      setTimeout(() => {
+        setNoti(prev => ({ ...prev, show: false }));
+        setIsNotifying(false);
+      }, 4500);
+    } catch(err) {
+      console.error('Error in generarPagoFalso:', err);
       setIsNotifying(false);
-    }, 4500);
+    }
+  };
+
+  const handleCreditosClick = () => {
+    if (miniTourCreditosActive) {
+      localStorage.removeItem('yape_mini_tour_creditos');
+      setMiniTourCreditosActive(false);
+    }
+    generarPagoFalso();
   };
 
   useEffect(() => {
@@ -293,23 +358,6 @@ export default function Inicio() {
     }, 3000 * speed);
   };
 
-  const getInitials = (nombre) => {
-    let partes = nombre.trim().split(/\s+/);
-    if (partes.length >= 2) return (partes[0][0] + partes[1][0]).toUpperCase();
-    if (partes.length === 1 && partes[0].length > 0) return partes[0].substring(0, 2).toUpperCase();
-    return "";
-  };
-
-  const getShortName = (nombre) => {
-    let partes = nombre.trim().split(/\s+/);
-    if (partes.length === 2) {
-      return partes[0] + " " + partes[1].substring(0, 3) + "*";
-    } else if (partes.length >= 3) {
-      return partes[0] + " " + partes[2].substring(0, 3) + "*";
-    }
-    return nombre;
-  };
-
   return (
     <>
       {showSplash && (
@@ -344,7 +392,16 @@ export default function Inicio() {
         
         {/* HEADER */}
         <div className="header">
-          <div className="user-profile" onClick={() => setShowProfile(true)}>
+          <div 
+            id="tour-inicio-perfil"
+            className="user-profile" 
+            onClick={() => {
+              setShowProfile(true);
+              if (tourInicioActive && tourInicioStep === 1) {
+                setTourInicioStep(2);
+              }
+            }}
+          >
             <div className="icon-bg-circle">
               <img src="/img/person.svg" alt="Perfil" className="profile-img" onError={(e) => e.target.src='https://via.placeholder.com/30/ffffff/742284?text=U'} />
             </div>
@@ -385,7 +442,7 @@ export default function Inicio() {
               <div className="grid-item"><div className="icon-circle" style={{padding:0, overflow:'hidden'}}><img src="/img/descarga.gif" alt="" style={{width:'100%', height:'100%', objectFit:'cover'}} /></div><span className="grid-label">Promos</span></div>
               <div className="grid-item"><div className="icon-circle"><img src="/img/icono4.png" alt="" /></div><span className="grid-label">Código aprobación</span></div>
               
-              <div className="grid-item" onClick={generarPagoFalso}>
+              <div id="tour-btn-creditos" className="grid-item" onClick={handleCreditosClick}>
                   <div ref={lottieRef} className="icon-circle" style={{padding:0, overflow:'hidden', backgroundColor: 'white'}}></div>
                   <span className="grid-label">Créditos</span>
               </div>
@@ -602,7 +659,17 @@ export default function Inicio() {
 
         <div className="perfil-section-title">Mi cuenta</div>
         <ul className="perfil-menu-list">
-            <li className="perfil-menu-item" onClick={() => router.push('/opciones')}>
+            <li 
+              id="tour-inicio-mis-datos" 
+              className="perfil-menu-item" 
+              onClick={() => {
+                if (tourInicioActive) {
+                  localStorage.setItem('yape_inicio_tour_visto', 'true');
+                  setTourInicioActive(false);
+                }
+                router.push('/opciones');
+              }}
+            >
                 <img src="/img/mp-datos-icon.svg" className="perfil-menu-icon-img" alt="" />
                 <div className="perfil-menu-text">Mis datos</div>
             </li>
@@ -688,7 +755,7 @@ export default function Inicio() {
 
               <div className="menu-section-title">Finanzas</div>
               <div className="menu-grid">
-                  <div className="grid-item" onClick={generarPagoFalso}><div className="icon-circle"><img src="/img/icono5.png" alt="" /></div><span className="grid-label">Créditos</span></div>
+                  <div className="grid-item" onClick={handleCreditosClick}><div className="icon-circle"><img src="/img/icono5.png" alt="" /></div><span className="grid-label">Créditos</span></div>
                   <div className="grid-item"><div className="icon-circle"><img src="/img/seguros-icon.svg" alt="" /></div><span className="grid-label">Seguros</span></div>
                   <div className="grid-item"><div className="icon-circle"><img src="/img/icono9.png" alt="" /></div><span className="grid-label">SOAT</span></div>
                   <div className="grid-item"><div className="icon-circle"><img src="/img/icono8.png" alt="" /></div><span className="grid-label">Remesas</span></div>
@@ -708,6 +775,59 @@ export default function Inicio() {
 
           </div>
       </div>
+
+      {/* MINI TUTORIAL CRÉDITOS (PROBAR NOTI FALSA) */}
+      {miniTourCreditosActive && (
+        <TourSpotlight
+          targetId="tour-btn-creditos"
+          title="Prueba tu Notificación"
+          description="Da click en 'Créditos' para simular tu notificación"
+          stepText="Entendido"
+          isFinal={true}
+          onNext={handleCreditosClick}
+          onSkip={() => {
+            localStorage.removeItem('yape_mini_tour_creditos');
+            setMiniTourCreditosActive(false);
+          }}
+        />
+      )}
+
+      {/* TUTORIAL DE BIENVENIDA A INICIO (CÓMO LLEGAR A OPCIONES) */}
+      {tourInicioActive && tourInicioStep === 1 && (
+        <TourSpotlight
+          targetId="tour-inicio-perfil"
+          title="Panel de Ajustes"
+          description="Toca aquí tu perfil para acceder a las opciones de configuración y personalización de tu cuenta."
+          stepText="Siguiente 1/2"
+          onNext={() => {
+            setShowProfile(true);
+            setTourInicioStep(2);
+          }}
+          onSkip={() => {
+            localStorage.setItem('yape_inicio_tour_visto', 'true');
+            setTourInicioActive(false);
+          }}
+        />
+      )}
+
+      {tourInicioActive && tourInicioStep === 2 && (
+        <TourSpotlight
+          targetId="tour-inicio-mis-datos"
+          title="Configura tu App"
+          description="Ingresa a 'Mis datos' para modificar tu saldo, nombre, activar las notificaciones y ver el tutorial completo."
+          stepText="Ir a Opciones"
+          onNext={() => {
+            localStorage.setItem('yape_inicio_tour_visto', 'true');
+            setTourInicioActive(false);
+            router.push('/opciones');
+          }}
+          onSkip={() => {
+            localStorage.setItem('yape_inicio_tour_visto', 'true');
+            setTourInicioActive(false);
+            setShowProfile(false);
+          }}
+        />
+      )}
 
       {/* ESTILOS INTERNOS EXTRAÍDOS DEL HTML ORIGINAL */}
       <style dangerouslySetInnerHTML={{__html: `

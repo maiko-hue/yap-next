@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import TourSpotlight from '../components/TourSpotlight';
 import { auth } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
@@ -11,25 +12,95 @@ export default function Opciones() {
   
   const [userName, setUserName] = useState("Usuario");
 
-  // POPUP PUBLICIDAD ALEATORIA EN OPCIONES
-  const [showAdPopup, setShowAdPopup] = useState(false);
-  const [randomAdImg, setRandomAdImg] = useState("");
+  // TUTORIAL STATE
+  const [tourActive, setTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+
+  const iniciarTutorial = () => {
+    localStorage.setItem('yape_tour_active', 'true');
+    localStorage.setItem('yape_tour_step', '1');
+    setTourActive(true);
+    setTourStep(1);
+  };
+
+  const cancelarTutorial = () => {
+    localStorage.removeItem('yape_tour_active');
+    localStorage.removeItem('yape_tour_step');
+    localStorage.setItem('yape_tutorial_visto', 'true');
+    setTourActive(false);
+    setTourStep(0);
+    setShowNotiModal(false);
+  };
+
+  const completarTutorial = () => {
+    cancelarTutorial();
+    showToast("¡Tutorial completado!");
+  };
+
+  // PUSH NOTIFICATION SIMULADA PREVIEW STATE
+  const [testNoti, setTestNoti] = useState({ show: false, dark: false, nombre: '', monto: '', codigo: '', hora: '' });
+
+  const probarNoti = () => {
+    let isRandom = localStorage.getItem('yape_noti_random') !== 'false';
+    let isDark = localStorage.getItem('yape_noti_dark') === 'true';
+    let nombre = "Juan Pérez";
+    if (!isRandom) {
+      try {
+        const names = JSON.parse(localStorage.getItem('yape_noti_remitentes')) || [];
+        if (names.length > 0) nombre = names[0];
+      } catch(e) {}
+    }
+    let monto = isRandom ? "150.00" : (localStorage.getItem('yape_noti_monto_fijo') || "70.00");
+    let codigo = isRandom ? "789" : (localStorage.getItem('yape_noti_cod_fijo') || "106");
+
+    const now = new Date();
+    let hours = now.getHours() % 12 || 12;
+    let minStr = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+    let ampm = now.getHours() >= 12 ? 'p.m.' : 'a.m.';
+
+    setTestNoti({
+      show: true,
+      dark: isDark,
+      nombre,
+      monto,
+      codigo,
+      hora: `${hours}:${minStr} ${ampm}`
+    });
+
+    try {
+      const audio = new Audio('/img/ysnid.mp3');
+      audio.play().catch(() => {});
+    } catch(e) {}
+
+    setTimeout(() => {
+      setTestNoti(prev => ({ ...prev, show: false }));
+    }, 4500);
+  };
 
   useEffect(() => {
-    const adImages = [
-      "/img/publicidad_1.jpg",
-      "/img/publicidad_2.jpg",
-      "/img/publicidad_3.jpg",
-      "/img/publicidad_4.jpg",
-      "/img/publicidad_5.jpg",
-      "/img/publicidad_6.jpg"
-    ];
-    const picked = adImages[Math.floor(Math.random() * adImages.length)];
-    setRandomAdImg(picked);
-    const timer = setTimeout(() => {
-      setShowAdPopup(true);
-    }, 250);
-    return () => clearTimeout(timer);
+    if (tourActive && tourStep === 8) {
+      setShowNotiModal(true);
+      const timer = setTimeout(() => {
+        probarNoti();
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, [tourActive, tourStep]);
+
+  useEffect(() => {
+    const isTourActive = localStorage.getItem('yape_tour_active') === 'true';
+    const savedStep = parseInt(localStorage.getItem('yape_tour_step') || '0', 10);
+    const alreadySeen = localStorage.getItem('yape_tutorial_visto') === 'true';
+
+    if (isTourActive && savedStep > 0) {
+      setTourActive(true);
+      setTourStep(savedStep);
+      if (savedStep === 8) {
+        setShowNotiModal(true);
+      }
+    } else if (!alreadySeen) {
+      iniciarTutorial();
+    }
   }, []);
 
   useEffect(() => {
@@ -327,7 +398,7 @@ export default function Opciones() {
           
           <div className="section-title">Cuenta y Pagos</div>
           <div className="settings-section">
-            <div className="setting-item" onClick={() => router.push('/editar_datos')}>
+            <div id="tour-datos-cuenta" className="setting-item" onClick={() => router.push('/editar_datos')}>
               <div className="setting-left">
                 <div className="icon-circle bg-purple"><i className="fa-solid fa-user-pen"></i></div>
                 <div className="setting-text">
@@ -338,7 +409,7 @@ export default function Opciones() {
               <i className="fa-solid fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div className="setting-item" onClick={() => setShowNotiModal(true)}>
+            <div id="tour-noti-falsa" className="setting-item" onClick={() => setShowNotiModal(true)}>
               <div className="setting-left">
                 <div className="icon-circle bg-orange"><i className="fa-solid fa-comment-dots"></i></div>
                 <div className="setting-text">
@@ -360,7 +431,7 @@ export default function Opciones() {
               <i className="fa-solid fa-chevron-right arrow-icon"></i>
             </div>
 
-            <div className="setting-item" onClick={handleStartPin}>
+            <div id="tour-definir-pin" className="setting-item" onClick={handleStartPin}>
               <div className="setting-left">
                 <div className="icon-circle bg-orange" style={{ background: 'rgba(255, 152, 0, 0.1)', color: '#FF9800' }}><i className="fa-solid fa-lock"></i></div>
                 <div className="setting-text">
@@ -437,7 +508,7 @@ export default function Opciones() {
 
           <div className="section-title">Mas de AppsReborn</div>
           <div className="settings-section">
-            <Link href="/shop" className="setting-item" style={{textDecoration: 'none'}}>
+            <Link id="tour-shop" href="/shop" className="setting-item" style={{textDecoration: 'none'}}>
               <div className="setting-left">
                 <div className="icon-circle bg-teal"><i className="fa-solid fa-bag-shopping"></i></div>
                 <div className="setting-text">
@@ -462,7 +533,8 @@ export default function Opciones() {
 
           <hr className="divider" />
 
-          <div className="section-title">Accesibilidad (Zoom Global)</div>
+          <div id="tour-zoom">
+            <div className="section-title">Accesibilidad (Zoom Global)</div>
             <div style={{display: 'flex', alignItems: 'flex-start', background: 'rgba(0,191,165,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '15px'}}>
               <svg style={{width: '20px', height: '20px', flexShrink: 0, marginRight: '10px', color: '#00BFA5'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <div style={{fontSize: '13px', lineHeight: '1.4', color: '#555', fontWeight: '600'}}>
@@ -482,6 +554,7 @@ export default function Opciones() {
                 </button>
               </div>
             </div>
+          </div>
             <hr className="divider" />
 
             <div className="section-title">Dise&ntilde;o de carga</div>
@@ -525,40 +598,52 @@ export default function Opciones() {
             </div>
             <hr className="divider" />
 
-            <div className="section-title">Tiempos de animaciones</div>
-          <div className="settings-section">
-            <div className="zoom-container">
-              <button className={`zoom-btn ${animSpeed === '0.01' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.01')}>
-                <i className="fa-solid fa-bolt"></i>
-                <span style={{ fontSize: '11px' }}>Ultra</span>
-              </button>
-              <button className={`zoom-btn ${animSpeed === '0.5' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.5')}>
-                <i className="fa-solid fa-gauge-high"></i>
-                <span style={{ fontSize: '11px' }}>Rápido</span>
-              </button>
-              <button className={`zoom-btn ${animSpeed === '1' ? 'active' : ''}`} onClick={() => handleAnimSpeed('1')}>
-                <i className="fa-solid fa-gauge"></i>
-                <span style={{ fontSize: '11px' }}>Normal</span>
-              </button>
-              <button className={`zoom-btn ${animSpeed === '2' ? 'active' : ''}`} onClick={() => handleAnimSpeed('2')}>
-                <i className="fa-solid fa-gauge-simple"></i>
-                <span style={{ fontSize: '11px' }}>Lento</span>
-              </button>
-            </div>
-          </div>
-          <hr className="divider" />
-          <div className="section-title">Sistema</div>
-          <div className="settings-section">
-            <div className="setting-item" onClick={() => { window.location.reload(); }}>
-              <div className="setting-left">
-                <div className="icon-circle bg-teal"><i className="fa-solid fa-arrows-rotate"></i></div>
-                <div className="setting-text">
-                  <span className="st-title">Actualizar App</span>
-                  <span className="st-desc">Limpia el caché del sistema</span>
+            <div id="tour-anim-speed">
+              <div className="section-title">Tiempos de animaciones</div>
+              <div className="settings-section">
+                <div className="zoom-container">
+                  <button className={`zoom-btn ${animSpeed === '0.01' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.01')}>
+                    <i className="fa-solid fa-bolt"></i>
+                    <span style={{ fontSize: '11px' }}>Ultra</span>
+                  </button>
+                  <button className={`zoom-btn ${animSpeed === '0.5' ? 'active' : ''}`} onClick={() => handleAnimSpeed('0.5')}>
+                    <i className="fa-solid fa-gauge-high"></i>
+                    <span style={{ fontSize: '11px' }}>Rápido</span>
+                  </button>
+                  <button className={`zoom-btn ${animSpeed === '1' ? 'active' : ''}`} onClick={() => handleAnimSpeed('1')}>
+                    <i className="fa-solid fa-gauge"></i>
+                    <span style={{ fontSize: '11px' }}>Normal</span>
+                  </button>
+                  <button className={`zoom-btn ${animSpeed === '2' ? 'active' : ''}`} onClick={() => handleAnimSpeed('2')}>
+                    <i className="fa-solid fa-gauge-simple"></i>
+                    <span style={{ fontSize: '11px' }}>Lento</span>
+                  </button>
                 </div>
               </div>
-              <i className="fa-solid fa-chevron-right arrow-icon"></i>
             </div>
+            <hr className="divider" />
+            <div className="section-title">Sistema</div>
+            <div className="settings-section">
+              <div className="setting-item" onClick={iniciarTutorial}>
+                <div className="setting-left">
+                  <div className="icon-circle bg-purple"><i className="fa-solid fa-graduation-cap"></i></div>
+                  <div className="setting-text">
+                    <span className="st-title">Tutorial</span>
+                    <span className="st-desc">Aprende a usar la app</span>
+                  </div>
+                </div>
+                <i className="fa-solid fa-chevron-right arrow-icon"></i>
+              </div>
+              <div className="setting-item" onClick={() => { window.location.reload(); }}>
+                <div className="setting-left">
+                  <div className="icon-circle bg-teal"><i className="fa-solid fa-arrows-rotate"></i></div>
+                  <div className="setting-text">
+                    <span className="st-title">Actualizar App</span>
+                    <span className="st-desc">Limpia el caché del sistema</span>
+                  </div>
+                </div>
+                <i className="fa-solid fa-chevron-right arrow-icon"></i>
+              </div>
             <a href="https://t.me/MaikolEsleiter" target="_blank" className="setting-item" style={{textDecoration: 'none'}}>
               <div className="setting-left">
                 <div className="icon-circle bg-blue"><i className="fa-solid fa-headset"></i></div>
@@ -618,13 +703,13 @@ export default function Opciones() {
 
       {/* MODAL: NOTI FALSA */}
       <div className={`modal-overlay-opciones ${showNotiModal ? 'show' : ''}`} onClick={() => setShowNotiModal(false)}>
-        <div className="modal-panel-opciones" onClick={e => e.stopPropagation()}>
+        <div id="tour-noti-panel" className="modal-panel-opciones" onClick={e => e.stopPropagation()}>
           <div className="modal-header-opciones">
             <div className="modal-title-opciones">Configurar Notificación</div>
             <button className="close-modal-btn-opciones" onClick={() => setShowNotiModal(false)}><i className="fa-solid fa-xmark"></i></button>
           </div>
           
-          <div style={{
+          <div id="tour-noti-info" style={{
             display: 'flex',
             alignItems: 'center',
             background: 'rgba(116, 35, 133, 0.08)',
@@ -639,9 +724,30 @@ export default function Opciones() {
               alt="Créditos" 
               style={{ width: '40px', height: '40px', objectFit: 'contain', flexShrink: 0 }} 
             />
-            <div style={{ fontSize: '13px', lineHeight: '1.4', color: '#444', fontWeight: '600' }}>
+            <div style={{ flex: 1, fontSize: '13px', lineHeight: '1.4', color: '#444', fontWeight: '600' }}>
               Click en el bot&oacute;n de <strong>&quot;Cr&eacute;ditos&quot;</strong> del inicio para que llegue la noti, los datos var&iacute;an seg&uacute;n tu configuraci&oacute;n
             </div>
+            <button
+              id="tour-btn-probar-noti"
+              onClick={() => {
+                localStorage.setItem('yape_mini_tour_creditos', 'true');
+                router.push('/inicio');
+              }}
+              style={{
+                backgroundColor: '#742385',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '7px 12px',
+                fontSize: '12px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(116, 35, 133, 0.3)'
+              }}
+            >
+              Probar
+            </button>
           </div>
 
           <div className="switch-container-opciones">
@@ -928,46 +1034,126 @@ export default function Opciones() {
             </div>
           </div>
         )}
-      {/* POPUP PUBLICIDAD ALEATORIA */}
+      {/* NOTIFICACION FALSA PREVIEW EN OPCIONES */}
       <div 
-        className={`modal-overlay ${showAdPopup ? 'show' : ''}`} 
-        id="modalPopup" 
-        style={{ zIndex: 11000 }}
-        onClick={(e) => { if (e.target.id === 'modalPopup') setShowAdPopup(false); }}
+        id="fake-notification-preview" 
+        className={`fake-notification ${testNoti.show ? 'show' : ''} ${testNoti.dark ? 'noti-dark' : ''}`} 
+        style={{ 
+          zIndex: 99999999, 
+          position: 'fixed',
+          top: testNoti.show ? '18px' : '-120px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        }}
       >
-        <div className="modal-content">
-          <div 
-            className="modal-close-btn" 
-            id="closeModal" 
-            onClick={(e) => { 
-              e.stopPropagation(); 
-              setShowAdPopup(false); 
-            }}
-          >
-            X
-          </div>
-          {randomAdImg && (
-            <a 
-              href={randomAdImg.includes('publicidad_6.jpg') ? 'https://t.me/addlist/2LeWY70DlMExNTg5' : 'https://t.me/MaikolEsleiter'} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ display: 'block', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden' }}
-              onClick={(e) => {
-                if (!showAdPopup) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <img 
-                src={randomAdImg} 
-                alt="Publicidad" 
-                onError={(e) => { e.target.src = '/img/publicidad_1.jpg'; }} 
-                style={{ width: '100%', display: 'block', cursor: 'pointer' }}
-              />
-            </a>
-          )}
+        <img src="/img/icon-96x96.png" className="notif-icon" alt="Yape" />
+        <div className="notif-content">
+            <div className="notif-header">
+                <span className="notif-title">Confirmación de Pago</span>
+                <span className="notif-time">{testNoti.hora}</span>
+            </div>
+            <div className="notif-text">{testNoti.nombre} te envió un pago por S/ {testNoti.monto}. El cód. de seguridad es: {testNoti.codigo}</div>
         </div>
       </div>
+
+      {/* TOUR SPOTLIGHT (EN OPCIONES) */}
+      {tourActive && tourStep === 1 && (
+        <TourSpotlight
+          targetId="tour-datos-cuenta"
+          title="Datos de mi cuenta"
+          description="Configura tu perfil, saldo y opciones automáticas. Ingresaremos para configurarlo juntos."
+          stepText="Siguiente 1/19"
+          onNext={() => {
+            localStorage.setItem('yape_tour_step', '2');
+            router.push('/editar_datos');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 8 && (
+        <TourSpotlight
+          targetId="tour-noti-info"
+          title="Notificación Push Simulada"
+          description="Simula una notificación push idéntica a Yape. IMPORTANTE: Para que llegue la notificación, debes presionar el botón 'Créditos' en la pantalla de Inicio. Aquí puedes elegir datos aleatorios, modo oscuro, remitentes personalizados o montos específicos."
+          stepText="Siguiente 8/19"
+          onNext={() => {
+            setShowNotiModal(false);
+            setTourStep(9);
+            localStorage.setItem('yape_tour_step', '9');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 9 && (
+        <TourSpotlight
+          targetId="tour-definir-pin"
+          title="Seguridad PIN"
+          description="Establece un código PIN de 6 dígitos para proteger tu cuenta y hacer mucho más realista el acceso a la app."
+          stepText="Siguiente 9/19"
+          onNext={() => {
+            setTourStep(10);
+            localStorage.setItem('yape_tour_step', '10');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 10 && (
+        <TourSpotlight
+          targetId="tour-zoom"
+          title="Calibración de Zoom"
+          description="Si la app se ve muy grande o con bordes blancos en tu teléfono, usa los botones (+) y (-) para calibrar la escala exacta según el tamaño de tu pantalla."
+          stepText="Siguiente 10/19"
+          onNext={() => {
+            localStorage.setItem('yape_tour_step', '11');
+            router.push('/agregar_contacto');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 18 && (
+        <TourSpotlight
+          targetId="tour-anim-speed"
+          title="Velocidad del Sistema"
+          description="Elige qué tan rápido cargan las transiciones y pantallas de la app: Ultra, Rápido, Normal o Lento, adaptándolo a la potencia de tu celular."
+          stepText="Siguiente 18/19"
+          onNext={() => {
+            setTourStep(19);
+            localStorage.setItem('yape_tour_step', '19');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 19 && (
+        <TourSpotlight
+          targetId="tour-shop"
+          title="Maikols Shop"
+          description="Accede a nuestra tienda exclusiva con productos y servicios actualizados en formato dinámico de historias."
+          stepText="Siguiente 19/19"
+          onNext={() => {
+            setTourStep(20);
+            localStorage.setItem('yape_tour_step', '20');
+          }}
+          onSkip={cancelarTutorial}
+        />
+      )}
+
+      {tourActive && tourStep === 20 && (
+        <TourSpotlight
+          targetId={null}
+          title="¡Todo Listo!"
+          description="Ya conoces las herramientas principales de AppsReborn. ¡Disfruta de la experiencia!"
+          stepText="Empezar"
+          isFinal={true}
+          onNext={completarTutorial}
+          onSkip={cancelarTutorial}
+        />
+      )}
 
         <style dangerouslySetInnerHTML={{__html: `
         .pin-floating-bubble { position: absolute; bottom: 120px; right: 20px; max-width: 200px; display: flex; align-items: flex-end; z-index: 10; animation: floatBubble 3s ease-in-out infinite; }

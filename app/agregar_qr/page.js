@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { db, doc, setDoc } from '../firebase';
 import jsQR from 'jsqr';
+import TourSpotlight, { typeWriter } from '../components/TourSpotlight';
 
 export default function AgregarQR() {
     const router = useRouter();
@@ -15,6 +16,33 @@ export default function AgregarQR() {
     const [toast, setToast] = useState({ message: '', type: '', show: false });
     const fileInputRef = useRef(null);
     const cameraInputRef = useRef(null);
+
+    // TOUR STATE
+    const [tourActive, setTourActive] = useState(false);
+    const [tourStep, setTourStep] = useState(0);
+
+    useEffect(() => {
+        const isTour = localStorage.getItem('yape_tour_active') === 'true';
+        const step = parseInt(localStorage.getItem('yape_tour_step') || '0', 10);
+        if (isTour && step >= 14 && step <= 17) {
+            setTourActive(true);
+            setTourStep(step);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!tourActive) return;
+        if (tourStep === 15) {
+            typeWriter('Bodega Don Pepe', setName, () => {}, 95);
+        }
+    }, [tourStep, tourActive]);
+
+    const onTourSkip = () => {
+        localStorage.removeItem('yape_tour_active');
+        localStorage.removeItem('yape_tour_step');
+        localStorage.setItem('yape_tutorial_visto', 'true');
+        router.push('/opciones');
+    };
 
     const showToast = (message, type) => {
         setToast({ message, type, show: true });
@@ -148,7 +176,7 @@ export default function AgregarQR() {
                         <div className="section-title">Nuevo Código QR</div>
 
                         <label className="label">Imagen del QR</label>
-                        <div className="upload-area">
+                        <div id="tour-aqr-upload" className="upload-area">
                             {!previewSrc ? (
                                 <div id="uploadPlaceholder" style={{ width: '100%', textAlign: 'center' }}>
                                     <div className="scan-options-container">
@@ -174,7 +202,7 @@ export default function AgregarQR() {
                             <input type="file" ref={cameraInputRef} accept="image/*" capture="environment" style={{ display: 'none' }} onChange={previewFile} />
                         </div>
 
-                        <div className="form-group">
+                        <div id="tour-aqr-nombre" className="form-group">
                             <label className="label">Nombre del Negocio / Persona</label>
                             <div className="input-card">
                                 <i className="fa-solid fa-store input-icon"></i>
@@ -182,7 +210,7 @@ export default function AgregarQR() {
                             </div>
                         </div>
 
-                        <div className="form-group">
+                        <div id="tour-aqr-destino" className="form-group">
                             <label className="label">Destino</label>
                             <div className="input-card">
                                 <i className="fa-solid fa-building-columns input-icon"></i>
@@ -210,9 +238,66 @@ export default function AgregarQR() {
                             </div>
                         </div>
 
-                        <button className="btn-save" onClick={handleGuardar}>Guardar</button>
+                        <button id="tour-aqr-guardar" className="btn-save" onClick={handleGuardar}>Guardar</button>
                     </div>
                 </div>
+
+                {/* TOUR SPOTLIGHT (EN AGREGAR QR) */}
+                {tourActive && tourStep === 14 && (
+                    <TourSpotlight
+                        targetId="tour-aqr-upload"
+                        title="Cargar Código QR"
+                        description="Sube una imagen o toma una foto a cualquier código QR de pago desde tu galería o cámara para que el sistema lo procese."
+                        stepText="Siguiente 14/19"
+                        onNext={() => {
+                            setTourStep(15);
+                            localStorage.setItem('yape_tour_step', '15');
+                        }}
+                        onSkip={onTourSkip}
+                    />
+                )}
+
+                {tourActive && tourStep === 15 && (
+                    <TourSpotlight
+                        targetId="tour-aqr-nombre"
+                        title="Nombre del QR"
+                        description="Indica el nombre del negocio o titular que se mostrará al escanear el QR."
+                        stepText="Siguiente 15/19"
+                        onNext={() => {
+                            setTourStep(16);
+                            localStorage.setItem('yape_tour_step', '16');
+                        }}
+                        onSkip={onTourSkip}
+                    />
+                )}
+
+                {tourActive && tourStep === 16 && (
+                    <TourSpotlight
+                        targetId="tour-aqr-destino"
+                        title="Destino de Pago"
+                        description="Selecciona a qué billetera o banco pertenece el código (Yape, Plin, BCP, Interbank, etc.)."
+                        stepText="Siguiente 16/19"
+                        onNext={() => {
+                            setTourStep(17);
+                            localStorage.setItem('yape_tour_step', '17');
+                        }}
+                        onSkip={onTourSkip}
+                    />
+                )}
+
+                {tourActive && tourStep === 17 && (
+                    <TourSpotlight
+                        targetId="tour-aqr-guardar"
+                        title="Guardar QR"
+                        description="Al guardar, este QR quedará registrado para que la cámara lo reconozca de inmediato al escanear."
+                        stepText="Siguiente 17/19"
+                        onNext={() => {
+                            localStorage.setItem('yape_tour_step', '18');
+                            router.push('/opciones');
+                        }}
+                        onSkip={onTourSkip}
+                    />
+                )}
 
                 <style jsx>{`
                     .page-wrapper {

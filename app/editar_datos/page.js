@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import TourSpotlight, { typeWriter } from '../components/TourSpotlight';
 
 export default function EditarDatos() {
   const router = useRouter();
@@ -22,6 +25,60 @@ export default function EditarDatos() {
 
   const [initialData, setInitialData] = useState(null);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+
+  // TOUR STATE
+  const [tourActive, setTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const [googleName, setGoogleName] = useState('Usuario');
+  const [googleEmail, setGoogleEmail] = useState('usuario@gmail.com');
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.displayName) setGoogleName(user.displayName);
+        else if (user.email) setGoogleName(user.email.split('@')[0]);
+        if (user.email) setGoogleEmail(user.email);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    const isTour = localStorage.getItem('yape_tour_active') === 'true';
+    const step = parseInt(localStorage.getItem('yape_tour_step') || '0', 10);
+    if (isTour && step >= 2 && step <= 7) {
+      setTourActive(true);
+      setTourStep(step);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!tourActive) return;
+
+    if (tourStep === 2) {
+      const targetName = googleName && googleName !== 'Usuario' ? googleName : (auth.currentUser?.displayName || 'Usuario AppsReborn');
+      typeWriter(targetName, setName, () => {}, 90);
+    } else if (tourStep === 3) {
+      const randInt = Math.floor(Math.random() * 1800) + 1250;
+      const randDec = Math.floor(Math.random() * 90) + 10;
+      const targetBal = `${randInt}.${randDec}`;
+      typeWriter(targetBal, setBalance, () => {}, 110);
+    } else if (tourStep === 5) {
+      setIsBotEnabled(true);
+    } else if (tourStep === 6) {
+      setIsCorreoEnabled(true);
+      const targetEmail = googleEmail || auth.currentUser?.email || 'usuario@gmail.com';
+      typeWriter(targetEmail, setCorreo, () => {}, 80);
+      typeWriter('999999999', setPhone, () => {}, 95);
+    }
+  }, [tourStep, tourActive, googleName, googleEmail]);
+
+  const onTourSkip = () => {
+    localStorage.removeItem('yape_tour_active');
+    localStorage.removeItem('yape_tour_step');
+    localStorage.setItem('yape_tutorial_visto', 'true');
+    handleSave();
+  };
 
   useEffect(() => {
     // Load existing data from localStorage
@@ -149,7 +206,7 @@ export default function EditarDatos() {
 
           {/* SECCIÓN 1: INPUTS PRINCIPALES */}
           <div className="settings-section-ed">
-            <div className="input-block-ed">
+            <div id="tour-ed-nombre" className="input-block-ed">
               <label>Nombre de Usuario</label>
               <div className={`input-container-ed ${loading ? 'skeleton-box-ed' : ''}`}>
                 <i className="fa-solid fa-user"></i>
@@ -157,7 +214,7 @@ export default function EditarDatos() {
               </div>
             </div>
 
-            <div className="input-block-ed">
+            <div id="tour-ed-saldo" className="input-block-ed">
               <label>Saldo Inicial</label>
               <div className={`input-container-ed ${loading ? 'skeleton-box-ed' : ''}`}>
                 <i className="fa-solid fa-sack-dollar"></i>
@@ -170,7 +227,7 @@ export default function EditarDatos() {
 
           {/* SECCIÓN 2: AJUSTES RÁPIDOS */}
           <div className="settings-section-ed">
-            <div className="setting-item-ed" onClick={() => setIsPopupEnabled(!isPopupEnabled)}>
+            <div id="tour-ed-popup" className="setting-item-ed" onClick={() => setIsPopupEnabled(!isPopupEnabled)}>
               <div className="setting-left-ed">
                 <div className="icon-circle-ed bg-red-ed"><i className="fa-regular fa-clone"></i></div>
                 <div className="setting-text-ed">
@@ -181,7 +238,7 @@ export default function EditarDatos() {
               <div className={`toggle-switch-ed ${isPopupEnabled ? 'active' : ''}`}><div className="toggle-knob-ed"></div></div>
             </div>
 
-            <div className="setting-item-ed" onClick={() => setIsBotEnabled(!isBotEnabled)}>
+            <div id="tour-ed-bot" className="setting-item-ed" onClick={() => setIsBotEnabled(!isBotEnabled)}>
               <div className="setting-left-ed">
                 <div className="icon-circle-ed bg-orange-ed"><i className="fa-solid fa-robot"></i></div>
                 <div className="setting-text-ed">
@@ -192,7 +249,7 @@ export default function EditarDatos() {
               <div className={`toggle-switch-ed ${isBotEnabled ? 'active' : ''}`}><div className="toggle-knob-ed"></div></div>
             </div>
 
-            <div className="setting-item-ed column-item-ed" onClick={toggleCorreo}>
+            <div id="tour-ed-correo" className="setting-item-ed column-item-ed" onClick={toggleCorreo}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', cursor: 'pointer' }}>
                 <div className="setting-left-ed">
                   <div className="icon-circle-ed bg-purple-ed"><i className="fa-solid fa-envelope-open-text"></i></div>
@@ -251,10 +308,95 @@ export default function EditarDatos() {
             </div>
           </div>
 
-          <button className="btn-primary-ed" onClick={handleSave}>Guardar Cambios</button>
+          <button id="tour-ed-guardar" className="btn-primary-ed" onClick={handleSave}>Guardar Cambios</button>
           
         </div>
       </div>
+
+      {/* TOUR SPOTLIGHT (EN EDITAR DATOS) */}
+      {tourActive && tourStep === 2 && (
+        <TourSpotlight
+          targetId="tour-ed-nombre"
+          title="Nombre de Usuario"
+          description="Aquí se coloca el nombre del titular. Lo sincronizamos automáticamente con tu cuenta para que aparezca en todas las pantallas de la app."
+          stepText="Siguiente 2/19"
+          onNext={() => {
+            setTourStep(3);
+            localStorage.setItem('yape_tour_step', '3');
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
+
+      {tourActive && tourStep === 3 && (
+        <TourSpotlight
+          targetId="tour-ed-saldo"
+          title="Saldo Inicial"
+          description="Configura el saldo disponible de tu cuenta. Te asignamos un saldo aleatorio inicial; podrás modificarlo cuando desees."
+          stepText="Siguiente 3/19"
+          onNext={() => {
+            setTourStep(4);
+            localStorage.setItem('yape_tour_step', '4');
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
+
+      {tourActive && tourStep === 4 && (
+        <TourSpotlight
+          targetId="tour-ed-popup"
+          title="Anuncio de Inicio"
+          description="Activa o desactiva la ventana emergente de publicidad que se muestra al abrir la pantalla de inicio."
+          stepText="Siguiente 4/19"
+          onNext={() => {
+            setTourStep(5);
+            localStorage.setItem('yape_tour_step', '5');
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
+
+      {tourActive && tourStep === 5 && (
+        <TourSpotlight
+          targetId="tour-ed-bot"
+          title="Auto Completado"
+          description="Al activarlo, la aplicación autocompletará datos y verificaciones de forma automática para agilizar tus operaciones."
+          stepText="Siguiente 5/19"
+          onNext={() => {
+            setTourStep(6);
+            localStorage.setItem('yape_tour_step', '6');
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
+
+      {tourActive && tourStep === 6 && (
+        <TourSpotlight
+          targetId="tour-ed-correo"
+          title="Constancias por Correo"
+          description="Envía el comprobante digital directamente a tu bandeja de correo. Se completó con tu correo registrado y número por defecto."
+          stepText="Siguiente 6/19"
+          onNext={() => {
+            setTourStep(7);
+            localStorage.setItem('yape_tour_step', '7');
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
+
+      {tourActive && tourStep === 7 && (
+        <TourSpotlight
+          targetId="tour-ed-guardar"
+          title="Guardar Cambios"
+          description="Guardamos todos tus ajustes automáticamente en memoria."
+          stepText="Siguiente 7/19"
+          onNext={() => {
+            localStorage.setItem('yape_tour_step', '8');
+            handleSave();
+          }}
+          onSkip={onTourSkip}
+        />
+      )}
 
       {showUnsavedModal && (
         <div className="unsaved-modal-overlay">
