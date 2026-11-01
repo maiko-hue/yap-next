@@ -30,6 +30,7 @@ export default function Inicio() {
   const [showYapearLoader, setShowYapearLoader] = useState(false);
   const [frecuentes, setFrecuentes] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [censurarInicio, setCensurarInicio] = useState(true);
   
     // Slider state
   const [notiSwipe, setNotiSwipe] = useState(0);
@@ -99,6 +100,7 @@ export default function Inicio() {
     }
 
     // Load initial data from localStorage
+    setCensurarInicio(localStorage.getItem('yape_censurar_nombres') !== 'false');
     const savedBalance = localStorage.getItem('yape_balance') || "1200.00";
     const cleanBalance = parseFloat(savedBalance.replace(/,/g, ''));
     if (!isNaN(cleanBalance)) {
@@ -160,8 +162,12 @@ export default function Inicio() {
 
   const getShortName = (nombre) => {
     if (!nombre) return "Usuario";
+    if (!censurarInicio) return nombre;
+    if (nombre.includes('*')) return nombre;
     let partes = nombre.trim().split(/\s+/);
-    if (partes.length === 2) {
+    if (partes.length === 1 && partes[0].length > 3) {
+      return partes[0].substring(0, 3) + "*";
+    } else if (partes.length === 2) {
       return partes[0] + " " + partes[1].substring(0, 3) + "*";
     } else if (partes.length >= 3) {
       return partes[0] + " " + partes[2].substring(0, 3) + "*";
@@ -307,6 +313,7 @@ export default function Inicio() {
 
   useEffect(() => {
     if (showYapear) {
+      setCensurarInicio(localStorage.getItem('yape_censurar_nombres') !== 'false');
       // Load frecuentes
       let frecs = JSON.parse(localStorage.getItem('yape_frecuentes')) || [];
       if (frecs.length === 0) {
@@ -525,7 +532,8 @@ export default function Inicio() {
                         movements.map((mov, idx) => {
                           let nombreMostrado = getShortName(mov.nombre);
                           let destinoHistorial = mov.destino || "Yape";
-                          if (destinoHistorial !== "Yape") {
+                          let esQr = mov.es_qr === true || mov.es_qr === "true";
+                          if (esQr || destinoHistorial !== "Yape") {
                               nombreMostrado = `${destinoHistorial} - ${nombreMostrado}`;
                           }
                           return (
@@ -625,7 +633,7 @@ export default function Inicio() {
                           const numFormatted = rawNum.length === 9 ? rawNum.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : rawNum;
                           return (
                               <div className="contact-item" key={i} onClick={() => handleContactClick(rawNum, c.nombre)}>
-                                  <span className="contact-name">{c.nombre}</span>
+                                  <span className="contact-name">{getShortName(c.nombre)}</span>
                                   <span className="contact-phone">{numFormatted}</span>
                               </div>
                           );

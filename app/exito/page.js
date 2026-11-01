@@ -69,14 +69,18 @@ function ExitoContent() {
     let isCensoredBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
     let isCensoredQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
     
-    let shouldCensor = esQrParam ? isCensoredQr : isCensoredBaucher;
+    let shouldCensor = isCensoredBaucher || (esQrParam && isCensoredQr);
 
-    if (shouldCensor) {
+    if (shouldCensor && typeof nombreRaw === 'string' && !nombreRaw.includes('*')) {
       const partesNombre = nombreRaw.trim().split(/\s+/);
-      if (partesNombre.length === 2) {
+      if (partesNombre.length === 1 && partesNombre[0].length > 3) {
+        setNombreMostrado(`${partesNombre[0].substring(0, 3)}*`);
+      } else if (partesNombre.length === 2) {
         setNombreMostrado(`${partesNombre[0]} ${partesNombre[1].substring(0, 3)}*`);
       } else if (partesNombre.length >= 3) {
         setNombreMostrado(`${partesNombre[0]} ${partesNombre[2].substring(0, 3)}*`);
+      } else {
+        setNombreMostrado(nombreRaw);
       }
     } else {
       setNombreMostrado(nombreRaw);

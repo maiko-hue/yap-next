@@ -14,6 +14,9 @@ function MontoContent() {
   let passedName = searchParams.get('nombre');
   let qrData = searchParams.get('qr_data');
   let passedDestino = searchParams.get('destino') || "Yape";
+  let esQrParam = searchParams.get('es_qr') === 'true';
+
+  const isQrOperation = !!qrData || esQrParam || rawNumber === "Yape";
 
   const [currentDestino, setCurrentDestino] = useState(passedDestino);
   const [loadingName, setLoadingName] = useState(true);
@@ -33,7 +36,7 @@ function MontoContent() {
   const [isUnregisteredQr, setIsUnregisteredQr] = useState(false);
 
   // Computed
-  const maskedNumber = currentDestino === "Yape" ? (qrData ? currentDestino : `*** *** ${rawNumber.slice(-3)}`) : currentDestino;
+  const maskedNumber = isQrOperation ? currentDestino : (currentDestino === "Yape" ? `*** *** ${rawNumber.slice(-3)}` : currentDestino);
 
   useEffect(() => {
     async function loadContactData() {
@@ -101,11 +104,13 @@ function MontoContent() {
     const isCensurarBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
     const isCensurarNombresQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
     
-    const shouldCensor = qrData ? isCensurarNombresQr : isCensurarBaucher;
+    const shouldCensor = isCensurarBaucher || (isQrOperation && isCensurarNombresQr);
 
-    if (shouldCensor && typeof nombreMostrar === 'string') {
+    if (shouldCensor && typeof nombreMostrar === 'string' && !nombreMostrar.includes('*')) {
       let partes = nombreMostrar.trim().split(/\s+/);
-      if (partes.length === 2) {
+      if (partes.length === 1 && partes[0].length > 3) {
+        nombreMostrar = partes[0].substring(0, 3) + "*";
+      } else if (partes.length === 2) {
         nombreMostrar = partes[0] + " " + partes[1].substring(0, 3) + "*";
       } else if (partes.length >= 3) {
         nombreMostrar = partes[0] + " " + partes[2].substring(0, 3) + "*";
@@ -186,12 +191,7 @@ function MontoContent() {
     const codigoSeguridadRandom = Math.floor(100 + Math.random() * 900).toString();
 
     let destinoReal = currentDestino; 
-    let esQrLogica = "false";
-    
-    if (qrData) {
-      destinoReal = maskedNumber;
-      esQrLogica = "true";
-    }
+    let esQrLogica = isQrOperation ? "true" : "false";
 
     let tipoMovimiento = 'gasto';
     if (mensajeFinal.trim() === "Auto") tipoMovimiento = 'ingreso';
@@ -208,11 +208,11 @@ function MontoContent() {
     const nuevoMovimiento = {
       nombre: nombreFinal, monto: montoFinal, fecha: dateTime.full,
       fechaSolo: dateTime.date, horaSolo: dateTime.time,
-      numero: esQrLogica === "true" ? destinoReal : rawNumber,
+      numero: isQrOperation ? destinoReal : rawNumber,
       operacion: operacionRandom, codigo: codigoSeguridadRandom,
       mensaje: mensajeFinal, destino: destinoReal, tipo: tipoMovimiento,
-      mostrar_celular: destinoReal === "Yape" ? "asteriscos" : "false",
-      es_qr: esQrLogica === "true"
+      mostrar_celular: destinoReal === "Yape" ? (isQrOperation ? "false" : "asteriscos") : "false",
+      es_qr: isQrOperation
     };
 
     let movimientos = JSON.parse(localStorage.getItem('yape_movements')) || [];
@@ -231,7 +231,7 @@ function MontoContent() {
     }
 
     setTimeout(() => {
-      let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${rawNumber}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${destinoReal === "Yape" ? "asteriscos" : "false"}&recien_yapeado=true`;
+      let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${encodeURIComponent(isQrOperation ? destinoReal : rawNumber)}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${isQrOperation ? "false" : (destinoReal === "Yape" ? "asteriscos" : "false")}&recien_yapeado=true`;
       if (tipoMovimiento === 'ingreso') url += '&tipo=ingreso';
       router.push(url);
     }, 3000 * (typeof window !== 'undefined' ? parseFloat(localStorage.getItem('yape_anim_speed') || '1') : 1));
@@ -257,9 +257,9 @@ function MontoContent() {
     const codigoSeguridadRandom = Math.floor(100 + Math.random() * 900).toString();
 
     let destinoReal = bancoSeleccionado;
-    let esQrLogica = qrData ? "true" : "false";
+    let esQrLogica = isQrOperation ? "true" : "false";
     let mostrarCelular = showPhoneCheckbox ? "true" : "false";
-    if (qrData) mostrarCelular = "false";
+    if (isQrOperation) mostrarCelular = "false";
 
     let tipoMovimiento = 'gasto';
     if (mensajeFinal.trim() === "Auto") tipoMovimiento = 'ingreso';
@@ -276,12 +276,12 @@ function MontoContent() {
     const nuevoMovimiento = {
         nombre: nombreFinal, monto: montoFinal, fecha: dateTime.full,
         fechaSolo: dateTime.date, horaSolo: dateTime.time,
-        numero: esQrLogica === "true" ? destinoReal : rawNumber, 
+        numero: isQrOperation ? destinoReal : rawNumber, 
         operacion: operacionRandom,
         codigo: codigoSeguridadRandom, mensaje: mensajeFinal,
         destino: destinoReal, tipo: tipoMovimiento,
         mostrar_celular: mostrarCelular,
-        es_qr: esQrLogica === "true"
+        es_qr: isQrOperation
     };
 
     let movimientos = JSON.parse(localStorage.getItem('yape_movements')) || [];
@@ -300,7 +300,7 @@ function MontoContent() {
     }
 
     setTimeout(() => {
-        let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${rawNumber}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${mostrarCelular}&recien_yapeado=true`;
+        let url = `/exito?monto=${montoFinal}&nombre=${encodeURIComponent(nombreFinal)}&destino=${encodeURIComponent(destinoReal)}&es_qr=${esQrLogica}&numero=${encodeURIComponent(isQrOperation ? destinoReal : rawNumber)}&mensaje=${encodeURIComponent(mensajeFinal)}&operacion=${operacionRandom}&codigo=${codigoSeguridadRandom}&fecha=${dateTime.date.replace(/\./g,'')}&hora=${dateTime.time.replace(/\./g,'')}&mostrar_celular=${mostrarCelular}&recien_yapeado=true`;
         if (tipoMovimiento === 'ingreso') url += '&tipo=ingreso';
         router.push(url);
     }, 3000 * (typeof window !== 'undefined' ? parseFloat(localStorage.getItem('yape_anim_speed') || '1') : 1));

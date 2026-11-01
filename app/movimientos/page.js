@@ -116,12 +116,21 @@ export default function MovimientosPage() {
                                     <div className="month-title">{mesAno}</div>
                                     {lista.map((mov, index) => {
                                         let nombreMostrado = mov.nombre;
-                                        const partes = mov.nombre.split(" ");
-                                        if (partes.length > 1) {
-                                            nombreMostrado = `${partes[0]} ${partes[1].substring(0, 3)}*`;
+                                        if (!nombreMostrado.includes('*')) {
+                                            const partes = mov.nombre.trim().split(/\s+/);
+                                            if (partes.length === 1 && partes[0].length > 3) {
+                                                nombreMostrado = `${partes[0].substring(0, 3)}*`;
+                                            } else if (partes.length === 2) {
+                                                nombreMostrado = `${partes[0]} ${partes[1].substring(0, 3)}*`;
+                                            } else if (partes.length >= 3) {
+                                                nombreMostrado = `${partes[0]} ${partes[2].substring(0, 3)}*`;
+                                            }
                                         }
-                                        if (mov.destino && mov.destino !== "Yape") {
-                                            nombreMostrado = `${mov.destino} - ${nombreMostrado}`;
+
+                                        const esQr = mov.es_qr === true || mov.es_qr === "true";
+                                        const destinoReal = mov.destino || "Yape";
+                                        if (esQr || destinoReal !== "Yape") {
+                                            nombreMostrado = `${destinoReal} - ${nombreMostrado}`;
                                         }
 
                                         let timeDisplay = "";
