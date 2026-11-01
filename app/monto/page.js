@@ -6,16 +6,6 @@ import { db, doc, getDoc, setDoc } from '../firebase';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5h6Q9mRk9E5ug_oNSI_B4EPxse2f4KLfbxUJoSx0zOSyzFoe3_eLC7zmjeM4qePes/exec";
 
-function toTitleCase(str) {
-  if (!str || typeof str !== 'string') return '';
-  return str
-    .toLowerCase()
-    .trim()
-    .split(/\s+/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-}
-
 function MontoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -24,7 +14,6 @@ function MontoContent() {
   let passedName = searchParams.get('nombre');
   let qrData = searchParams.get('qr_data');
   let passedDestino = searchParams.get('destino') || "Yape";
-  let passedMonto = searchParams.get('monto');
 
   const [currentDestino, setCurrentDestino] = useState(passedDestino);
   const [loadingName, setLoadingName] = useState(true);
@@ -48,11 +37,6 @@ function MontoContent() {
 
   useEffect(() => {
     async function loadContactData() {
-      // Pre-cargar monto si fue detectado por la IA o EMVCo
-      if (passedMonto && !isNaN(parseFloat(passedMonto))) {
-        setAmount(passedMonto);
-      }
-
       if (qrData) {
         try {
           const safeId = qrData.replace(/\//g, '_slash_');
@@ -61,21 +45,13 @@ function MontoContent() {
           if (docSnap.exists()) {
             displayLoadedName(docSnap.data().nombre);
             setCurrentDestino(docSnap.data().destino || "Yape");
-          } else if (passedName && passedName !== "null" && passedName !== "undefined") {
-            displayLoadedName(decodeURIComponent(passedName));
-            if (passedDestino) setCurrentDestino(passedDestino);
-            setIsUnregisteredQr(false);
           } else {
             setIsUnregisteredQr(true);
             setRecipientName("Ingresa el nombre aqui");
             setLoadingName(false);
           }
         } catch (error) {
-          if (passedName && passedName !== "null" && passedName !== "undefined") {
-            displayLoadedName(decodeURIComponent(passedName));
-          } else {
-            displayLoadedName("Error QR");
-          }
+          displayLoadedName("Error QR");
         }
         return;
       }
@@ -120,23 +96,19 @@ function MontoContent() {
   }, [qrData, rawNumber, passedName]);
 
   const displayLoadedName = (name) => {
-    let cleanName = toTitleCase(name);
+    let nombreMostrar = name;
     
     const isCensurarBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
     const isCensurarNombresQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
     
-    // Respeta tanto "Censurar nombres (en monto)" como "Censurar nombres en QRs"
-    const shouldCensor = isCensurarBaucher || (qrData ? isCensurarNombresQr : false);
+    const shouldCensor = qrData ? isCensurarNombresQr : isCensurarBaucher;
 
-    let nombreMostrar = cleanName;
-    if (shouldCensor && typeof cleanName === 'string' && !cleanName.includes('*')) {
-      let partes = cleanName.trim().split(/\s+/);
+    if (shouldCensor && typeof nombreMostrar === 'string') {
+      let partes = nombreMostrar.trim().split(/\s+/);
       if (partes.length === 2) {
         nombreMostrar = partes[0] + " " + partes[1].substring(0, 3) + "*";
       } else if (partes.length >= 3) {
         nombreMostrar = partes[0] + " " + partes[2].substring(0, 3) + "*";
-      } else if (partes.length === 1 && partes[0].length > 3) {
-        nombreMostrar = partes[0].substring(0, 3) + "*";
       }
     }
     setRecipientName(nombreMostrar);

@@ -5,16 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import '../exito.css';
 import html2canvas from 'html2canvas';
 
-function toTitleCase(str) {
-  if (!str || typeof str !== 'string') return '';
-  return str
-    .toLowerCase()
-    .trim()
-    .split(/\s+/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-}
-
 function ExitoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -79,22 +69,17 @@ function ExitoContent() {
     let isCensoredBaucher = localStorage.getItem('yape_censurar_baucher') === 'true';
     let isCensoredQr = localStorage.getItem('yape_censurar_nombres_qr') === 'true';
     
-    let shouldCensor = isCensoredBaucher || (esQrParam ? isCensoredQr : false);
-    let cleanName = toTitleCase(nombreRaw);
+    let shouldCensor = esQrParam ? isCensoredQr : isCensoredBaucher;
 
-    if (shouldCensor && !cleanName.includes('*')) {
-      const partesNombre = cleanName.trim().split(/\s+/);
+    if (shouldCensor) {
+      const partesNombre = nombreRaw.trim().split(/\s+/);
       if (partesNombre.length === 2) {
         setNombreMostrado(`${partesNombre[0]} ${partesNombre[1].substring(0, 3)}*`);
       } else if (partesNombre.length >= 3) {
         setNombreMostrado(`${partesNombre[0]} ${partesNombre[2].substring(0, 3)}*`);
-      } else if (partesNombre.length === 1 && partesNombre[0].length > 3) {
-        setNombreMostrado(`${partesNombre[0].substring(0, 3)}*`);
-      } else {
-        setNombreMostrado(cleanName);
       }
     } else {
-      setNombreMostrado(cleanName);
+      setNombreMostrado(nombreRaw);
     }
   }, [nombreRaw, esQrParam]);
 
