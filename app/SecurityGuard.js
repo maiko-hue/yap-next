@@ -15,8 +15,8 @@ export default function SecurityGuard({ children }) {
 
   const esIndex = pathname === '/';
 
-  // VALIDACIÓN SÍNCRONA: Si ya está activo, ocultamos el index al instante
-  const isVip = typeof window !== 'undefined' ? localStorage.getItem("pase_vip_activo") === "true" : false;
+  // Estado VIP sincronizado en cliente tras la hidratación
+  const [isVip, setIsVip] = useState(false);
 
   const expulsarUsuario = async () => {
     document.documentElement.classList.remove('vip-preload-hide');
@@ -49,6 +49,7 @@ export default function SecurityGuard({ children }) {
       // Si ya cuenta con pase VIP activo, desbloqueamos la pantalla inmediatamente en el cliente
       if (localStorage.getItem('pase_vip_activo') === 'true') {
         setIsChecking(false);
+        setIsVip(true);
       }
     }
   }, []);
@@ -57,11 +58,12 @@ export default function SecurityGuard({ children }) {
   useEffect(() => {
     if (esIndex && localStorage.getItem("pase_vip_activo") === "true") {
       setIsChecking(false);
+      setIsVip(true);
       router.push('/login_pin');
     } else {
       document.documentElement.classList.remove('vip-preload-hide');
     }
-  }, [pathname]);
+  }, [pathname, esIndex]);
 
   // Función de verificación con Caché Inteligente de 10 minutos (Evita gastar cuota)
   const verificarEstadoUsuario = async (user, forzar = false) => {

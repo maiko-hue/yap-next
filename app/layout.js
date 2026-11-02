@@ -35,11 +35,7 @@ export default function RootLayout({ children }) {
             }
           `
         }} />
-      </head>
-      <body suppressHydrationWarning>
-        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="afterInteractive" />
-        
-        <Script id="vip-preload-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
+        <script dangerouslySetInnerHTML={{
           __html: `
             try {
               if (window.location.pathname === '/' && localStorage.getItem('pase_vip_activo') === 'true') {
@@ -48,6 +44,9 @@ export default function RootLayout({ children }) {
             } catch(e) {}
           `
         }} />
+      </head>
+      <body suppressHydrationWarning>
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="afterInteractive" />
         
         <Script id="ios-mode-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
