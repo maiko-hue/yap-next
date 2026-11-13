@@ -28,6 +28,9 @@ export default function Inicio() {
   const [showLoader, setShowLoader] = useState(false);
   const [searchYapear, setSearchYapear] = useState('');
   const [showYapearLoader, setShowYapearLoader] = useState(false);
+  const [showNuevoNumero, setShowNuevoNumero] = useState(false);
+  const [nuevoNumero, setNuevoNumero] = useState('');
+  const nuevoNumeroInputRef = useRef(null);
   const [frecuentes, setFrecuentes] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [censurarInicio, setCensurarInicio] = useState(true);
@@ -355,6 +358,30 @@ export default function Inicio() {
     }
   };
 
+  useEffect(() => {
+    if (showNuevoNumero && nuevoNumeroInputRef.current) {
+      setTimeout(() => {
+        nuevoNumeroInputRef.current?.focus();
+      }, 150);
+    }
+  }, [showNuevoNumero]);
+
+  const handleNuevoNumeroChange = (e) => {
+    let rawDigits = e.target.value.replace(/\D/g, '');
+    if (rawDigits.startsWith('51') && rawDigits.length > 9) {
+      rawDigits = rawDigits.slice(2);
+    }
+    rawDigits = rawDigits.slice(0, 9);
+    setNuevoNumero(rawDigits);
+  };
+
+  const formatNuevoNumero = (digits) => {
+    if (!digits) return '';
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
+  };
+
   const handleContactClick = (numero, nombre) => {
     setShowYapearLoader(true);
     const speed = typeof window !== "undefined" ? parseFloat(localStorage.getItem('yape_anim_speed') || '1') : 1;
@@ -607,7 +634,7 @@ export default function Inicio() {
               </div>
           ) : (
               <div id="mainYapearContent" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-                  <div className="nuevo-numero-row" onClick={() => document.querySelector('.search-input').focus()}>
+                  <div className="nuevo-numero-row" onClick={() => setShowNuevoNumero(true)}>
                       <div className="nn-left">
                           <img src="/img/fonoicon.svg" className="nn-icon" alt="" />
                           <span className="nn-text">Nuevo número</span>
@@ -645,6 +672,85 @@ export default function Inicio() {
               </div>
           )}
       </div>
+
+      {/* VISTA: YAPEAR A NUEVO NÚMERO */}
+      {showNuevoNumero && (
+        <div className="nuevo-numero-screen">
+          <div className="nn-top-header">
+            <button
+              type="button"
+              className="nn-back-btn"
+              onClick={() => {
+                setShowNuevoNumero(false);
+                setNuevoNumero('');
+              }}
+              aria-label="Volver"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div className="nn-body-content">
+            <h1 className="nn-page-title">Yapear a nuevo número</h1>
+
+            <fieldset className="nn-fieldset" onClick={() => nuevoNumeroInputRef.current?.focus()}>
+              <legend className="nn-legend">Ingresa el número de celular</legend>
+              <div className="nn-input-row">
+                <span className="nn-prefix">+51</span>
+                <input
+                  ref={nuevoNumeroInputRef}
+                  type="tel"
+                  inputMode="numeric"
+                  className="nn-input"
+                  value={formatNuevoNumero(nuevoNumero)}
+                  onChange={handleNuevoNumeroChange}
+                  placeholder=""
+                  maxLength={11}
+                  autoComplete="off"
+                />
+                {nuevoNumero.length > 0 && (
+                  <button
+                    type="button"
+                    className="nn-clear-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setNuevoNumero('');
+                      nuevoNumeroInputRef.current?.focus();
+                    }}
+                    aria-label="Borrar número"
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="15" y1="9" x2="9" y2="15"></line>
+                      <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="nn-bottom-footer">
+            <button
+              type="button"
+              className={`nn-continue-btn ${nuevoNumero.length === 9 ? 'active' : ''}`}
+              disabled={nuevoNumero.length !== 9}
+              onClick={() => {
+                if (nuevoNumero.length === 9) {
+                  setShowNuevoNumero(false);
+                  setShowYapear(false);
+                  handleContactClick(nuevoNumero);
+                }
+              }}
+            >
+              Continuar
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className={`loader-overlay ${showYapearLoader ? 'show' : ''}`} id="loaderyapear">
           <div className="loader-card">

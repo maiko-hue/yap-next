@@ -67,7 +67,11 @@ export default function RootLayout({ children }) {
 
         <Script id="zoom-block" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
+            let startTouchY = 0;
             document.addEventListener('touchstart', function(event) {
+              if (event.touches.length === 1) {
+                startTouchY = event.touches[0].pageY;
+              }
               if (event.touches.length > 1) {
                 event.preventDefault();
               }
@@ -93,6 +97,24 @@ export default function RootLayout({ children }) {
             document.addEventListener('touchmove', function(event) {
               if (event.touches && event.touches.length > 1) {
                 event.preventDefault();
+              } else if (event.touches && event.touches.length === 1) {
+                const currentY = event.touches[0].pageY;
+                if (currentY > startTouchY) {
+                  let el = event.target;
+                  let canScrollUp = false;
+                  while (el && el !== document.body && el !== document.documentElement) {
+                    if (el.scrollTop > 0) {
+                      canScrollUp = true;
+                      break;
+                    }
+                    el = el.parentElement;
+                  }
+                  if (!canScrollUp && (window.pageYOffset || document.documentElement.scrollTop || 0) <= 0) {
+                    if (event.cancelable) {
+                      event.preventDefault();
+                    }
+                  }
+                }
               }
             }, { passive: false });
           `

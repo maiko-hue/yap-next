@@ -4,6 +4,8 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overscroll-behavior: none !important;
+  overscroll-behavior-y: none !important;
 }
 * {
     /* Elimina el recuadro azul al hacer clic en celulares */
@@ -59,6 +61,8 @@ html, body {
             color: #333;
             height: calc(100dvh / var(--app-zoom, 1));
             overflow: hidden;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
         }
         img {
          -webkit-touch-callout: none !important;
@@ -601,7 +605,23 @@ html, body {
         #pantalla-yapear .search-section { padding: 15px 20px 10px 20px; width: 100%; flex-shrink: 0; }
         #pantalla-yapear .search-box { position: relative; display: flex; align-items: center; width: 100%; }
         #pantalla-yapear .search-icon { position: absolute; left: 15px; color: #888; font-size: 16px; pointer-events: none; }
-        #pantalla-yapear .search-input { width: 100%; padding: 12px 12px 12px 45px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-weight: 500; background-color: white; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.05); -webkit-appearance: none; }
+        #pantalla-yapear .search-input {
+            width: 100%;
+            padding: 13px 14px 13px 45px;
+            border: 1px solid #e2e2e2;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            background-color: white;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+            -webkit-appearance: none;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        #pantalla-yapear .search-input:focus {
+            border-color: var(--brand-purple);
+            box-shadow: 0 4px 16px rgba(116, 34, 132, 0.12), 0 1px 4px rgba(0,0,0,0.06);
+        }
         #pantalla-yapear .search-input::placeholder { color: #aaa; font-weight: 400; }
         #pantalla-yapear .contact-list { padding: 0 20px; width: 100%; flex: 1; overflow-y: auto; }
         #pantalla-yapear .contact-item { padding: 16px 0; border-bottom: 1px solid #f5f5f5; display: flex; flex-direction: column; cursor: pointer; width: 100%; }
@@ -617,6 +637,166 @@ html, body {
         #pantalla-yapear .nc-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
         #pantalla-yapear .nc-icon img { width: 28px; height: 28px; object-fit: contain; }
         #pantalla-yapear .nc-footer-msg { color: #999; font-size: 13px; border-top: 1px solid #f0f0f0; padding-top: 15px; text-align: center; }
+
+        /* --- VISTA: YAPEAR A NUEVO NÚMERO --- */
+        .nuevo-numero-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100dvh / var(--app-zoom, 1));
+            background-color: white;
+            z-index: 2100;
+            display: flex;
+            flex-direction: column;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            animation: fadeInScreen 0.2s ease-out;
+        }
+
+        @keyframes fadeInScreen {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nn-top-header {
+            padding: 18px 20px 8px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nn-back-btn {
+            background: none;
+            border: none;
+            color: #222;
+            cursor: pointer;
+            padding: 6px;
+            margin-left: -6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 50%;
+            transition: background-color 0.15s;
+        }
+
+        .nn-back-btn:active {
+            background-color: #f2f2f2;
+        }
+
+        .nn-body-content {
+            padding: 10px 24px 0 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nn-page-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--brand-purple);
+            margin: 0 0 28px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .nn-fieldset {
+            border: 2px solid var(--brand-purple);
+            border-radius: 8px;
+            padding: 8px 16px 12px 16px;
+            margin: 0;
+            position: relative;
+            background-color: white;
+            cursor: text;
+        }
+
+        .nn-legend {
+            color: var(--brand-purple);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 0 6px;
+            margin-left: -2px;
+            line-height: 1;
+        }
+
+        .nn-input-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 38px;
+        }
+
+        .nn-prefix {
+            font-size: 20px;
+            font-weight: 500;
+            color: #222;
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        .nn-input {
+            flex: 1;
+            border: none !important;
+            outline: none !important;
+            background: transparent;
+            font-size: 20px;
+            font-weight: 500;
+            color: #222;
+            padding: 0;
+            margin: 0;
+            caret-color: var(--brand-purple);
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        .nn-clear-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            margin-left: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border-radius: 50%;
+        }
+
+        .nn-clear-btn:active {
+            opacity: 0.7;
+        }
+
+        .nn-bottom-footer {
+            padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px)) 24px;
+            background-color: white;
+            width: 100%;
+        }
+
+        .nn-continue-btn {
+            width: 100%;
+            height: 48px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+            background-color: #dcd6e2;
+            color: #8c8296;
+            cursor: not-allowed;
+        }
+
+        .nn-continue-btn.active {
+            background-color: var(--brand-teal);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 191, 165, 0.3);
+        }
+
+        .nn-continue-btn.active:active {
+            transform: scale(0.98);
+        }
 
         #splash-screen {
             position: fixed;
