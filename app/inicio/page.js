@@ -495,7 +495,7 @@ export default function Inicio() {
             <div className="card-block" id="balanceCard" onClick={toggleBalance}>
                 <div className="card-header-toggle">
                     <div className="action-left">
-                        <img src={balanceVisible ? "/img/ojo_cerrado.png" : "/img/ojo_abierto.webp"} className="action-icon-img" alt="Ojo" />
+                        <img src={balanceVisible ? "/img/ojo_cerrado.png" : "/img/open-eyes.svg"} className="action-icon-img" alt="Ojo" />
                         <span className="action-text">{balanceVisible ? "Ocultar saldo" : "Mostrar saldo"}</span>
                     </div>
                     <span className="balance-amount" style={{ display: balanceVisible ? 'block' : 'none' }}>S/ {balance}</span>
