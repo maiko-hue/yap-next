@@ -947,7 +947,7 @@ export default function Inicio() {
       <style dangerouslySetInnerHTML={{__html: `
         .nuevo-numero-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
+            padding: 16px 20px; border-bottom: 1.5px solid #e0e0e0; cursor: pointer;
         }
         .nuevo-numero-row:active { background-color: #fafafa; }
         .nn-left { display: flex; align-items: center; gap: 15px; }
@@ -955,7 +955,7 @@ export default function Inicio() {
         .nn-text { font-size: 15.5px; font-weight: 700; color: #333; }
         .nn-arrow { color: #888; font-size: 16px; }
         .section-title-yapear { font-size: 16.5px; font-weight: 800; color: #111; padding: 20px 20px 12px 20px; }
-        .frecuentes-scroll { display: flex; overflow-x: auto; padding: 0 20px; gap: 18px; scrollbar-width: none; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px; }
+        .frecuentes-scroll { display: flex; overflow-x: auto; padding: 0 20px; gap: 18px; scrollbar-width: none; border-bottom: 1.5px solid #e0e0e0; padding-bottom: 20px; }
         .frecuentes-scroll::-webkit-scrollbar { display: none; }
         .frecuente-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 65px; }
         .frecuente-circle { width: 52px; height: 52px; background-color: #f0f0f0; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #888888; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
