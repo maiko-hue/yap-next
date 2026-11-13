@@ -339,7 +339,7 @@ function MontoContent() {
             style={{ width: amount ? `${amount.length}ch` : '1ch' }}
           />
         </div>
-        <div className="limit-text-monto">Límite por yapeo S/500, lÃ­mite por día S/2,000</div>
+        <div className="limit-text-monto">Límite por yapeo S/500, límite por día S/2,000</div>
       </div>
 
       <div className="bottom-section-monto">
